@@ -6,6 +6,7 @@ This is a plugin that adds Android SDK jar to CLASSPATH when using [javacomplete
 # Install
 
 Copy java.vim to ~/.vim/after/ftplugin/ this will load the script whenever 'java' filetype is set.
+
 Edit s:androidSdkPath in java.vim accordingly to yout Android SDK path.
 
 
