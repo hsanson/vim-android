@@ -1,6 +1,6 @@
 # What is this?
 
-This is a plugin that adds Android SDK jar to CLASSPATH when using [javacomplete](http://www.vim.org/scripts/script.php?script_id#1785) plugin allowing you to complete classes from Android SDK.
+This is a plugin that adds Android SDK jar to CLASSPATH when using [javacomplete](http://www.vim.org/scripts/script.php?script_id=1785) plugin allowing you to complete classes from Android SDK.
 
 
 # Install
