@@ -17,4 +17,5 @@ if glob('AndroidManifest.xml') =~ ''
           endif
         endfor
     end
+    compiler android
 endif
