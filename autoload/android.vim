@@ -131,10 +131,6 @@ function! s:getDevicesList()
 
   call android#logi(len(l:devices) . "  Devices " . join(l:devices, " || "))
 
-  if len(l:devices) < 1
-    call android#logw("No android devices found. Make sure adb is detecting your devices or emulators as online.")
-  endif
-
   return l:devices
 endfunction
 
@@ -151,7 +147,8 @@ function! s:callAnt(...)
   set errorformat=\ %#[javac]\ %#%f:%l:%c:%*\\d:%*\\d:\ %t%[%^:]%#:%m,
                 \%A\ %#[javac]\ %f:%l:\ %m,
                 \%A\ %#[aapt]\ %f:%l:\ %m,%-Z\ %#[javac]\ %p^,%-C%.%#
-  make
+  silent! make
+  redraw!
 
   let &makeprg = makeprg
   let &errorformat = errorformat
@@ -167,6 +164,8 @@ function! android#install(mode)
   let l:choice = 1
 
   if len(l:devices) == 0
+    call s:callAnt(a:mode)
+    call android#logw("No android device/emulator found. Skipping install step.")
     return 0
   endif
 
@@ -189,6 +188,7 @@ function! android#install(mode)
   let l:device = strpart(l:option, 3)
   let $ANDROID_SERIAL = l:device
   call s:callAnt(a:mode, 'install')
+  call android#logi("Finished installing on device " . l:device)
 endfunction
 
 ""
