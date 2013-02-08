@@ -23,6 +23,96 @@ function! android#isAndroidProject()
   endif
 endfunction
 
+function! android#hasVimProc(...)
+  try
+    call vimproc#version()
+    let l:exists_vimproc = 1
+  catch
+    let l:exists_vimproc = 0
+  endtry
+  return l:exists_vimproc
+endfunction
+
+""
+" Calling this methods will create a ctags file from the android source and
+" included libraries into the projects root folder. This tag can be used then
+" to auto-complete and navigate the project source code.
+function! android#updateProjectTags()
+  if !android#hasVimProc()
+    call android#logw("updateProjecTags() failed: required VimProc plugin not found.")
+    return 0
+  endif
+
+  if !android#isAndroidProject()
+    call android#logw("updateProjectTags() failed: pwd must be on the android project root.")
+    return 0
+  endif
+
+  if !executable("ctags")
+    call android#logw(updateProjectTags() failed: could not find ctags executable")
+    return 0
+  endif
+
+  let l:project_path = getcwd()
+  let l:ctags_args = " --recurse --langmap=Java:.java --languages=Java --verbose -f "
+  let l:ctags_cmd = vimproc#get_command_name('ctags') . l:ctags_args
+
+  try
+    let l:ps_cmd = vimproc#get_command_name('ps')
+    let l:cmd = l:ps_cmd . " -C ctags || " .  l:ctags_cmd . l:project_path  . "/.tags " . l:project_path . "/src"
+  catch
+    let l:cmd = l:ctags_cmd . l:project_pat . "/.tags " . l:project_path . "/src"
+  endtry
+
+  call android#logi("Generating project tags (may take a while to finish)" )
+  call vimproc#system(l:cmd)
+  call android#logi("Done!" )
+endfunction
+
+""
+" Appends ctags for all referenced libraries used for the Android project. The
+" library list is obtained from the project.properties file.
+function! android#updateLibraryTags()
+  " TODO: Implement this method
+endfunction
+
+""
+" Calling this methods will create a ctags file from the Android SDK sources
+" and store it in the path defined by the g:android_sdk_tags variable. This
+" function only works if the VimProc plugin is installed and working.
+function! android#updateAndroidTags()
+  if !android#hasVimProc()
+    call android#logw("updateProjecTags() failed: required VimProc plugin not found.")
+    return 0
+  endif
+
+  if !executable("ctags")
+    call android#logw(updateProjectTags() failed: could not find ctags executable")
+    return 0
+  endif
+
+  let l:android_sources = g:android_sdk_path . "/sources"
+  let l:ctags_args = " --recurse --langmap=Java:.java --languages=Java --verbose -f "
+  let l:ctags_cmd = vimproc#get_command_name('ctags') . l:ctags_args
+
+  try
+    let l:ps_cmd = vimproc#get_command_name('ps')
+    let l:cmd = l:ps_cmd . " -C ctags || " .  l:ctags_cmd . g:android_sdk_tags . " " . l:android_sources
+  catch
+    let l:cmd = l:ctags_cmd . g:android_sdk_tags . " " . l:android_sources
+  endtry
+
+  call android#logi("Generating android SDK tags (may take a while to finish)" )
+  call vimproc#system(l:cmd)
+  call android#logi("Done!" )
+endfunction
+
+function! android#updateTags()
+  call android#updateAndroidTags()
+  call android#updateProjectTags()
+  call android#updateLibraryTags()
+endfunction
+
 "" Helper method that returns a list of currently connected and online android
 "" devices. This method depends on the android adb tool.
 function! s:getDevicesList()
