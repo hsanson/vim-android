@@ -109,8 +109,7 @@ function! android#setAndroidSdkTags()
   if !exists('g:android_sdk_tags')
     let g:android_sdk_tags = '~/.vim/tags/android'
   endif
-  let l:tags = &l:tags
-  let &l:tags = l:tags . ',' . g:android_sdk_tags
+  execute 'setlocal'  'tags+=' . g:android_sdk_tags
 endfunction
 ""
 " Try to determine the android target platform and then load the corresponding
