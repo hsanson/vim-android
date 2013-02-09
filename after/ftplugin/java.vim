@@ -4,9 +4,6 @@ if android#isAndroidProject()
   else
     call android#setAndroidSdkTags()
     call android#setAndroidJarInClassPath()
-    command! AndroidDebug call android#compile("debug")
-    command! AndroidRelease call android#compile("release")
-    command! AndroidDebugInstall call android#install("debug")
-    command! AndroidReleaseInstall call android#install("release")
+    call android#setupAndroidCommands()
   endif
 endif

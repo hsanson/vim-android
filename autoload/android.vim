@@ -222,3 +222,13 @@ function! android#setAndroidJarInClassPath()
     endfor
   end
 endfunction
+
+function! android#setupAndroidCommands()
+  command! AndroidDebug call android#compile("debug")
+  command! AndroidRelease call android#compile("release")
+  command! AndroidDebugInstall call android#install("debug")
+  command! AndroidReleaseInstall call android#install("release")
+  command! AndroidUpdateProjectTags call android#updateProjectTags()
+  command! AndroidUpdateAndroidTags call android#updateAndroidTags()
+  command! AndroidUpdateTags call android#updateTags()
+endfunction

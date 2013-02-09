@@ -49,12 +49,18 @@ All you have to do is make sure your current path (pwd) is where your AndroidMan
 
 If the plugin detects the AndroidManifest.xml file and the g:android_sdk_path is correctly set then it defines some commands that you can use to compile and install your application:
 
- - AndroidDebug:          - Compiles the application on debug mode.
- - AndroidRelease:        - Compiles the application on release mode.
- - AndroidDebugInstall:   - Compiles and installs the application in debug mode. I you have more than one device/emulator connected
-                            you will be prompted with a list of devices so you can select on which one to install.
- - AndroidReleaseInstall: - Same as AndroidDebugInstall but in release mode.
-
+ - AndroidDebug: Compiles the application on debug mode.
+ - AndroidRelease: Compiles the application on release mode.
+ - AndroidDebugInstall: Compiles and installs the application in debug mode. I you have more than one device/emulator connected
+    you will be prompted with a list of devices so you can select on which one to install. If no device or emulator is found then 
+    this command fallbacks to compilation only.
+ - AndroidReleaseInstall: Same as AndroidDebugInstall but in release mode.
+ - AndroidUpdateAndroidTags: Creates a ctags file with the Android SDK sources. The resulting file is saved at *g:android_sdk_tags* if
+    defined or at *~/.vim/tags/android* if not. This command depends on VimProc plugin so will only work if it is installed. Note that
+    this command can take a long time to finish so only use it when you update the Android SDK with new versions.
+ - AndroidUpdateProjectTags: Creates a ctags file with the current android project sources. The file is stored at the project root and
+    called *.tags*. Make sure you add this file to your tags variable (e.g. set tags+=.tags).
+ 
 ## Command Mappings
 
 You may prefer to map the above commands to some shorter strings so you do not have to type the commands every time:
@@ -73,13 +79,15 @@ endif
 
 Now everytime you open a java or xml file and your current path has an AndroidManifest.xml the F5 key is mapped to the AndroidDebugInstall command.
 
+You can also map the *AndroidUpdateProjectTags* with an auto command so it is executed every time you save a buffer or after compiling the project. Keeping your ctags up to date is important to enable tags navigation and tag based auto-completion of code.
+
 ## Auto-completion
 
 This plugin by itself does not provide auto-completion of Android code but it configures the environment CLASSPATH variable so other plugins like [javacomplete](https://github.com/vim-scripts/javacomplete) can omni-complete Android packages, classes, and methods.
 
 What this plugin does is try to determine the application target SDK version and add the corresponding android.jar file to the CLASSPATH environment variable. This allows javacomplete to find Android packages, classes and methods and provide auto-completion via omnifunc (Ctrl-X Ctrl-O).
 
-Of course this requires javacomplete plugin installed to work so make sure you have it installed and running.
+Also make sure you have your ctags files updated. You can use the provided AndroidUpdateProjecTags and AndroidUpdateAndroidTags commands to generate and update the project and android SDK tags.
 
 # Recommended plugins
 
