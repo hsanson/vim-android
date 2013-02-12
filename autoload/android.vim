@@ -129,7 +129,7 @@ function! s:getDevicesList()
   let l:adb_devices = filter(split(l:adb_output, '\n'), 'v:val =~ "device$"')
   let l:devices =  map(l:adb_devices, 'v:key + 1 . ". " . substitute(v:val, "\tdevice$", "", "")')
 
-  call android#logi(len(l:devices) . "  Devices " . join(l:devices, " || "))
+  "call android#logi(len(l:devices) . "  Devices " . join(l:devices, " || "))
 
   return l:devices
 endfunction
