@@ -113,6 +113,10 @@ function! android#updateTags()
   call android#updateLibraryTags()
 endfunction
 
+function! s:sortFunc(i1, i2)
+  return tolower(a:i1) == tolower(a:i2) ? 0 : tolower(a:i1) > tolower(a:i2) ? 1 : -1
+endfunction
+
 "" Helper method that returns a list of currently connected and online android
 "" devices. This method depends on the android adb tool.
 function! s:getDevicesList()
@@ -127,7 +131,8 @@ function! s:getDevicesList()
 
   let l:adb_output = system(g:android_adb_tool . " devices")
   let l:adb_devices = filter(split(l:adb_output, '\n'), 'v:val =~ "device$"')
-  let l:devices =  map(l:adb_devices, 'v:key + 1 . ". " . substitute(v:val, "\tdevice$", "", "")')
+  let l:adb_devices_sorted = sort(copy(l:adb_devices), "s:sortFunc")
+  let l:devices = map(l:adb_devices_sorted, 'v:key + 1 . ". " . substitute(v:val, "\tdevice$", "", "")')
 
   "call android#logi(len(l:devices) . "  Devices " . join(l:devices, " || "))
 
