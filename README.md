@@ -55,6 +55,7 @@ If the plugin detects the AndroidManifest.xml file and the g:android_sdk_path is
     you will be prompted with a list of devices so you can select on which one to install. If no device or emulator is found then 
     this command fallbacks to compilation only.
  - AndroidReleaseInstall: Same as AndroidDebugInstall but in release mode.
+ - AndroidClean: Cleans the build files by calling *ant clean* on the root project folder.
  - AndroidUpdateAndroidTags: Creates a ctags file with the Android SDK sources. The resulting file is saved at *g:android_sdk_tags* if
     defined or at *~/.vim/tags/android* if not. This command depends on VimProc plugin so will only work if it is installed. Note that
     this command can take a long time to finish so only use it when you update the Android SDK with new versions.
