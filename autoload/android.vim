@@ -166,34 +166,54 @@ endfunction
 function! android#install(mode)
   let l:mode = a:mode
   let l:devices = s:getDevicesList()
-  let l:choice = 1
 
+  " If no device found give a warning an exit
   if len(l:devices) == 0
     call s:callAnt(a:mode)
     call android#logw("No android device/emulator found. Skipping install step.")
     return 0
   endif
 
-  if len(l:devices) > 1
-    let l:choice = -1
-    while(l:choice < 0 || l:choice > len(l:devices))
-      echom "Select target device"
-      call inputsave()
-      let l:choice = inputlist(l:devices)
-      call inputrestore()
-      echo "\n"
-    endwhile
+  " If only one device is found automatically install to it.
+  if len(l:devices) == 1
+    let l:device = strpart(l:devices[0], 3)
+    call s:callAnt(a:mode, 'install')
+    call android#logi("Finished installing on device " . l:device)
+    return 0
   endif
 
+  " If more than one device is found give a list so the user can choose.
+  let l:choice = -1
+  call add(l:devices, (len(l:devices) + 1) . ". All devices")
+  while(l:choice < 0 || l:choice > len(l:devices))
+    echom "Select target device"
+    call inputsave()
+    let l:choice = inputlist(l:devices)
+    call inputrestore()
+    echo "\n"
+  endwhile
+
+  " Zero means cancel the operation
   if l:choice == 0
     return 0
   endif
 
-  let l:option = l:devices[l:choice - 1]
-  let l:device = strpart(l:option, 3)
-  let $ANDROID_SERIAL = l:device
-  call s:callAnt(a:mode, 'install')
-  call android#logi("Finished installing on device " . l:device)
+  if l:choice == len(l:devices)
+    call android#logi("Installing on all devices")
+    call remove(l:devices, len(l:devices) - 1)
+    for device in l:devices
+      let l:device = strpart(device, 3)
+      let $ANDROID_SERIAL = l:device
+      call s:callAnt(a:mode, 'install')
+      call android#logi ("Finished installing on the following devices " . join(l:devices, " "))
+    endfor
+  else
+    let l:option = l:devices[l:choice - 1]
+    let l:device = strpart(l:option, 3)
+    let $ANDROID_SERIAL = l:device
+    call s:callAnt(a:mode, 'install')
+    echomsg ("Finished installing on device " . l:device)
+  endif
 endfunction
 
 ""
