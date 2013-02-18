@@ -248,6 +248,15 @@ function! android#setAndroidJarInClassPath()
   end
 endfunction
 
+function! android#listDevices()
+  let l:devices = s:getDevicesList()
+  if len(l:devices) <= 0
+    call android#logw("Could not find any android devices or emulators.")
+  else
+    call android#logi("Android Devices: " . join(l:devices, " "))
+  endif
+endfunction
+
 function! android#setupAndroidCommands()
   command! AndroidDebug call android#compile("debug")
   command! AndroidRelease call android#compile("release")
@@ -257,4 +266,5 @@ function! android#setupAndroidCommands()
   command! AndroidUpdateProjectTags call android#updateProjectTags()
   command! AndroidUpdateAndroidTags call android#updateAndroidTags()
   command! AndroidUpdateTags call android#updateTags()
+  command! AndroidDevices call android#listDevices()
 endfunction
