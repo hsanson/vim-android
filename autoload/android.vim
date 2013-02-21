@@ -177,6 +177,7 @@ function! android#install(mode)
   " If only one device is found automatically install to it.
   if len(l:devices) == 1
     let l:device = strpart(l:devices[0], 3)
+    let $ANDROID_SERIAL = l:device
     call s:callAnt(a:mode, 'install')
     call android#logi("Finished installing on device " . l:device)
     return 0
