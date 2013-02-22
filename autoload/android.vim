@@ -227,16 +227,17 @@ function! android#setAndroidSdkTags()
   endif
   execute 'setlocal'  'tags+=' . g:android_sdk_tags
 endfunction
+
 ""
 " Try to determine the android target platform and then load the corresponding
 " android.jar file into the CLASSPATH environment variable. This way plugins
 " like javacomplete should be able to omnicomplete java packages, classes and
 " methods.
 function! android#setAndroidJarInClassPath()
-  if filereadable('project.properties') 
-    for line in readfile('project.properties')
-      if line =~ 'target='
-        let s:androidTargetPlatform = split(line, '=')[1]
+  if filereadable('AndroidManifest.xml') 
+    for line in readfile('AndroidManifest.xml')
+      if line =~ 'android:targetSdkVersion='
+        let s:androidTargetPlatform = 'android-' . split(line, '"')[1]
         let s:targetAndroidJar = g:android_sdk_path . '/platforms/' . s:androidTargetPlatform . '/android.jar'
         if $CLASSPATH =~ ''
           let $CLASSPATH = s:targetAndroidJar . ':' . $CLASSPATH
