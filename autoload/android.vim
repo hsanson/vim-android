@@ -239,10 +239,11 @@ function! android#setAndroidJarInClassPath()
       if line =~ 'android:targetSdkVersion='
         let s:androidTargetPlatform = 'android-' . split(line, '"')[1]
         let s:targetAndroidJar = g:android_sdk_path . '/platforms/' . s:androidTargetPlatform . '/android.jar'
+        let s:libsJar = './libs/*'
         if $CLASSPATH =~ ''
-          let $CLASSPATH = s:targetAndroidJar . ':' . $CLASSPATH
+          let $CLASSPATH = s:libsJar . ':' . s:targetAndroidJar . ':' . $CLASSPATH
         else
-          let $CLASSPATH = s:targetAndroidJar
+          let $CLASSPATH =  s:libsJar . ':' . s:targetAndroidJarp
         endif
         break
       endif
