@@ -239,16 +239,28 @@ function! android#setAndroidJarInClassPath()
       if line =~ 'android:targetSdkVersion='
         let s:androidTargetPlatform = 'android-' . split(line, '"')[1]
         let s:targetAndroidJar = g:android_sdk_path . '/platforms/' . s:androidTargetPlatform . '/android.jar'
-        let s:libsJar = './libs/*'
-        if $CLASSPATH =~ ''
-          let $CLASSPATH = s:libsJar . ':' . s:targetAndroidJar . ':' . $CLASSPATH
-        else
-          let $CLASSPATH =  s:libsJar . ':' . s:targetAndroidJarp
-        endif
         break
       endif
     endfor
   end
+
+  if filereadable('project.properties') 
+    let s:libs = []
+    for line in readfile('project.properties')
+      if line =~ 'android.library.reference'
+        let s:path = split(line, '=')[1]
+        call add(s:libs, s:path)
+      endif
+    endfor
+    let s:referenceJar = join(map(copy(s:libs), 'v:val . "/bin/classes.jar"'), ":")
+  end
+
+  let s:libsJar = './libs/*'
+  if $CLASSPATH =~ ''
+    let $CLASSPATH = s:libsJar . ':' . s:referenceJar . ':' . s:targetAndroidJar . ':' . $CLASSPATH
+  else
+    let $CLASSPATH =  s:libsJar . ':' . s:referenceJar . ':' . s:targetAndroidJarp
+  endif
 endfunction
 
 function! android#listDevices()
