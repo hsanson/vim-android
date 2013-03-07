@@ -229,38 +229,59 @@ function! android#setAndroidSdkTags()
 endfunction
 
 ""
-" Try to determine the android target platform and then load the corresponding
-" android.jar file into the CLASSPATH environment variable. This way plugins
-" like javacomplete should be able to omnicomplete java packages, classes and
-" methods.
+" Update the CLASSPATH environment variable to include all classes related to
+" the current Android project. This allows other plugins like javacomplete to
+" find the classes and methods for auto-completion.
 function! android#setAndroidJarInClassPath()
+  let s:paths = []
+
+  " Obtain a list of current paths in the $CLASSPATH
+  let s:oldpaths = split($CLASSPATH, ':')
+
+  " Add our project classes path
+  let s:local='./bin/classes'
+  if index(s:oldpaths, s:local) == -1
+    call add(s:paths, s:local)
+  endif
+
+  " Next find out if the project uses external libraries. If so add the
+  " corresponding jars.
+  if filereadable('project.properties') 
+    for line in readfile('project.properties')
+      if line =~ 'android.library.reference'
+        let s:path = split(line, '=')[1]
+        let s:referenceJar = s:path . "/bin/classes.jar"
+        if index(s:oldpaths, s:referenceJar) == -1
+          call add(s:paths, s:referenceJar)
+        endif
+      endif
+    endfor
+  end
+
+  " Also include any jar files inside the project libs directory.
+  let s:libs='./libs/*'
+  if index(s:oldpaths, s:libs) == -1
+    call add(s:paths, s:libs)
+  endif
+
+  " Try to find the android target SDK and corresponding jar path
   if filereadable('AndroidManifest.xml') 
     for line in readfile('AndroidManifest.xml')
       if line =~ 'android:targetSdkVersion='
         let s:androidTargetPlatform = 'android-' . split(line, '"')[1]
         let s:targetAndroidJar = g:android_sdk_path . '/platforms/' . s:androidTargetPlatform . '/android.jar'
+        if index(s:oldpaths, s:targetAndroidJar) == -1
+          call add(s:paths, s:targetAndroidJar)
+        endif
         break
       endif
     endfor
   end
 
-  if filereadable('project.properties') 
-    let s:libs = []
-    for line in readfile('project.properties')
-      if line =~ 'android.library.reference'
-        let s:path = split(line, '=')[1]
-        call add(s:libs, s:path)
-      endif
-    endfor
-    let s:referenceJar = join(map(copy(s:libs), 'v:val . "/bin/classes.jar"'), ":")
-  end
+  " Finally add any other paths already defined in the $CLASSPATH
+  call extend(s:paths, s:oldpaths)
 
-  let s:libsJar = './libs/*'
-  if $CLASSPATH =~ ''
-    let $CLASSPATH = s:libsJar . ':' . s:referenceJar . ':' . s:targetAndroidJar . ':' . $CLASSPATH
-  else
-    let $CLASSPATH =  s:libsJar . ':' . s:referenceJar . ':' . s:targetAndroidJarp
-  endif
+  let $CLASSPATH = join(copy(s:paths), ':')
 endfunction
 
 function! android#listDevices()
