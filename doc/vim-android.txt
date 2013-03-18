@@ -1,0 +1,214 @@
+*vim-android.txt*    For Vim version 7.3    Last change: 2013 March 18
+
+Author:         Horacio Sanson
+Licence:        Vim licence, see |license|
+Homepage:       https://github.com/hsanson/vim-android
+Version:        1.0.0
+
+==============================================================================
+Contents                                   *vim-android* *vim-android-contents*
+
+         1. Intro ........................... |vim-android-intro|
+              Supported Features              |vim-android-features|
+         2. Requirements .................... |vim-android-requirements|
+         3. Installation .................... |vim-android-installation|
+         4. Usage ........................... |vim-android-usage|
+              Commands ...................... |vim-android-commands|
+              Key mappings .................. |vim-android-keys|
+         5. Configuration ................... |vim-android-configuration|
+         6. Todo ............................ |vim-android-todo|
+         7. Credits ......................... |vim-android-credits|
+
+==============================================================================
+1. Intro                                                      *vim-android-intro*
+
+vim-android is a plugin that facilitates the development of Android
+applications withing vim. When editing a java or xml file this plugin tries
+to find an AndroidManifest.xml file in the current directory and if found it
+cofigures a set of variables and commands that allows easier development for
+Android applications.
+
+------------------------------------------------------------------------------
+SUPPORTED FEATURES                                         *vim-android-features*
+
+The following features are supported by vim-android:
+
+  - Auto-detection of Android projects when opening a Java or XML file. This
+    relies on the AndroidManifest.xml file being located on the current
+    working directory.
+  - Updates the CLASSPATH environment variable to include paths for your
+    current project, external libs, external lib-projects and the current
+    target Android SDK jars. This allows auto-completion of Java code using
+    other plugins such as javacomplete.
+  - Adds useful commands to compile and install your application APK into
+    your emulator/devices.
+  - Adds useful commands to generate tags for the current project source and
+    the Android SDK sources.
+
+==============================================================================
+2. Requirements                                        *vim-android-requirements*
+
+The following requirements have to be met in order to be able to use vim-android:
+
+  - Vim 7.3 or higher. This plugin may also work with previous versions but I
+    have only tested Vim 7.3.
+  - Android SDK installed and with the platform-tools directory set in your
+    PATH environment variable.
+
+==============================================================================
+3. Installation                                        *vim-android-installation*
+
+It is recommended that you use a package manager like Pathogen or Vundle to
+install this plugin. In the case of Vundle all you have to do is add this
+line to your vimrc:
+>
+       Bundle 'hsanson/vim-android'
+<
+and then inside vim run the |:BundleInstall| command.
+
+==============================================================================
+4. Usage                                                      *vim-android-usage*
+
+There are two requirements for this plugin to work correctly: First you must set
+the *g:android_sdk_path* variable in you vimrc file so the plugin can find
+the tools it needs, second this plugin assumes that your current working
+directory contains the AndroidManifest.xml of your android project.
+
+If these two requirements are satisfied then everytime you open a Java or XML
+file this plugin will enable several commands *vim-android-commands* that greatly
+facilitate tasks such as building and installing your APK into emulators and/or
+devices.
+
+------------------------------------------------------------------------------
+COMMANDS                                                   *vim-android-commands*
+
+:AndroidDebug                                                   *:AndroidDebug*
+    Builds the application APK in debug mode.
+
+:AndroidRelease                                               *:AndroidRelease*
+    Builds the application APK in release mode.
+
+:AndroidDebugInstall                                       *:AndroidDebugInstall*
+    Compiles and installs the application in debug mode. In the case that you
+    have several emulators running and/or several devices connected then this
+    command will present you a list of emulators/devices so you can choose to
+    which one the APK should be installed to.
+
+:AndroidReleaseInstall                                 *:AndroidReleaseInstall*
+    This is the same as the :AndroidDebugInstall command but builds the APK
+    in release mode instead of debug mode.
+
+:AndroidUpdateAndroidTags                           *:AndroidUpdateAndroidTags*
+    This is a simple helper command that generates a tags file from the
+    android sdk sources. This tags files is automatically added to the local
+    *tags* variable. This can be used for some tag based auto-completion plugins
+    to enable auto-completion of android classes and methods.
+
+    Generating the tags file for the Android SDK requires that you have the
+    ctags command utility installed and available in your PATH. Also consider
+    that this can take a long time to finish so use it only when you update your
+    SDK.
+
+:AndroidUpdateProjectTags
+    This is similar to the :AndroidUpdateAndroidTags command but it generates
+    the tags file for the current Android source code. This allows other tags
+    based auto-completion plugins to auto-complete classes and methods of your
+    own sources.
+
+------------------------------------------------------------------------------
+KEY MAPPINGS                                                  *vim-android-keys*
+By default the vim-android plugin has not mappings and all functionality is
+accessed using the commmands *vim-android-commands* but this does not impede
+you from creating your own mappings.
+
+For example you can map a function key (e.g. F5) so it invokes the
+:AndroidDebugInstall command:
+
+>
+nmap <F5> <ESC>:AndroidDebugInstall<CR>
+<
+
+this way anytime you press the <F5> key it will build and install your
+Android application.
+
+==============================================================================
+5. Configuration                                     *vim-android-configuration*
+
+                                                        *g:android_sdk_path*
+g:android_sdk_path~
+Default: /opt/android-sdk
+
+This option must specify the location of your Android SDK installation.
+
+Example:
+>
+        let g:vim-android_ctags_bin = '/opt/adroid-sdk'
+<
+
+                                                            *g:android_adb_tool*
+g:android_adb_tool~
+Default: empty
+
+This plugin relies heavily on the Android ADB tool to query devices/emulators
+and to install the APK files. By default this tool is found inside the
+Android SDK so you do not need to set this variable but if for some reason in
+you installation the ADB tool is located in a different path you can
+explicitly tell the plugin where to find it using this variable.
+
+Example:
+>
+        let g:android_adb_tool=/path/to/tool/adb
+<
+
+                                                            *g:android_sdk_tags*
+g:android_sdk_tags~
+Default: ~/.vim/tags/android
+
+By default the :AndroidUpdateAndroidTags commands generates the tags file in
+~/.vim/tags/android. This file is automatically added to the *:tags*
+variable. If you prefer the tags to be generated in a different place you may
+change the default using this global variable.
+
+Example:
+>
+        let g:android_sdk_tags=/path/to/tags/android.tags
+<
+
+------------------------------------------------------------------------------
+ANDROID OMNI-COMPLETION                             *vim-android-omnicomplete*
+
+This plugin by itself does not provide omni-completion of Android classes
+and/or methods. Instead it auto-configures the CLASSPATH environment variable
+so it includes all the JAR files related to your project so other plugins
+like the javacomplete (https://github.com/vim-scripts/javacomplete) can do
+omni-completion.
+
+The JAR files added to your CLASSPATH environment includes the Android SDK
+jar for the target API defined in the AndroidManifest.xml, any JAR files in
+the libs directory and any JAR files of external lib-projects defined in the
+project.properties file. With this CLASSPATH and the javacomplete plugin I am
+able to omni-complete all classes and methods for my project.
+
+==============================================================================
+9. Todo                                                          *vim-android-todo*
+
+  - Add secure prompt to AndroidReleaseInstall that requires users to input
+    the keystore and sign key passwords. Not sure how to make Vim not display
+    the input text on screen.
+  - Better Android XML omni-completion.
+  - Maybe add one of the LogCat plugins arround to show the log directly
+    inside Vim. This is low priority for me as the Android monitor is good for
+    my purposes.
+
+==============================================================================
+10. Credits                                                *vim-android-credits*
+
+vim-android was written from scratch but I learned and used as reference
+several other plugins:
+
+ - https://github.com/bpowell/vim-android
+ - https://github.com/mgarriott/vim-android
+ - https://github.com/anddam/android-javacomplete
+
+==============================================================================
+ vim: tw=78 ts=8 sw=4 sts=4 et ft=help
