@@ -142,7 +142,7 @@ This option must specify the location of your Android SDK installation.
 
 Example:
 >
-        let g:vim-android_ctags_bin = '/opt/adroid-sdk'
+        let g:android_sdk_path = '/opt/adroid-sdk'
 <
 
                                                             *g:android_adb_tool*
