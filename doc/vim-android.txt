@@ -70,12 +70,12 @@ and then inside vim run the |:BundleInstall| command.
 4. Usage                                                      *vim-android-usage*
 
 There are two requirements for this plugin to work correctly: First you must set
-the *g:android_sdk_path* variable in you vimrc file so the plugin can find
+the g:android_sdk_path variable in you vimrc file so the plugin can find
 the tools it needs, second this plugin assumes that your current working
 directory contains the AndroidManifest.xml of your android project.
 
 If these two requirements are satisfied then everytime you open a Java or XML
-file this plugin will enable several commands *vim-android-commands* that greatly
+file this plugin will enable several commands vim-android-commands that greatly
 facilitate tasks such as building and installing your APK into emulators and/or
 devices.
 
@@ -118,7 +118,7 @@ COMMANDS                                                   *vim-android-commands
 ------------------------------------------------------------------------------
 KEY MAPPINGS                                                  *vim-android-keys*
 By default the vim-android plugin has not mappings and all functionality is
-accessed using the commmands *vim-android-commands* but this does not impede
+accessed using the commmands vim-android-commands but this does not impede
 you from creating your own mappings.
 
 For example you can map a function key (e.g. F5) so it invokes the
