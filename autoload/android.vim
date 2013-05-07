@@ -151,7 +151,9 @@ function! s:callAnt(...)
 
   set errorformat=\ %#[javac]\ %#%f:%l:%c:%*\\d:%*\\d:\ %t%[%^:]%#:%m,
                 \%A\ %#[javac]\ %f:%l:\ %m,
-                \%A\ %#[aapt]\ %f:%l:\ %m,%-Z\ %#[javac]\ %p^,%-C%.%#
+                \%A\ %#[aapt]\ %f:%l:\ %m,%-Z\ %#[javac]\ %p^,%-C%.%#,
+                \%A\ %#[exec]\ Failure\ [%m]
+
   silent! make
   redraw!
 
