@@ -117,12 +117,17 @@ function! s:sortFunc(i1, i2)
   return tolower(a:i1) == tolower(a:i2) ? 0 : tolower(a:i1) > tolower(a:i2) ? 1 : -1
 endfunction
 
-"" Helper method that returns a list of currently connected and online android
-"" devices. This method depends on the android adb tool.
-function! s:getDevicesList()
+function! s:getAdbBin()
   if !exists('g:android_adb_tool')
     let g:android_adb_tool = g:android_sdk_path . "/platform-tools/adb"
   endif
+  return g:android_adb_tool
+endfunction
+
+"" Helper method that returns a list of currently connected and online android
+"" devices. This method depends on the android adb tool.
+function! s:getDevicesList()
+  call s:getAdbBin()
 
   if !executable(g:android_adb_tool)
     call android#loge("Android adb tool could not be found. Set g:android_adb_tool to point to the location of the adb tool")
@@ -161,9 +166,27 @@ function! s:callAnt(...)
   let &errorformat = errorformat
 endfunction
 
+function! s:callInstall(mode, device)
+  let l:cmd = s:getAdbBin() . ' -s ' . a:device . ' install -r ' . android#getApkPath(a:mode)
+  call android#logi("Installing " . android#getApkPath(a:mode) . " to " . a:device . " (wait...)")
+  let l:output = system(l:cmd)
+  redraw!
+  let l:success = matchstr(l:output, 'Success')
+  if empty(l:success)
+    let l:errormsg = matchstr(l:output, '\cFailure \[\zs.\{-}\ze\]')
+    call android#loge("Installation failed on " . a:device . " with error " . l:errormsg)
+    return 1
+  else
+    call android#logi("Installation finished on " . a:device)
+    return 0
+  endif
+endfunction
+
 function! s:callUninstall(device)
+  call android#logi("Uninstalling " . s:androidPackageName . " from " . a:device)
   let l:cmd = 'adb -s ' . a:device . ' uninstall ' . s:androidPackageName
   execute "silent !" . l:cmd
+  redraw!
 endfunction
 
 function! android#compile(mode)
@@ -184,9 +207,8 @@ function! android#install(mode)
   " If only one device is found automatically install to it.
   if len(l:devices) == 1
     let l:device = strpart(l:devices[0], 3)
-    let $ANDROID_SERIAL = l:device
-    call s:callAnt(a:mode, 'install')
-    call android#logi("Finished installing on device " . l:device)
+    call s:callAnt(a:mode)
+    call s:callInstall(a:mode, l:device)
     return 0
   endif
 
@@ -206,22 +228,24 @@ function! android#install(mode)
     return 0
   endif
 
+  call s:callAnt(a:mode)
+
   if l:choice == len(l:devices)
     call android#logi("Installing on all devices")
     call remove(l:devices, len(l:devices) - 1)
     for device in l:devices
       let l:device = strpart(device, 3)
-      let $ANDROID_SERIAL = l:device
-      call s:callAnt(a:mode, 'install')
-      call android#logi ("Finished installing on device " . l:device)
+      let l:result = s:callInstall(a:mode, l:device)
+      if l:result != 0
+        call android#logw("Abort installtion of all devices")
+        return 1
+      endif
     endfor
     call android#logi ("Finished installing on the following devices " . join(l:devices, " "))
   else
     let l:option = l:devices[l:choice - 1]
     let l:device = strpart(l:option, 3)
-    let $ANDROID_SERIAL = l:device
-    call s:callAnt(a:mode, 'install')
-    call android#logi ("Finished installing on device " . l:device)
+    call s:callInstall(a:mode, l:device)
   endif
 endfunction
 
@@ -323,7 +347,8 @@ function! android#setAndroidJarInClassPath()
     call add(s:paths, s:libs)
   endif
 
-  " Try to find the android target SDK and corresponding jar path
+  " Try to find the android target SDK and corresponding jar path and the
+  " package name.
   if filereadable('AndroidManifest.xml') 
     for line in readfile('AndroidManifest.xml')
       if line =~ 'android:targetSdkVersion='
@@ -349,6 +374,37 @@ function! android#setAndroidJarInClassPath()
   call extend(s:paths, s:oldpaths)
 
   let $CLASSPATH = join(copy(s:paths), ':')
+endfunction
+
+function! android#getProjectName()
+  " Now try to find out the project name and the apk file names for release and
+  " debug.
+  if filereadable('build.xml') 
+    for line in readfile('build.xml')
+      if line =~ "project name"
+        let s:androidProjectName = matchstr(line, '\cproject name=\([''"]\)\zs.\{-}\ze\1')
+      endif
+    endfor
+  end
+  return s:androidProjectName
+endfunction
+
+function! android#getDebugApkPath()
+  let s:androidDebugApkPath = "bin/" . android#getProjectName() . "-debug.apk"
+  return s:androidDebugApkPath
+endfunction
+
+function! android#getReleaseApkPath()
+  let s:androidReleaseApkPath = "bin/" . android#getProjectName() . "-release.apk"
+  return s:androidReleaseApkPath
+endfunction
+
+function! android#getApkPath(mode)
+  if a:mode == "release"
+    return android#getReleaseApkPath()
+  else
+    return android#getDebugApkPath()
+  endif
 endfunction
 
 function! android#listDevices()
