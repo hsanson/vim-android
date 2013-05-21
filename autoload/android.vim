@@ -270,7 +270,8 @@ function! android#setAndroidJarInClassPath()
   if filereadable('AndroidManifest.xml') 
     for line in readfile('AndroidManifest.xml')
       if line =~ 'android:targetSdkVersion='
-        let s:androidTargetPlatform = 'android-' . split(line, '"')[1]
+        let s:androidTarget = matchstr(line, '\candroid:targetSdkVersion=\([''"]\)\zs.\{-}\ze\1')
+        let s:androidTargetPlatform = 'android-' . s:androidTarget
         let s:targetAndroidJar = g:android_sdk_path . '/platforms/' . s:androidTargetPlatform . '/android.jar'
         if index(s:oldpaths, s:targetAndroidJar) == -1
           call add(s:paths, s:targetAndroidJar)
