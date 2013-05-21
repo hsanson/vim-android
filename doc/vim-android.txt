@@ -98,6 +98,12 @@ COMMANDS                                                   *vim-android-commands
     This is the same as the :AndroidDebugInstall command but builds the APK
     in release mode instead of debug mode.
 
+:AndroidUninstall                                           *:AndroidUninstall*
+    This command allows to uninstall the application. If you have several
+    emulators running and/or several devices connected, then this command will
+    prompt you with a list of emulators/devices so you can choose from which one
+    the app should be uninstalled.
+
 :AndroidUpdateAndroidTags                           *:AndroidUpdateAndroidTags*
     This is a simple helper command that generates a tags file from the
     android sdk sources. This tags files is automatically added to the local
