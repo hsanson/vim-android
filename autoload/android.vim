@@ -161,6 +161,11 @@ function! s:callAnt(...)
   let &errorformat = errorformat
 endfunction
 
+function! s:callUninstall(device)
+  let l:cmd = 'adb -s ' . a:device . ' uninstall ' . s:androidPackageName
+  execute "silent !" . l:cmd
+endfunction
+
 function! android#compile(mode)
   call s:callAnt(a:mode)
 endfunction
@@ -208,14 +213,66 @@ function! android#install(mode)
       let l:device = strpart(device, 3)
       let $ANDROID_SERIAL = l:device
       call s:callAnt(a:mode, 'install')
-      call android#logi ("Finished installing on the following devices " . join(l:devices, " "))
+      call android#logi ("Finished installing on device " . l:device)
     endfor
+    call android#logi ("Finished installing on the following devices " . join(l:devices, " "))
   else
     let l:option = l:devices[l:choice - 1]
     let l:device = strpart(l:option, 3)
     let $ANDROID_SERIAL = l:device
     call s:callAnt(a:mode, 'install')
-    echomsg ("Finished installing on device " . l:device)
+    call android#logi ("Finished installing on device " . l:device)
+  endif
+endfunction
+
+function! android#uninstall()
+
+  let l:devices = s:getDevicesList()
+
+  " If no device found give a warning an exit
+  if len(l:devices) == 0
+    call android#logw("No android device/emulator found. Skipping uninstall.")
+    return 0
+  endif
+
+  " If only one device is found automatically uninstall app from it.
+  if len(l:devices) == 1
+    let l:device = strpart(l:devices[0], 3)
+    call s:callUninstall(l:device)
+    call android#logi("Finished uninstalling from device " . l:device)
+    return 0
+  endif
+
+  " If more than one device is found give a list so the user can choose.
+  let l:choice = -1
+  call add(l:devices, (len(l:devices) + 1) . ". All devices")
+  while(l:choice < 0 || l:choice > len(l:devices))
+    echom "Select target device"
+    call inputsave()
+    let l:choice = inputlist(l:devices)
+    call inputrestore()
+    echo "\n"
+  endwhile
+
+  " Zero means cancel the operation
+  if l:choice == 0
+    return 0
+  endif
+
+  if l:choice == len(l:devices)
+    call android#logi("Uninstalling from all devices")
+    call remove(l:devices, len(l:devices) - 1)
+    for device in l:devices
+      let l:device = strpart(device, 3)
+      call s:callUninstall(l:device)
+      call android#logi ("Finished uninstalling from device " . l:device)
+    endfor
+    call android#logi ("Finished uninstalling from the following devices " . join(l:devices, " "))
+  else
+    let l:option = l:devices[l:choice - 1]
+    let l:device = strpart(l:option, 3)
+    call s:callUninstall(l:device)
+    call android#logi ("Finished uninstalling from device " . l:device)
   endif
 endfunction
 
@@ -278,6 +335,13 @@ function! android#setAndroidJarInClassPath()
         endif
         break
       endif
+
+      if line =~ 'package='
+        let s:androidPackageName = matchstr(line, '\cpackage=\([''"]\)\zs.\{-}\ze\1')
+        if empty(s:androidPackageName)
+          throw "Unable to get package name"
+        endif
+      endif
     endfor
   end
 
@@ -302,6 +366,7 @@ function! android#setupAndroidCommands()
   command! AndroidDebugInstall call android#install("debug")
   command! AndroidReleaseInstall call android#install("release")
   command! AndroidClean call android#compile("clean")
+  command! AndroidUninstall call android#uninstall()
   command! AndroidUpdateProjectTags call android#updateProjectTags()
   command! AndroidUpdateAndroidTags call android#updateAndroidTags()
   command! AndroidUpdateTags call android#updateTags()
