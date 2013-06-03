@@ -164,6 +164,14 @@ function! s:callAnt(...)
 
   let &makeprg = makeprg
   let &errorformat = errorformat
+  return s:getErrorCount()
+endfunction
+
+" This method returns the number of valid errors in the quickfix window. This
+" allows us to check if there are errors after compilation.
+function! s:getErrorCount()
+  let l:list = deepcopy(getqflist())
+  return len(filter(l:list, "v:val['valid'] > 0"))
 endfunction
 
 function! s:callInstall(mode, device)
@@ -190,7 +198,7 @@ function! s:callUninstall(device)
 endfunction
 
 function! android#compile(mode)
-  call s:callAnt(a:mode)
+  return s:callAnt(a:mode)
 endfunction
 
 function! android#install(mode)
@@ -207,9 +215,13 @@ function! android#install(mode)
   " If only one device is found automatically install to it.
   if len(l:devices) == 1
     let l:device = strpart(l:devices[0], 3)
-    call s:callAnt(a:mode)
-    call s:callInstall(a:mode, l:device)
-    return 0
+    let l:result = s:callAnt(a:mode)
+    if(l:result == 0)
+      return s:callInstall(a:mode, l:device)
+    else
+      call android#loge("Compilation failed... Skip installing step")
+      return l:result
+    endif
   endif
 
   " If more than one device is found give a list so the user can choose.
@@ -228,7 +240,11 @@ function! android#install(mode)
     return 0
   endif
 
-  call s:callAnt(a:mode)
+  let l:result = s:callAnt(a:mode)
+  if(l:result != 0)
+    call android#loge("Compilation failed... Skip installing step")
+    return l:result
+  endif
 
   if l:choice == len(l:devices)
     call android#logi("Installing on all devices")
