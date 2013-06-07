@@ -327,6 +327,31 @@ function! android#setAndroidSdkTags()
   execute 'setlocal'  'tags+=' . g:android_sdk_tags
 endfunction
 
+function! android#_setAndroidJarInClassPath(path)
+  if filereadable(a:path . '/project.properties')
+    for line in readfile(a:path . '/project.properties')
+      if line =~ 'android.library.reference'
+        let s:path = substitute(fnamemodify(a:path . '/' . split(line, '=')[1], ':p'), '/*$', '', '')
+        let s:referenceJar = s:path . "/bin/classes.jar"
+        if index(s:paths, s:referenceJar) != -1
+          return
+        endif
+        if index(s:oldpaths, s:referenceJar) == -1
+          call add(s:paths, s:referenceJar)
+        endif
+
+        for lib in split(globpath(s:path . "/libs/", "*.jar"), '\n')
+          if index(s:oldpaths, lib) == -1
+            call add(s:paths, lib)
+          endif
+        endfor
+
+        call android#_setAndroidJarInClassPath(s:path)
+      endif
+    endfor
+  end
+endfunction
+
 ""
 " Update the CLASSPATH environment variable to include all classes related to
 " the current Android project. This allows other plugins like javacomplete to
@@ -338,34 +363,43 @@ function! android#setAndroidJarInClassPath()
   let s:oldpaths = split($CLASSPATH, ':')
 
   " Add our project classes path
-  let s:local='./bin/classes'
+  let s:local = fnamemodify('./bin/classes', ':p')
   if index(s:oldpaths, s:local) == -1
     call add(s:paths, s:local)
   endif
 
   " Next find out if the project uses external libraries. If so add the
   " corresponding jars.
-  if filereadable('project.properties') 
+  if filereadable('project.properties')
     for line in readfile('project.properties')
       if line =~ 'android.library.reference'
         let s:path = split(line, '=')[1]
-        let s:referenceJar = s:path . "/bin/classes.jar"
+        let s:referenceJar = substitute(fnamemodify(s:path . "/bin/classes.jar", ':p'), '/*$', '', '')
         if index(s:oldpaths, s:referenceJar) == -1
           call add(s:paths, s:referenceJar)
         endif
+
+        for lib in split(globpath(s:path . "/libs/", "*.jar"), '\n')
+          if index(s:oldpaths, lib) == -1
+            call add(s:paths, lib)
+          endif
+        endfor
+
+        call android#_setAndroidJarInClassPath(s:path)
       endif
     endfor
   end
 
   " Also include any jar files inside the project libs directory.
-  let s:libs='./libs/*'
-  if index(s:oldpaths, s:libs) == -1
-    call add(s:paths, s:libs)
-  endif
+  for lib in split(globpath(fnamemodify("./libs/", ':p'), "*.jar"), '\n')
+    if index(s:oldpaths, lib) == -1
+      call add(s:paths, lib)
+    endif
+  endfor
 
   " Try to find the android target SDK and corresponding jar path and the
   " package name.
-  if filereadable('AndroidManifest.xml') 
+  if filereadable('AndroidManifest.xml')
     for line in readfile('AndroidManifest.xml')
       if line =~ 'android:targetSdkVersion='
         let s:androidTarget = matchstr(line, '\candroid:targetSdkVersion=\([''"]\)\zs.\{-}\ze\1')
@@ -395,7 +429,7 @@ endfunction
 function! android#getProjectName()
   " Now try to find out the project name and the apk file names for release and
   " debug.
-  if filereadable('build.xml') 
+  if filereadable('build.xml')
     for line in readfile('build.xml')
       if line =~ "project name"
         let s:androidProjectName = matchstr(line, '\cproject name=\([''"]\)\zs.\{-}\ze\1')
