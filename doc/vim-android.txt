@@ -1,15 +1,16 @@
-*vim-android.txt*    For Vim version 7.3    Last change: 2013 March 18
+*vim-android.txt*    For Vim version 7.3    Last change: 2013 July 13
 
 Author:         Horacio Sanson
 Licence:        Vim licence, see |license|
 Homepage:       https://github.com/hsanson/vim-android
-Version:        1.0.0
+Version:        1.2.0
 
 ==============================================================================
 Contents                                   *vim-android* *vim-android-contents*
 
          1. Intro ........................... |vim-android-intro|
               Supported Features              |vim-android-features|
+              Known Issues                    |vim-android-issues|
          2. Requirements .................... |vim-android-requirements|
          3. Installation .................... |vim-android-installation|
          4. Usage ........................... |vim-android-usage|
@@ -28,6 +29,10 @@ to find an AndroidManifest.xml file in the current directory and if found it
 cofigures a set of variables and commands that allows easier development for
 Android applications.
 
+The lasted version of this plugin can also build and install gradle based
+projects that is the new build system used by the android build tools and
+AndroidStudio.
+
 ------------------------------------------------------------------------------
 SUPPORTED FEATURES                                         *vim-android-features*
 
@@ -36,6 +41,9 @@ The following features are supported by vim-android:
   - Auto-detection of Android projects when opening a Java or XML file. This
     relies on the AndroidManifest.xml file being located on the current
     working directory.
+  - Automatically build using ant or gradle depending on the existence of the
+    build.xml or build.gradle files respectively.
+  - Set errorformat values to detect ant and gradle output errors.
   - Updates the CLASSPATH environment variable to include paths for your
     current project, external libs, external lib-projects and the current
     target Android SDK jars. This allows auto-completion of Java code using
@@ -44,6 +52,17 @@ The following features are supported by vim-android:
     your emulator/devices.
   - Adds useful commands to generate tags for the current project source and
     the Android SDK sources.
+
+------------------------------------------------------------------------------
+Known Issues                                             *vim-android-issues*
+
+  - The gradle build system error outputs do not show the original source
+    filename. Instead they show a temporary file stored in the build folder.
+    For this reason we cannot jump to the source file when browsing build
+    errors in the quickfix window.
+  - The javacomplete plugin is nice but in some situations it hangs or spits
+    thousands of incomprensible error messages. For this reason I recommend
+    disabling it.
 
 ==============================================================================
 2. Requirements                                        *vim-android-requirements*
@@ -82,21 +101,16 @@ devices.
 ------------------------------------------------------------------------------
 COMMANDS                                                   *vim-android-commands*
 
-:AndroidDebug                                                   *:AndroidDebug*
-    Builds the application APK in debug mode.
+:AndroidBuild <mode>                                            *:AndroidBuild*
+    Builds the application APK. The <mode> parameter can be  release or
+    debug mode for ant projects and any  buildType (e.g. release, debug, test)
+    on gradle projects.
 
-:AndroidRelease                                               *:AndroidRelease*
-    Builds the application APK in release mode.
-
-:AndroidDebugInstall                                       *:AndroidDebugInstall*
-    Compiles and installs the application in debug mode. In the case that you
+:AndroidInstall <mode>                                   *:AndroidDebugInstall*
+    Build and installs the application in <mode> mode. In the case that you
     have several emulators running and/or several devices connected then this
     command will present you a list of emulators/devices so you can choose to
     which one the APK should be installed to.
-
-:AndroidReleaseInstall                                 *:AndroidReleaseInstall*
-    This is the same as the :AndroidDebugInstall command but builds the APK
-    in release mode instead of debug mode.
 
 :AndroidUninstall                                           *:AndroidUninstall*
     This command allows to uninstall the application. If you have several
@@ -131,7 +145,7 @@ For example you can map a function key (e.g. F5) so it invokes the
 :AndroidDebugInstall command:
 
 >
-nmap <F5> <ESC>:AndroidDebugInstall<CR>
+nmap <F5> <ESC>:AndroidInstall debug<CR>
 <
 
 this way anytime you press the <F5> key it will build and install your
@@ -150,6 +164,15 @@ Example:
 >
         let g:android_sdk_path = '/opt/adroid-sdk'
 <
+
+                                                               *g:gradle_path*
+g:gradle_path
+Default: $GRADLE_HOME
+
+When building gradle based projects we need to use the gradle tool to build
+and install APK files. The g:gradle_path should be set to the absolute
+directory path where gradle is installed. If g:gradle_path is not set then we
+fallback to the $GRADLE_HOME environment variable.
 
                                                             *g:android_adb_tool*
 g:android_adb_tool~

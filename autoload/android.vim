@@ -1,22 +1,38 @@
 function! android#logi(msg)
   redraw
-  echomsg a:msg
+  echomsg "vim-android: " . a:msg
 endfunction
 
 function! android#logw(msg)
   echohl warningmsg
-  echo a:msg
+  echo "vim-android: " . a:msg
   echohl normal
 endfunction
 
 function! android#loge(msg)
   echohl errormsg
-  echo a:msg
+  echo "vim-android: " . a:msg
   echohl normal
 endfunction
 
 function! android#isAndroidProject()
   if glob('AndroidManifest.xml') =~ ''
+    return 1
+  else
+    return 0
+  endif
+endfunction
+
+function! android#isGradleProject()
+  if filereadable('build.gradle') && executable(s:getGradleBin())
+    return 1
+  else
+    return 0
+  endif
+endfunction
+
+function! android#isAntProject()
+  if filereadable('build.xml') && executable("ant")
     return 1
   else
     return 0
@@ -117,6 +133,14 @@ function! s:sortFunc(i1, i2)
   return tolower(a:i1) == tolower(a:i2) ? 0 : tolower(a:i1) > tolower(a:i2) ? 1 : -1
 endfunction
 
+function! s:getGradleBin()
+  if !exists('g:gradle_path')
+    let g:gradle_path = $GRADLE_HOME
+  endif
+  let g:gradle_tool = g:gradle_path . "/bin/gradle"
+  return g:gradle_tool
+endfunction
+
 function! s:getAdbBin()
   if !exists('g:android_adb_tool')
     let g:android_adb_tool = g:android_sdk_path . "/platform-tools/adb"
@@ -144,15 +168,73 @@ function! s:getDevicesList()
   return l:devices
 endfunction
 
-function! s:callAnt(...)
+function! s:callClean()
+  let $ANDROID_HOME=g:android_sdk_path
+  if android#isGradleProject()
+    call android#logi("Cleaning gradle project")
+    call s:callGradleClean()
+    call android#logi("Finished cleaning project")
+  elseif android#isAntProject()
+    call android#logi("Cleaning ant project")
+    call s:callAnt("clean")
+    call android#logi("Finished cleaning project")
+  else
+    call android#loge("Could find a gradle nor an ant project")
+  endif
+endfunction
+
+function! s:callBuild(mode)
+  let $ANDROID_HOME=g:android_sdk_path
+  if android#isGradleProject()
+    call android#logi("Building gradle project")
+    return s:callGradleBuild(a:mode)
+  elseif android#isAntProject()
+    call android#logi("Building ant project")
+    return s:callAnt(a:mode)
+  else
+    call android#loge("Could find a gradle nor an ant project")
+  endif
+endfunction
+
+function! s:callGradleBuild(mode)
+  return s:callGradle("assemble" . s:capitalize(a:mode))
+endfunction
+
+function! s:callGradleClean()
+  return s:callGradle("clean")
+endfunction
+
+function! s:callGradle(action)
+  let makeprg = &makeprg
+  let errorformat = &errorformat
+  let makeef = &makeef
+
+  " Modify the shellpipe to save only stderr to the makeef file. If we do
+  " not do this then the output file will have the stdout and stderr messages
+  " interleaved making it impossible for errorformat to parse the error
+  " messages.
+  let shellpipe = &shellpipe
+  let &shellpipe='2>'
+
+  let &makeprg = g:gradle_tool . " " . a:action
+
+  set errorformat=%f:%l:\ error:\ %m,
+                  %E%f:%l:%m,%-Z%p^,%-C%.%#,
+  silent! make
+  redraw!
+
+  " Restore previous values
+  let &makeprg = makeprg
+  let &errorformat = errorformat
+  let &shellpipe = shellpipe
+  return s:getErrorCount()
+endfunction
+
+function! s:callAnt(mode)
   let makeprg = &makeprg
   let errorformat = &errorformat
 
-  if index(a:000, '-f') == -1
-    let &makeprg = 'ant -find build.xml ' . join(a:000)
-  else
-    let &makeprg = 'ant ' . join(a:000)
-  endif
+  let &makeprg = 'ant -find build.xml ' . a:mode
 
   set errorformat=\ %#[javac]\ %#%f:%l:%c:%*\\d:%*\\d:\ %t%[%^:]%#:%m,
                 \%A\ %#[javac]\ %f:%l:\ %m,
@@ -175,6 +257,36 @@ function! s:getErrorCount()
 endfunction
 
 function! s:callInstall(mode, device)
+  if android#isGradleProject()
+    return s:callInstallGradle(a:mode, a:device)
+  elseif android#isAntProject()
+    return s:callInstallAnt(a:mode, a:device)
+  else
+    call android#loge("Unknown build system")
+  endif
+endfunction
+
+function! s:capitalize(str)
+  return substitute(a:str, '\(^.\)', '\u&', 'g')
+endfunction
+
+function! s:callInstallGradle(mode, device)
+  let l:cmd = "ANDROID_SERIAL=" . a:device . " " . s:getGradleBin() . ' install' . s:capitalize(a:mode)
+  call android#logi("Installing " . a:mode . " to " . a:device . " (wait...)")
+  let l:output = system(l:cmd)
+  redraw!
+  let l:failure = matchstr(l:output, "Failure")
+  if empty(l:failure)
+    call android#logi("Installation finished on " . a:device)
+    return 0
+  else
+    let l:errormsg = matchstr(l:output, '\cFailure \[\zs.\{-}\ze\]')
+    call android#loge("Installation failed on " . a:device . " with error " . l:errormsg)
+    return 1
+  endif
+endfunction
+
+function! s:callInstallAnt(mode, device)
   let l:cmd = s:getAdbBin() . ' -s ' . a:device . ' install -r ' . android#getApkPath(a:mode)
   call android#logi("Installing " . android#getApkPath(a:mode) . " to " . a:device . " (wait...)")
   let l:output = system(l:cmd)
@@ -192,13 +304,22 @@ endfunction
 
 function! s:callUninstall(device)
   call android#logi("Uninstalling " . s:androidPackageName . " from " . a:device)
-  let l:cmd = 'adb -s ' . a:device . ' uninstall ' . s:androidPackageName
+  let l:cmd = s:getAdbBin() .' -s ' . a:device . ' uninstall ' . s:androidPackageName
   execute "silent !" . l:cmd
   redraw!
 endfunction
 
+function! android#clean()
+  return s:callClean()
+endfunction
+
 function! android#compile(mode)
-  return s:callAnt(a:mode)
+  let l:result = s:callBuild(a:mode)
+  if(l:result == 0)
+    call android#logi("Building finished successfully")
+  else
+    call android#loge("Building finished with " . l:result . " errors")
+  endif
 endfunction
 
 function! android#install(mode)
@@ -207,7 +328,7 @@ function! android#install(mode)
 
   " If no device found give a warning an exit
   if len(l:devices) == 0
-    call s:callAnt(a:mode)
+    call s:callBuild(a:mode)
     call android#logw("No android device/emulator found. Skipping install step.")
     return 0
   endif
@@ -215,8 +336,9 @@ function! android#install(mode)
   " If only one device is found automatically install to it.
   if len(l:devices) == 1
     let l:device = strpart(l:devices[0], 3)
-    let l:result = s:callAnt(a:mode)
+    let l:result = s:callBuild(a:mode)
     if(l:result == 0)
+      call android#logi("Build finished without issues...")
       return s:callInstall(a:mode, l:device)
     else
       call android#loge("Compilation failed... Skip installing step")
@@ -240,11 +362,13 @@ function! android#install(mode)
     return 0
   endif
 
-  let l:result = s:callAnt(a:mode)
+  let l:result = s:callBuild(a:mode)
   if(l:result != 0)
     call android#loge("Compilation failed... Skip installing step")
     return l:result
   endif
+
+  call android#logi("Build finished without issues...")
 
   if l:choice == len(l:devices)
     call android#logi("Installing on all devices")
@@ -467,11 +591,9 @@ function! android#listDevices()
 endfunction
 
 function! android#setupAndroidCommands()
-  command! AndroidDebug call android#compile("debug")
-  command! AndroidRelease call android#compile("release")
-  command! AndroidDebugInstall call android#install("debug")
-  command! AndroidReleaseInstall call android#install("release")
-  command! AndroidClean call android#compile("clean")
+  command! -nargs=1 AndroidBuild call android#compile(<f-args>)
+  command! -nargs=1 AndroidInstall call android#install(<f-args>)
+  command! AndroidClean call android#clean()
   command! AndroidUninstall call android#uninstall()
   command! AndroidUpdateProjectTags call android#updateProjectTags()
   command! AndroidUpdateAndroidTags call android#updateAndroidTags()
