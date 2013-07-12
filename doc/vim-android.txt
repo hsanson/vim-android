@@ -88,15 +88,23 @@ and then inside vim run the |:BundleInstall| command.
 ==============================================================================
 4. Usage                                                      *vim-android-usage*
 
-There are two requirements for this plugin to work correctly: First you must set
-the g:android_sdk_path variable in you vimrc file so the plugin can find
-the tools it needs, second this plugin assumes that your current working
-directory contains the AndroidManifest.xml of your android project.
+Before using this plugin you must tell it where you have the android SDK
+installed. There are two ways to do this: first you can set the ANDROID_HOME
+environment variable to the absolute path of the android SDK or you can add
+it to the global variable g:android_sdk_path in your vimrc file.
 
-If these two requirements are satisfied then everytime you open a Java or XML
-file this plugin will enable several commands vim-android-commands that greatly
-facilitate tasks such as building and installing your APK into emulators and/or
-devices.
+This plugin assumes your current working directory is the rook path of the
+android project you are working on. More precisely your current path must be
+the same where the AndroidManifest.xml file is located or the plugin won't
+load. When you open a Java or XML file this plugin checks for the presence of
+the AndroidManifest.xml and if it exists it enables several commands to build
+and install android apps into emulators and/or devices.
+
+Optionally if you use gradle to build your projects (recommended) you also
+need to tell the plugin where is your gradle installation. This can be done
+by setting the GRADLE_HOME environment variable or by adding a global
+variable g:gradle_path to your vimrc file with the absolute path to your
+gradle installation.
 
 ------------------------------------------------------------------------------
 COMMANDS                                                   *vim-android-commands*
@@ -156,7 +164,7 @@ Android application.
 
                                                         *g:android_sdk_path*
 g:android_sdk_path~
-Default: /opt/android-sdk
+Default: $ANDROID_HOME
 
 This option must specify the location of your Android SDK installation.
 
@@ -176,7 +184,7 @@ fallback to the $GRADLE_HOME environment variable.
 
                                                             *g:android_adb_tool*
 g:android_adb_tool~
-Default: empty
+Default: {g:android_sdk_path}/tools/adb
 
 This plugin relies heavily on the Android ADB tool to query devices/emulators
 and to install the APK files. By default this tool is found inside the
@@ -219,7 +227,7 @@ project.properties file. With this CLASSPATH and the javacomplete plugin I am
 able to omni-complete all classes and methods for my project.
 
 ==============================================================================
-9. Todo                                                          *vim-android-todo*
+9. Todo                                                       *vim-android-todo*
 
   - Add secure prompt to AndroidReleaseInstall that requires users to input
     the keystore and sign key passwords. Not sure how to make Vim not display
