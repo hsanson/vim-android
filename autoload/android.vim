@@ -100,6 +100,11 @@ function! android#updateProjectTags()
     return 0
   endif
 
+  if !executable("ctags")
+    call android#logw("updateProjectTags() failed: required ctag binary not found.")
+    return 0
+  endif
+
   if !android#isAndroidProject()
     call android#logw("updateProjectTags() failed: pwd must be on the android project root.")
     return 0
@@ -139,18 +144,30 @@ endfunction
 " function only works if the VimProc plugin is installed and working.
 function! android#updateAndroidTags()
   if !android#hasVimProc()
-    call android#logw("updateProjecTags() failed: required VimProc plugin not found.")
+    call android#logw("updateAndroidTags() failed: required VimProc plugin not found.")
     return 0
   endif
 
-  if !executable("ctags")
-    call android#logw(updateProjectTags() failed: could not find ctags executable")
+  let l:ctags_bin = vimproc#get_command_name('ctags')
+
+  if !executable(l:ctags_bin)
+    call android#logw("updateAndroidTags() failed: could not find ctags executable")
     return 0
   endif
 
   let l:android_sources = g:android_sdk_path . "/sources"
   let l:ctags_args = " --recurse --langmap=Java:.java --languages=Java --verbose -f "
-  let l:ctags_cmd = vimproc#get_command_name('ctags') . l:ctags_args
+  let l:ctags_cmd = l:ctags_bin . l:ctags_args
+
+  if exists("*mkdir")
+    let l:basepath = fnamemodify(g:android_sdk_tags, ":h")
+    silent! mkdir(l:basepath, "p")
+  endif
+
+  if finddir(l:basepath) == ""
+    call android#loge("Tags folder " . l:basepath . " does not exists. Create the path or change your g:android_sdk_tags variable to a path that exists.")
+    return
+  endif
 
   try
     let l:ps_cmd = vimproc#get_command_name('ps')
@@ -161,7 +178,7 @@ function! android#updateAndroidTags()
 
   call android#logi("Generating android SDK tags (may take a while to finish)" )
   call vimproc#system(l:cmd)
-  call android#logi("Done!" )
+  call android#logi("  Done!" )
 endfunction
 
 function! android#updateTags()
