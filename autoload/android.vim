@@ -16,27 +16,68 @@ function! android#loge(msg)
 endfunction
 
 function! android#isAndroidProject()
-  if glob('AndroidManifest.xml') =~ ''
-    return 1
-  else
-    return 0
-  endif
+  return filereadable("AndroidManifest.xml")
 endfunction
 
 function! android#isGradleProject()
-  if filereadable('build.gradle') && executable(s:getGradleBin())
-    return 1
-  else
-    return 0
-  endif
+  return g:android_build_type == "gradle"
 endfunction
 
 function! android#isAntProject()
-  if filereadable('build.xml') && executable("ant")
-    return 1
+  return g:android_build_type == "ant"
+endfunction
+
+function! android#checkAndroidHome()
+  if exists("g:android_sdk_path") && finddir(g:android_sdk_path) != ""
+    let $ANDROID_HOME=g:android_sdk_path
+  elseif exists("$ANDROID_HOME") && finddir($ANDROID_HOME) != ""
+    let g:android_sdk_path = $ANDROID_HOME
   else
+    call android#loge("Could not find android SDK. Ensure the g:android_sdk_path variable or ANDROID_HOME env variable are set and correct.")
     return 0
   endif
+  return 1
+endfunction
+
+" Helper method that tries to find out if the project is build using Ant or
+" Gradle.
+function! android#findProjectType()
+  if ! android#checkAndroidHome()
+    return
+  endif
+
+  let g:android_build_type = "undefined"
+  let l:gradle_cfg_exists = filereadable('build.gradle')
+  let l:gradle_bin_exists = executable(s:getGradleBin())
+  let l:ant_cfg_exists = filereadable('build.xml')
+  let l:ant_bin_exists = executable('ant')
+
+  if( ! l:gradle_cfg_exists && ! l:ant_cfg_exists )
+    call android#loge("Could not find any build.gradle or build.xml file... aborting")
+    return g:android_build_type
+  endif
+
+  if( l:gradle_cfg_exists && l:gradle_bin_exists )
+    call android#logi("Found gradle build system")
+    let g:android_build_type = "gradle"
+    return g:android_build_type
+  endif
+
+  if( l:ant_cfg_exists && l:ant_bin_exists )
+    call android#logi("Found ant build system")
+    let g:android_build_type = "ant"
+    return g:android_build_type
+  endif
+
+  if( l:gradle_cfg_exists && ! l:gradle_bin_exists )
+    call android#loge("Found build.gradle file but there is no gradle binary available. Set the g:gradle_path varible to point to your gradle installation.")
+  endif
+
+  if( l:ant_cfg_exists && ! l:ant_bin_exists )
+    call android#loge("Found build.ant file but there is not ant binary available. Make sure you installed ant and ant-optional packages on you machine.")
+  endif
+
+  return g:android_build_type
 endfunction
 
 function! android#hasVimProc(...)
@@ -169,7 +210,6 @@ function! s:getDevicesList()
 endfunction
 
 function! s:callClean()
-  let $ANDROID_HOME=g:android_sdk_path
   if android#isGradleProject()
     call android#logi("Cleaning gradle project")
     call s:callGradleClean()
@@ -184,7 +224,6 @@ function! s:callClean()
 endfunction
 
 function! s:callBuild(mode)
-  let $ANDROID_HOME=g:android_sdk_path
   if android#isGradleProject()
     call android#logi("Building gradle project")
     return s:callGradleBuild(a:mode)
@@ -309,11 +348,21 @@ function! s:callUninstall(device)
   redraw!
 endfunction
 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" High level methods
+
 function! android#clean()
+  if(android#findProjectType() == "undefined")
+    return
+  endif
   return s:callClean()
 endfunction
 
 function! android#compile(mode)
+  if(android#findProjectType() == "undefined")
+    return
+  endif
+
   let l:result = s:callBuild(a:mode)
   if(l:result == 0)
     call android#logi("Building finished successfully")
@@ -323,6 +372,9 @@ function! android#compile(mode)
 endfunction
 
 function! android#install(mode)
+  if(android#findProjectType() == "undefined")
+    return
+  endif
   let l:mode = a:mode
   let l:devices = s:getDevicesList()
 
@@ -390,6 +442,9 @@ function! android#install(mode)
 endfunction
 
 function! android#uninstall()
+  if(android#findProjectType() == "undefined")
+    return
+  endif
 
   let l:devices = s:getDevicesList()
 
@@ -481,6 +536,11 @@ endfunction
 " the current Android project. This allows other plugins like javacomplete to
 " find the classes and methods for auto-completion.
 function! android#setAndroidJarInClassPath()
+
+  if ! android#checkAndroidHome()
+    return
+  endif
+
   let s:paths = []
 
   " Obtain a list of current paths in the $CLASSPATH
