@@ -218,8 +218,9 @@ function! s:callGradle(action)
 
   let &makeprg = g:gradle_tool . " " . a:action
 
-  set errorformat=%f:%l:\ error:\ %m,
-                  %E%f:%l:%m,%-Z%p^,%-C%.%#,
+  set errorformat=%f:%l:\ %m,
+        \%A%f:%l:\ %m,%-Z%p^,%-C%.%#
+
   silent! make
   redraw!
 
