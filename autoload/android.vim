@@ -359,9 +359,25 @@ function! s:callInstallAnt(mode, device)
   endif
 endfunction
 
+function! s:androidPackageName()
+  if ! exists(s:androidPackageName)
+    if filereadable('AndroidManifest.xml')
+      for line in readfile('AndroidManifest.xml')
+        if line =~ 'package='
+          let s:androidPackageName = matchstr(line, '\cpackage=\([''"]\)\zs.\{-}\ze\1')
+          if empty(s:androidPackageName)
+            throw "Unable to get package name"
+          endif
+        endif
+      endfor
+    endif
+  endif
+  return s:androidPackageName
+endfunction
+
 function! s:callUninstall(device)
-  call android#logi("Uninstalling " . s:androidPackageName . " from " . a:device)
-  let l:cmd = s:getAdbBin() .' -s ' . a:device . ' uninstall ' . s:androidPackageName
+  call android#logi("Uninstalling " . s:androidPackageName() . " from " . a:device)
+  let l:cmd = s:getAdbBin() .' -s ' . a:device . ' uninstall ' . s:androidPackageName()
   execute "silent !" . l:cmd
   redraw!
 endfunction
@@ -524,108 +540,8 @@ function! android#setAndroidSdkTags()
   execute 'setlocal'  'tags+=' . g:android_sdk_tags
 endfunction
 
-function! android#_setAndroidJarInClassPath(path)
-  if filereadable(a:path . '/project.properties')
-    for line in readfile(a:path . '/project.properties')
-      if line =~ 'android.library.reference'
-        let s:path = substitute(fnamemodify(a:path . '/' . split(line, '=')[1], ':p'), '/*$', '', '')
-        let s:referenceJar = s:path . "/bin/classes.jar"
-        if index(s:paths, s:referenceJar) != -1
-          return
-        endif
-        if index(s:oldpaths, s:referenceJar) == -1
-          call add(s:paths, s:referenceJar)
-        endif
-
-        for lib in split(globpath(s:path . "/libs/", "*.jar"), '\n')
-          if index(s:oldpaths, lib) == -1
-            call add(s:paths, lib)
-          endif
-        endfor
-
-        call android#_setAndroidJarInClassPath(s:path)
-      endif
-    endfor
-  end
-endfunction
-
-""
-" Update the CLASSPATH environment variable to include all classes related to
-" the current Android project. This allows other plugins like javacomplete to
-" find the classes and methods for auto-completion.
-function! android#setAndroidJarInClassPath()
-
-  if ! android#checkAndroidHome()
-    return
-  endif
-
-  let s:paths = []
-
-  " Obtain a list of current paths in the $CLASSPATH
-  let s:oldpaths = split($CLASSPATH, ':')
-
-  " Add our project classes path
-  let s:local = fnamemodify('./bin/classes', ':p')
-  if index(s:oldpaths, s:local) == -1
-    call add(s:paths, s:local)
-  endif
-
-  " Next find out if the project uses external libraries. If so add the
-  " corresponding jars.
-  if filereadable('project.properties')
-    for line in readfile('project.properties')
-      if line =~ 'android.library.reference'
-        let s:path = split(line, '=')[1]
-        let s:referenceJar = substitute(fnamemodify(s:path . "/bin/classes.jar", ':p'), '/*$', '', '')
-        if index(s:oldpaths, s:referenceJar) == -1
-          call add(s:paths, s:referenceJar)
-        endif
-
-        for lib in split(globpath(s:path . "/libs/", "*.jar"), '\n')
-          if index(s:oldpaths, lib) == -1
-            call add(s:paths, lib)
-          endif
-        endfor
-
-        call android#_setAndroidJarInClassPath(s:path)
-      endif
-    endfor
-  end
-
-  " Also include any jar files inside the project libs directory.
-  for lib in split(globpath(fnamemodify("./libs/", ':p'), "*.jar"), '\n')
-    if index(s:oldpaths, lib) == -1
-      call add(s:paths, lib)
-    endif
-  endfor
-
-  " Try to find the android target SDK and corresponding jar path and the
-  " package name.
-  if filereadable('AndroidManifest.xml')
-    for line in readfile('AndroidManifest.xml')
-      if line =~ 'android:targetSdkVersion='
-        let s:androidTarget = matchstr(line, '\candroid:targetSdkVersion=\([''"]\)\zs.\{-}\ze\1')
-        let s:androidTargetPlatform = 'android-' . s:androidTarget
-        let s:targetAndroidJar = g:android_sdk_path . '/platforms/' . s:androidTargetPlatform . '/android.jar'
-        if index(s:oldpaths, s:targetAndroidJar) == -1
-          call add(s:paths, s:targetAndroidJar)
-        endif
-        break
-      endif
-
-      if line =~ 'package='
-        let s:androidPackageName = matchstr(line, '\cpackage=\([''"]\)\zs.\{-}\ze\1')
-        if empty(s:androidPackageName)
-          throw "Unable to get package name"
-        endif
-      endif
-    endfor
-  end
-
-  " Finally add any other paths already defined in the $CLASSPATH
-  call extend(s:paths, s:oldpaths)
-
-  let $CLASSPATH = join(copy(s:paths), ':')
+function! android#setClassPath()
+  call classpath#setClassPath()
 endfunction
 
 function! android#getProjectName()
