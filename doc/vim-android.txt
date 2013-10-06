@@ -29,7 +29,7 @@ to find an AndroidManifest.xml file in the current directory and if found it
 cofigures a set of variables and commands that allows easier development for
 Android applications.
 
-The lasted version of this plugin can also build and install gradle based
+The latest version of this plugin can also build and install gradle based
 projects that is the new build system used by the android build tools and
 AndroidStudio.
 
@@ -89,11 +89,11 @@ and then inside vim run the |:BundleInstall| command.
 4. Usage                                                      *vim-android-usage*
 
 Before using this plugin you must tell it where you have the android SDK
-installed. There are two ways to do this: first you can set the ANDROID_HOME
+installed. There are two ways to do this: you can set the ANDROID_HOME
 environment variable to the absolute path of the android SDK or you can add
 it to the global variable g:android_sdk_path in your vimrc file.
 
-This plugin assumes your current working directory is the rook path of the
+This plugin assumes your current working directory is the root path of the
 android project you are working on. More precisely your current path must be
 the same where the AndroidManifest.xml file is located or the plugin won't
 load. When you open a Java or XML file this plugin checks for the presence of
@@ -113,6 +113,9 @@ COMMANDS                                                   *vim-android-commands
     Builds the application APK. The <mode> parameter can be  release or
     debug mode for ant projects and any  buildType (e.g. release, debug, test)
     on gradle projects.
+
+:AndroidClean                                                   *:AndroidClean*
+    Cleans the build auto-generated files.
 
 :AndroidInstall <mode>                                   *:AndroidDebugInstall*
     Build and installs the application in <mode> mode. In the case that you
@@ -137,16 +140,23 @@ COMMANDS                                                   *vim-android-commands
     that this can take a long time to finish so use it only when you update your
     SDK.
 
-:AndroidUpdateProjectTags
+:AndroidUpdateProjectTags                           *:AndroidUpdateProjectTags*
     This is similar to the :AndroidUpdateAndroidTags command but it generates
     the tags file for the current Android source code. This allows other tags
     based auto-completion plugins to auto-complete classes and methods of your
     own sources.
 
+:AndroidUpdateTags                                         *:AndroidUpdateTags*
+    Shortcut method that invokes both *:AndroidUpdateAndroidTags* and
+    *:AndroidUpdateProjectTags* together.
+
+:AndroidDevices                                               *:AndroidDevices*
+    Lists all android devices connected and all running emulators.
+
 ------------------------------------------------------------------------------
 KEY MAPPINGS                                                  *vim-android-keys*
-By default the vim-android plugin has not mappings and all functionality is
-accessed using the commmands vim-android-commands but this does not impede
+By default the vim-android plugin has no mappings and all functionality is
+accessed using the commmands *vim-android-commands* but this does not impede
 you from creating your own mappings.
 
 For example you can map a function key (e.g. F5) so it invokes the
@@ -215,16 +225,19 @@ Example:
 ANDROID OMNI-COMPLETION                             *vim-android-omnicomplete*
 
 This plugin by itself does not provide omni-completion of Android classes
-and/or methods. Instead it auto-configures the CLASSPATH environment variable
-so it includes all the JAR files related to your project so other plugins
-like the javacomplete (https://github.com/vim-scripts/javacomplete) can do
-omni-completion.
+and/or methods. Instead it relies on the javacomplete plugin to handle the
+auto-completion (https://github.com/vim-scripts/javacomplete). Make sure you
+have the javacomplete plugin intalled along this one.
 
-The JAR files added to your CLASSPATH environment includes the Android SDK
-jar for the target API defined in the AndroidManifest.xml, any JAR files in
-the libs directory and any JAR files of external lib-projects defined in the
-project.properties file. With this CLASSPATH and the javacomplete plugin I am
-able to omni-complete all classes and methods for my project.
+For the javacomplete plugin to be able to auto-complete classes and
+methods used in your Android app, it requires you to add all the JAR and source
+directories of the Android SDK, external libraries and libs it uses.
+Fortunately this plugin takes care of this for you.
+
+This plugin scans the project.properties and the build.gradle files for
+dependencies and the Android target SDK version and adds them to the
+CLASSPATH environment variable that is used by javacomplete to generate the
+auto-completion dictionary.
 
 ==============================================================================
 9. Todo                                                       *vim-android-todo*
