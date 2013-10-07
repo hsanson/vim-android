@@ -158,6 +158,7 @@ function! classpath#setClassPath()
   let $CLASSPATH = join(copy(s:jars), ':')
   let $SRCPATH = join(copy(s:paths), ':')
 
-  call javacomplete#SetClassPath($CLASSPATH)
-  "call javacomplete#SetSourcePath($SRCPATH)
+  silent! call javacomplete#SetClassPath($CLASSPATH)
+  silent! call javacomplete#SetSourcePath($SRCPATH)
+
 endfunction
