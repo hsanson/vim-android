@@ -141,14 +141,14 @@ COMMANDS                                                   *vim-android-commands
     SDK.
 
 :AndroidUpdateProjectTags                           *:AndroidUpdateProjectTags*
-    This is similar to the :AndroidUpdateAndroidTags command but it generates
+    This is similar to the |:AndroidUpdateAndroidTags| command but it generates
     the tags file for the current Android source code. This allows other tags
     based auto-completion plugins to auto-complete classes and methods of your
     own sources.
 
 :AndroidUpdateTags                                         *:AndroidUpdateTags*
-    Shortcut method that invokes both *:AndroidUpdateAndroidTags* and
-    *:AndroidUpdateProjectTags* together.
+    Shortcut method that invokes both |:AndroidUpdateAndroidTags| and
+    |:AndroidUpdateProjectTags| together.
 
 :AndroidDevices                                               *:AndroidDevices*
     Lists all android devices connected and all running emulators.
@@ -156,7 +156,7 @@ COMMANDS                                                   *vim-android-commands
 ------------------------------------------------------------------------------
 KEY MAPPINGS                                                  *vim-android-keys*
 By default the vim-android plugin has no mappings and all functionality is
-accessed using the commmands *vim-android-commands* but this does not impede
+accessed using the commmands |vim-android-commands| but this does not impede
 you from creating your own mappings.
 
 For example you can map a function key (e.g. F5) so it invokes the
