@@ -1,15 +1,15 @@
 ""
-" Adds the current android project classes to the list of paths
+" Adds the current android project classes to the classpath
 function! s:addProjectClassPath(paths, jars)
   " Add our project classes path
   let l:local = fnamemodify('./bin/classes', ':p')
   if index(s:oldjars, l:local) == -1 && index(a:jars, l:local) == -1
-    call add(a:paths, l:local)
+    call add(a:jars, l:local)
   endif
 endfunction
 
 ""
-" Load all jar files inside libs folder to paths
+" Load all jar files inside libs folder to classpath
 function! s:addLibJarClassPath(dir, jars)
   let wildignore = &wildignore
   let &wildignore = ''
@@ -22,8 +22,8 @@ function! s:addLibJarClassPath(dir, jars)
 endfunction
 
 ""
-" Parse properties file if available and add all library dependencies to the
-" list of paths
+" Parse project.properties file if available and add all library dependencies to the
+" classpath
 function! s:addPropertiesClassPath(dir, paths, jars)
 
   let l:properties = a:dir . '/project.properties'
@@ -86,27 +86,43 @@ function! s:addGradleClassPath(dir, paths, jars)
         call s:addGradleClassPath(l:path, a:paths, a:jars)
       endif
 
+      " Add all srcDirs definitions
       let mlist = matchlist(sanitized_line, 'srcDirs\s*=\s*\["\([^"]*\)"\]')
       if empty(mlist) == 0 && len(mlist[1]) > 0
-        let l:path = a:dir . '/' . mlist[1]
-        if isdirectory(l:path)
+        let l:path = fnamemodify(a:dir . '/' . mlist[1], ':p')
+        if isdirectory(l:path) && index(a:paths, l:path) == -1
           call add(a:paths, l:path)
         endif
       endif
     endfor
+
+    " By default gradle projects have well defined source structure. Make sure
+    " we add it the the path
+    let l:javapath = fnamemodify(a:dir . "/src/main/java", ':p')
+    let l:respath = fnamemodify(a:dir . "/src/main/res", ':p')
+    if isdirectory(l:javapath) && index(a:paths, l:javapath) == -1
+      call add(a:paths, l:javapath)
+    endif
+    if isdirectory(l:respath) && index(a:paths, l:respath) == -1
+      call add(a:paths, l:respath)
+    endif
   end
 endfunction
 
-" Add the android.jar for the SDK version defined in the AndroidManifest.xml
-function! s:addManifestSdkJar(jars)
+" Add the android.jar and source path for the SDK version defined in the AndroidManifest.xml
+function! s:addManifestSdkJar(paths, jars)
   if filereadable('AndroidManifest.xml')
     for line in readfile('AndroidManifest.xml')
       if line =~ 'android:targetSdkVersion='
         let l:androidTarget = matchstr(line, '\candroid:targetSdkVersion=\([''"]\)\zs.\{-}\ze\1')
         let l:androidTargetPlatform = 'android-' . l:androidTarget
         let l:targetAndroidJar = g:android_sdk_path . '/platforms/' . l:androidTargetPlatform . '/android.jar'
+        let l:targetAndroidSrc = g:android_sdk_path . '/sources/' . l:androidTargetPlatform . '/'
         if index(s:oldjars, l:targetAndroidJar) == -1 && index(a:jars, l:targetAndroidJar) == -1
           call add(a:jars, l:targetAndroidJar)
+        endif
+        if isdirectory(l:targetAndroidSrc) && index(a:paths, l:targetAndroidSrc) == -1
+          call add(a:paths, l:targetAndroidSrc)
         endif
         break
       endif
@@ -114,16 +130,21 @@ function! s:addManifestSdkJar(jars)
   end
 endfunction
 
-" Add the android.jar for the SDK version defined in the build.gradle
-function! s:addGradleSdkJar(jars)
+" Add the android.jar for the SDK version defined in the build.gradle and the
+" android sources path.
+function! s:addGradleSdkJar(paths, jars)
   if filereadable('build.gradle')
     for line in readfile('build.gradle')
       if line =~ 'compileSdkVersion'
         let l:androidTarget = split(line, ' ')[1]
         let l:androidTargetPlatform = 'android-' . l:androidTarget
         let l:targetAndroidJar = g:android_sdk_path . '/platforms/' . l:androidTargetPlatform . '/android.jar'
+        let l:targetAndroidSrc = g:android_sdk_path . '/sources/' . l:androidTargetPlatform . '/'
         if index(s:oldjars, l:targetAndroidJar) == -1 && index(a:jars, l:targetAndroidJar) == -1
           call add(a:jars, l:targetAndroidJar)
+        endif
+        if isdirectory(l:targetAndroidSrc) && index(a:paths, l:targetAndroidSrc) == -1
+          call add(a:paths, l:targetAndroidSrc)
         endif
         break
       endif
@@ -147,11 +168,14 @@ function! classpath#setClassPath()
   let s:oldjars = split($CLASSPATH, ':')
 
   call s:addProjectClassPath(s:paths, s:jars)
-  call s:addGradleSdkJar(s:jars)
-  call s:addManifestSdkJar(s:jars)
+  if android#isGradleProject()
+    call s:addGradleSdkJar(s:paths, s:jars)
+    call s:addGradleClassPath(getcwd(), s:paths, s:jars)
+  else
+    call s:addManifestSdkJar(s:paths, s:jars)
+    call s:addPropertiesClassPath(getcwd(), s:paths, s:jars)
+  endif
   call s:addLibJarClassPath(getcwd(), s:jars)
-  call s:addPropertiesClassPath(getcwd(), s:paths, s:jars)
-  call s:addGradleClassPath(getcwd(), s:paths, s:jars)
 
   call extend(s:jars, s:oldjars)
 

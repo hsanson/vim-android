@@ -91,47 +91,6 @@ function! android#hasVimProc(...)
 endfunction
 
 ""
-" Calling this methods will create a ctags file from the android source and
-" included libraries into the projects root folder. This tag can be used then
-" to auto-complete and navigate the project source code.
-function! android#updateProjectTags()
-  if !android#hasVimProc()
-    call android#logw("updateProjecTags() failed: required VimProc plugin not found.")
-    return 0
-  endif
-
-  if !executable("ctags")
-    call android#logw("updateProjectTags() failed: required ctag binary not found.")
-    return 0
-  endif
-
-  if !android#isAndroidProject()
-    call android#logw("updateProjectTags() failed: pwd must be on the android project root.")
-    return 0
-  endif
-
-  if !executable("ctags")
-    call android#logw(updateProjectTags() failed: could not find ctags executable")
-    return 0
-  endif
-
-  let l:project_path = getcwd()
-  let l:ctags_args = " --recurse --langmap=Java:.java --languages=Java --verbose -f "
-  let l:ctags_cmd = vimproc#get_command_name('ctags') . l:ctags_args
-
-  try
-    let l:ps_cmd = vimproc#get_command_name('ps')
-    let l:cmd = l:ps_cmd . " -C ctags || " .  l:ctags_cmd . l:project_path  . "/.tags " . l:project_path . "/src"
-  catch
-    let l:cmd = l:ctags_cmd . l:project_pat . "/.tags " . l:project_path . "/src"
-  endtry
-
-  call android#logi("Generating project tags (may take a while to finish)" )
-  call vimproc#system(l:cmd)
-  call android#logi("Done!" )
-endfunction
-
-""
 " Appends ctags for all referenced libraries used for the Android project. The
 " library list is obtained from the project.properties file.
 function! android#updateLibraryTags()
@@ -139,9 +98,9 @@ function! android#updateLibraryTags()
 endfunction
 
 ""
-" Calling this methods will create a ctags file from the Android SDK sources
-" and store it in the path defined by the g:android_sdk_tags variable. This
-" function only works if the VimProc plugin is installed and working.
+" Create a tags file inside the g:android_sdk_tags folder that includes tags for
+" the current project source, the target android sdk source, all library
+" dependencies, all xml resource files, etc.
 function! android#updateAndroidTags()
   if !android#hasVimProc()
     call android#logw("updateAndroidTags() failed: required VimProc plugin not found.")
@@ -155,8 +114,8 @@ function! android#updateAndroidTags()
     return 0
   endif
 
-  let l:android_sources = g:android_sdk_path . "/sources"
-  let l:ctags_args = " --recurse --langmap=Java:.java --languages=Java --verbose -f "
+  let l:android_sources = substitute(copy($SRCPATH), ":", " ", "g")
+  let l:ctags_args = ' --recurse --fields=+l --langdef=XML --langmap=Java:.java,XML:.xml --languages=Java,XML --regex-XML=/id="([a-zA-Z0-9_]+)"/\1/d,definition/  -f '
   let l:ctags_cmd = l:ctags_bin . l:ctags_args
 
   if exists("*mkdir")
@@ -179,12 +138,6 @@ function! android#updateAndroidTags()
   call android#logi("Generating android SDK tags (may take a while to finish)" )
   call vimproc#system(l:cmd)
   call android#logi("  Done!" )
-endfunction
-
-function! android#updateTags()
-  call android#updateAndroidTags()
-  call android#updateProjectTags()
-  call android#updateLibraryTags()
 endfunction
 
 function! s:sortFunc(i1, i2)
@@ -535,7 +488,7 @@ endfunction
 " the g:android_sdk_tags variable if defined.
 function! android#setAndroidSdkTags()
   if !exists('g:android_sdk_tags')
-    let g:android_sdk_tags = '~/.vim/tags/android'
+    let g:android_sdk_tags = getcwd() . '/.tags'
   endif
   execute 'setlocal'  'tags+=' . g:android_sdk_tags
 endfunction
@@ -589,8 +542,6 @@ function! android#setupAndroidCommands()
   command! -nargs=1 AndroidInstall call android#install(<f-args>)
   command! AndroidClean call android#clean()
   command! AndroidUninstall call android#uninstall()
-  command! AndroidUpdateProjectTags call android#updateProjectTags()
-  command! AndroidUpdateAndroidTags call android#updateAndroidTags()
-  command! AndroidUpdateTags call android#updateTags()
+  command! AndroidUpdateTags call android#updateAndroidTags()
   command! AndroidDevices call android#listDevices()
 endfunction
