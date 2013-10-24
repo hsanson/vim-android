@@ -181,8 +181,10 @@ function! classpath#setClassPath()
 
   let $CLASSPATH = join(copy(s:jars), ':')
   let $SRCPATH = join(copy(s:paths), ':')
+  exec "setlocal path=" . join(copy(s:paths), ',')
 
   silent! call javacomplete#SetClassPath($CLASSPATH)
   silent! call javacomplete#SetSourcePath($SRCPATH)
+
 
 endfunction
