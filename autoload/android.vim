@@ -313,12 +313,12 @@ function! s:callInstallAnt(mode, device)
 endfunction
 
 function! s:androidPackageName()
-  if ! exists(s:androidPackageName)
+  if ! exists("s:androidPackageName")
     if filereadable('AndroidManifest.xml')
       for line in readfile('AndroidManifest.xml')
         if line =~ 'package='
           let s:androidPackageName = matchstr(line, '\cpackage=\([''"]\)\zs.\{-}\ze\1')
-          if empty(s:androidPackageName)
+          if empty("s:androidPackageName")
             throw "Unable to get package name"
           endif
         endif
