@@ -50,6 +50,8 @@ The following features are supported by vim-android:
     other plugins such as javacomplete.
   - Adds useful commands to compile and install your application APK into
     your emulator/devices.
+  - If vim-dispatch is installed then compilation is done in the background
+    without blocking vim.
   - Adds useful commands to generate tags for the current project source and
     the Android SDK sources. If you use vim-dispatch then this tag generation
     is performed asynchronously.

@@ -209,25 +209,24 @@ function! s:callGradle(action)
   let errorformat = &errorformat
   let makeef = &makeef
 
-  " Modify the shellpipe to save only stderr to the makeef file. If we do
-  " not do this then the output file will have the stdout and stderr messages
-  " interleaved making it impossible for errorformat to parse the error
-  " messages.
-  let shellpipe = &shellpipe
-  let &shellpipe='2>'
-
-  let &makeprg = g:gradle_tool . " " . a:action
-
   set errorformat=%f:%l:\ %m,
         \%A%f:%l:\ %m,%-Z%p^,%-C%.%#
 
-  silent! make
-  redraw!
+  if !exists('g:loaded_dispatch')
+    let &makeprg = g:gradle_tool . " --no-color " . a:action . " 1> /dev/null"
+    silent! exe 'Make'
+  else
+    let &makeprg = g:gradle_tool . " --no-color " . a:action
+    let shellpipe = &shellpipe
+    let &shellpipe='2>'
+    silent! make
+    redraw!
+    let &shellpipe = shellpipe
+  endif
 
   " Restore previous values
   let &makeprg = makeprg
   let &errorformat = errorformat
-  let &shellpipe = shellpipe
   return s:getErrorCount()
 endfunction
 
@@ -242,8 +241,12 @@ function! s:callAnt(mode)
                 \%A\ %#[aapt]\ %f:%l:\ %m,%-Z\ %#[javac]\ %p^,%-C%.%#,
                 \%A\ %#[exec]\ Failure\ [%m]
 
-  silent! make
-  redraw!
+  if !exists('g:loaded_dispatch')
+    silent! exe 'Make'
+  else
+    silent! make
+    redraw!
+  endif
 
   let &makeprg = makeprg
   let &errorformat = errorformat
