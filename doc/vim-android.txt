@@ -51,7 +51,8 @@ The following features are supported by vim-android:
   - Adds useful commands to compile and install your application APK into
     your emulator/devices.
   - Adds useful commands to generate tags for the current project source and
-    the Android SDK sources.
+    the Android SDK sources. If you use vim-dispatch then this tag generation
+    is performed asynchronously.
 
 ------------------------------------------------------------------------------
 Known Issues                                             *vim-android-issues*
@@ -73,6 +74,12 @@ The following requirements have to be met in order to be able to use vim-android
     have only tested Vim 7.3.
   - Android SDK installed and with the platform-tools directory set in your
     PATH environment variable.
+  - The exuberant-ctags package if you want to generate tags for the android
+    project, dependencies and the Android SDK.
+
+To enable asynchronous generation of tags, project compilation and
+installation it is highly recommended that you also install the vim-dispatch
+plugin from tpope: https://github.com/tpope/vim-dispatch.
 
 ==============================================================================
 3. Installation                                        *vim-android-installation*
@@ -141,7 +148,11 @@ COMMANDS                                                   *vim-android-commands
     some flags available only in exuberant-ctags.
 
     You should invoke this command every time you change library dependencies,
-    the android target API, and you project source files.
+    the android target API, and you project source files. You may create an
+    command to update the tags everytime a file is saved.
+
+    If you have tpope/vim-dispatch plugin installed the tag generation will be
+    performed asynchronously so vim is not blocked during tag generation.
 
 :AndroidDevices                                               *:AndroidDevices*
     Lists all android devices connected and all running emulators.

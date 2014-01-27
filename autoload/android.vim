@@ -80,16 +80,6 @@ function! android#findProjectType()
   return g:android_build_type
 endfunction
 
-function! android#hasVimProc(...)
-  try
-    call vimproc#version()
-    let l:exists_vimproc = 1
-  catch
-    let l:exists_vimproc = 0
-  endtry
-  return l:exists_vimproc
-endfunction
-
 ""
 " Appends ctags for all referenced libraries used for the Android project. The
 " library list is obtained from the project.properties file.
@@ -102,21 +92,19 @@ endfunction
 " the current project source, the target android sdk source, all library
 " dependencies, all xml resource files, etc.
 function! android#updateAndroidTags()
-  if !android#hasVimProc()
-    call android#logw("updateAndroidTags() failed: required VimProc plugin not found.")
+
+  if !executable("ctags")
+    call android#logw("updateAndroidTags() failed: ctags tool not found.")
     return 0
   endif
 
-  let l:ctags_bin = vimproc#get_command_name('ctags')
-
-  if !executable(l:ctags_bin)
-    call android#logw("updateAndroidTags() failed: could not find ctags executable")
+  if !executable("ps")
+    call android#logw("updateAndroidTags() failed: ps command not found.")
     return 0
   endif
 
   let l:android_sources = substitute(copy($SRCPATH), ":", " ", "g")
-  let l:ctags_args = ' --recurse --fields=+l --langdef=XML --langmap=Java:.java,XML:.xml --languages=Java,XML --regex-XML=/id="([a-zA-Z0-9_]+)"/\1/d,definition/  -f '
-  let l:ctags_cmd = l:ctags_bin . l:ctags_args
+  let l:ctags_cmd = 'ctags --recurse --fields=+l --langdef=XML --langmap=Java:.java,XML:.xml --languages=Java,XML --regex-XML=/id="([a-zA-Z0-9_]+)"/\1/d,definition/  -f '
 
   if exists("*mkdir")
     let l:basepath = fnamemodify(g:android_sdk_tags, ":h")
@@ -129,15 +117,18 @@ function! android#updateAndroidTags()
   endif
 
   try
-    let l:ps_cmd = vimproc#get_command_name('ps')
-    let l:cmd = l:ps_cmd . " -C ctags || " .  l:ctags_cmd . g:android_sdk_tags . " " . l:android_sources
+    let l:cmd = "ps -C ctags || ctags " . g:android_sdk_tags . " " . l:android_sources
   catch
-    let l:cmd = l:ctags_cmd . g:android_sdk_tags . " " . l:android_sources
+    let l:cmd = "ctags " . g:android_sdk_tags . " " . l:android_sources
   endtry
 
-  call android#logi("Generating android SDK tags (may take a while to finish)" )
-  call vimproc#system(l:cmd)
-  call android#logi("  Done!" )
+  if exists('g:loaded_dispatch')
+    silent! exe 'Start!' l:cmd
+  else
+    call android#logi("Generating android SDK tags (may take a while to finish)" )
+    silent! exe '!' . l:cmd '&'
+    call android#logi("  Done!" )
+  endif
 endfunction
 
 function! s:sortFunc(i1, i2)
