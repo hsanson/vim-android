@@ -242,12 +242,15 @@ function! android#install(mode)
   " If only one device is found automatically install to it.
   if len(l:devices) == 1
     let l:device = strpart(l:devices[0], 3)
-    return ant#install(l:device, a:mode)
+    return adb(l:device, a:mode)
   endif
 
   " If more than one device is found give a list so the user can choose.
   let l:choice = -1
-  call add(l:devices, (len(l:devices) + 1) . ". All devices")
+
+  let l:devices = ["0. All Devices"] + l:devices
+
+  "call add(l:devices, (len(l:devices) + 1) . ". All devices")
   while(l:choice < 0 || l:choice > len(l:devices))
     echom "Select target device"
     call inputsave()
@@ -256,32 +259,35 @@ function! android#install(mode)
     echo "\n"
   endwhile
 
-  " Zero means cancel the operation
-  if l:choice == 0
-    return 0
-  endif
+  echomsg l:choice
 
-  if l:choice == len(l:devices)
-    call android#logi("Installing on all devices")
-    call remove(l:devices, len(l:devices) - 1)
+  if l:choice == "0"
+    call android#logi("Installing on all devices... (May take some time)")
+    call remove(l:devices, 0) " Remove All Devices option
     for device in l:devices
       let l:device = strpart(device, 3)
-      let l:result = ant#install(l:device, a:mode)
+      let l:result = adb#install(l:device, a:mode)
       if l:result != 0
-        call android#logw("Abort installtion of all devices")
+        call android#logw("Abort installation of all devices")
         return 1
       endif
     endfor
     call android#logi ("Finished installing on the following devices " . join(l:devices, " "))
   else
-    let l:option = l:devices[l:choice - 1]
+    let l:option = l:devices[l:choice]
     let l:device = strpart(l:option, 3)
-    call ant#install(l:device, a:mode)
+    call android#logi("Installing on " . l:device . " ...")
+    let l:res = adb#install(l:device, a:mode)
+
+    if(!l:res)
+      call android#logi("Finished installing on " . l:device)
+    endif
   endif
 endfunction
 
 function! android#uninstall()
-  if(android#getBuildType() == "undefined")
+
+  if(!android#isAndroidCompilerSet())
     return
   endif
 
@@ -303,7 +309,7 @@ function! android#uninstall()
 
   " If more than one device is found give a list so the user can choose.
   let l:choice = -1
-  call add(l:devices, (len(l:devices) + 1) . ". All devices")
+  let l:devices = ["0. All Devices"] + l:devices
   while(l:choice < 0 || l:choice > len(l:devices))
     echom "Select target device"
     call inputsave()
@@ -312,22 +318,16 @@ function! android#uninstall()
     echo "\n"
   endwhile
 
-  " Zero means cancel the operation
   if l:choice == 0
-    return 0
-  endif
-
-  if l:choice == len(l:devices)
-    call android#logi("Uninstalling from all devices")
-    call remove(l:devices, len(l:devices) - 1)
+    call android#logi("Uninstalling from all devices...")
+    call remove(l:devices, 0)
     for device in l:devices
       let l:device = strpart(device, 3)
       call adb#uninstall(l:device)
-      call android#logi ("Finished uninstalling from device " . l:device)
     endfor
     call android#logi ("Finished uninstalling from the following devices " . join(l:devices, " "))
   else
-    let l:option = l:devices[l:choice - 1]
+    let l:option = l:devices[l:choice]
     let l:device = strpart(l:option, 3)
     call adb#uninstall(l:device)
     call android#logi ("Finished uninstalling from device " . l:device)

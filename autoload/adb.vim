@@ -38,7 +38,7 @@ endfunction
 " Installs android package from device
 function! adb#install(device, mode)
   let l:cmd = adb#bin() . ' -s ' . a:device . ' install -r ' . android#getApkPath(a:mode)
-  call android#logi("Installing " . android#getApkPath(a:mode) . " to " . a:device . " (wait...)")
+  "call android#logi("Installing " . android#getApkPath(a:mode) . " to " . a:device . " (wait...)")
   let l:output = system(l:cmd)
   redraw!
   let l:success = matchstr(l:output, 'Success')
@@ -47,7 +47,7 @@ function! adb#install(device, mode)
     call android#loge("Installation failed on " . a:device . " with error " . l:errormsg)
     return 1
   else
-    call android#logi("Installation finished on " . a:device)
+    "call android#logi("Installation finished on " . a:device)
     return 0
   endif
 endfunction
