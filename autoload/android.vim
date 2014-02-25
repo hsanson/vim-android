@@ -15,16 +15,28 @@ function! android#loge(msg)
   echohl normal
 endfunction
 
+function! android#setCompiler()
+  silent! execute("compiler android")
+endfunction
+
+function! android#isAndroidCompilerSet()
+  if(b:current_compiler == "android")
+    return 1
+  else
+    return 0
+  endif
+endfunction
+
 function! android#isAndroidProject()
   return filereadable("AndroidManifest.xml")
 endfunction
 
 function! android#isGradleProject()
-  return g:android_build_type == "gradle"
+  return android#getBuildType() == "gradle"
 endfunction
 
 function! android#isAntProject()
-  return g:android_build_type == "ant"
+  return android#getBuildType() == "ant"
 endfunction
 
 function! android#checkAndroidHome()
@@ -39,18 +51,26 @@ function! android#checkAndroidHome()
   return 1
 endfunction
 
-" Helper method that tries to find out if the project is build using Ant or
-" Gradle.
-function! android#findProjectType()
-  if ! android#checkAndroidHome()
-    return
+" Try to automagically determine the build type (gradle or ant) giving
+" preference to gradle builds. It is possible to override this preference by
+" directly setting the g:android_build_type variable to *gradle* or *ant* in
+" the vimrc file.
+function! android#getBuildType()
+
+  if(exists('g:android_build_type'))
+    return g:android_build_type
   endif
 
   let g:android_build_type = "undefined"
+
+  if ! android#checkAndroidHome()
+    return g:android_build_type
+  endif
+
   let l:gradle_cfg_exists = filereadable('build.gradle')
-  let l:gradle_bin_exists = executable(s:getGradleBin())
+  let l:gradle_bin_exists = executable(gradle#bin())
   let l:ant_cfg_exists = filereadable('build.xml')
-  let l:ant_bin_exists = executable('ant')
+  let l:ant_bin_exists = executable(ant#bin())
 
   if( ! l:gradle_cfg_exists && ! l:ant_cfg_exists )
     call android#loge("Could not find any build.gradle or build.xml file... aborting")
@@ -58,13 +78,11 @@ function! android#findProjectType()
   endif
 
   if( l:gradle_cfg_exists && l:gradle_bin_exists )
-    call android#logi("Found gradle build system")
     let g:android_build_type = "gradle"
     return g:android_build_type
   endif
 
   if( l:ant_cfg_exists && l:ant_bin_exists )
-    call android#logi("Found ant build system")
     let g:android_build_type = "ant"
     return g:android_build_type
   endif
@@ -80,16 +98,6 @@ function! android#findProjectType()
   return g:android_build_type
 endfunction
 
-function! android#hasVimProc(...)
-  try
-    call vimproc#version()
-    let l:exists_vimproc = 1
-  catch
-    let l:exists_vimproc = 0
-  endtry
-  return l:exists_vimproc
-endfunction
-
 ""
 " Appends ctags for all referenced libraries used for the Android project. The
 " library list is obtained from the project.properties file.
@@ -102,21 +110,14 @@ endfunction
 " the current project source, the target android sdk source, all library
 " dependencies, all xml resource files, etc.
 function! android#updateAndroidTags()
-  if !android#hasVimProc()
-    call android#logw("updateAndroidTags() failed: required VimProc plugin not found.")
-    return 0
-  endif
 
-  let l:ctags_bin = vimproc#get_command_name('ctags')
-
-  if !executable(l:ctags_bin)
-    call android#logw("updateAndroidTags() failed: could not find ctags executable")
+  if !executable("ctags")
+    call android#logw("updateAndroidTags() failed: ctags tool not found.")
     return 0
   endif
 
   let l:android_sources = substitute(copy($SRCPATH), ":", " ", "g")
-  let l:ctags_args = ' --recurse --fields=+l --langdef=XML --langmap=Java:.java,XML:.xml --languages=Java,XML --regex-XML=/id="([a-zA-Z0-9_]+)"/\1/d,definition/  -f '
-  let l:ctags_cmd = l:ctags_bin . l:ctags_args
+  let l:ctags_cmd = 'ctags --recurse --fields=+l --langdef=XML --langmap=Java:.java,XML:.xml --languages=Java,XML --regex-XML=/id="([a-zA-Z0-9_]+)"/\1/d,definition/  -f '
 
   if exists("*mkdir")
     let l:basepath = fnamemodify(g:android_sdk_tags, ":h")
@@ -128,134 +129,34 @@ function! android#updateAndroidTags()
     return
   endif
 
-  try
-    let l:ps_cmd = vimproc#get_command_name('ps')
-    let l:cmd = l:ps_cmd . " -C ctags || " .  l:ctags_cmd . g:android_sdk_tags . " " . l:android_sources
-  catch
-    let l:cmd = l:ctags_cmd . g:android_sdk_tags . " " . l:android_sources
-  endtry
+  let l:cmd = l:ctags_cmd . g:android_sdk_tags . " " . l:android_sources
 
-  call android#logi("Generating android SDK tags (may take a while to finish)" )
-  call vimproc#system(l:cmd)
-  call android#logi("  Done!" )
+  "if exists('g:loaded_dispatch')
+  ""  silent! exe 'Start!' l:cmd
+  "else
+    call android#logi("Generating android SDK tags (may take a while to finish)" )
+    call system(l:cmd)
+    call android#logi("  Done!" )
+  "endif
 endfunction
 
-function! s:sortFunc(i1, i2)
-  return tolower(a:i1) == tolower(a:i2) ? 0 : tolower(a:i1) > tolower(a:i2) ? 1 : -1
-endfunction
-
-function! s:getGradleBin()
-  if !exists('g:gradle_path')
-    let g:gradle_path = $GRADLE_HOME
-  endif
-  let g:gradle_tool = g:gradle_path . "/bin/gradle"
-  return g:gradle_tool
-endfunction
-
-function! s:getAdbBin()
-  if !exists('g:android_adb_tool')
-    let g:android_adb_tool = g:android_sdk_path . "/platform-tools/adb"
-  endif
-  return g:android_adb_tool
-endfunction
-
-"" Helper method that returns a list of currently connected and online android
-"" devices. This method depends on the android adb tool.
-function! s:getDevicesList()
-  call s:getAdbBin()
-
-  if !executable(g:android_adb_tool)
-    call android#loge("Android adb tool could not be found. Set g:android_adb_tool to point to the location of the adb tool")
-    return []
-  endif
-
-  let l:adb_output = system(g:android_adb_tool . " devices")
-  let l:adb_devices = filter(split(l:adb_output, '\n'), 'v:val =~ "device$"')
-  let l:adb_devices_sorted = sort(copy(l:adb_devices), "s:sortFunc")
-  let l:devices = map(l:adb_devices_sorted, 'v:key + 1 . ". " . substitute(v:val, "\tdevice$", "", "")')
-
-  "call android#logi(len(l:devices) . "  Devices " . join(l:devices, " || "))
-
-  return l:devices
-endfunction
-
-function! s:callClean()
-  if android#isGradleProject()
-    call android#logi("Cleaning gradle project")
-    call s:callGradleClean()
-    call android#logi("Finished cleaning project")
-  elseif android#isAntProject()
-    call android#logi("Cleaning ant project")
-    call s:callAnt("clean")
-    call android#logi("Finished cleaning project")
-  else
-    call android#loge("Could find a gradle nor an ant project")
-  endif
-endfunction
-
-function! s:callBuild(mode)
-  if android#isGradleProject()
-    call android#logi("Building gradle project")
-    return s:callGradleBuild(a:mode)
-  elseif android#isAntProject()
-    call android#logi("Building ant project")
-    return s:callAnt(a:mode)
-  else
-    call android#loge("Could find a gradle nor an ant project")
-  endif
-endfunction
-
-function! s:callGradleBuild(mode)
-  return s:callGradle("assemble" . s:capitalize(a:mode))
-endfunction
-
-function! s:callGradleClean()
-  return s:callGradle("clean")
-endfunction
-
-function! s:callGradle(action)
-  let makeprg = &makeprg
-  let errorformat = &errorformat
-  let makeef = &makeef
-
-  " Modify the shellpipe to save only stderr to the makeef file. If we do
-  " not do this then the output file will have the stdout and stderr messages
-  " interleaved making it impossible for errorformat to parse the error
-  " messages.
+function! s:compile(action)
   let shellpipe = &shellpipe
-  let &shellpipe='2>'
 
-  let &makeprg = g:gradle_tool . " " . a:action
+  if(android#isGradleProject())
+    let &shellpipe = '2>'
+  endif
 
-  set errorformat=%f:%l:\ %m,
-        \%A%f:%l:\ %m,%-Z%p^,%-C%.%#
-
-  silent! make
-  redraw!
+  call android#logi("Compiling " . a:action)
+  "if exists('g:loaded_dispatch')
+  ""  silent! exe 'Make'
+  "else
+    execute("silent! make " . a:action)
+    redraw!
+  "endif
 
   " Restore previous values
-  let &makeprg = makeprg
-  let &errorformat = errorformat
   let &shellpipe = shellpipe
-  return s:getErrorCount()
-endfunction
-
-function! s:callAnt(mode)
-  let makeprg = &makeprg
-  let errorformat = &errorformat
-
-  let &makeprg = 'ant -find build.xml ' . a:mode
-
-  set errorformat=\ %#[javac]\ %#%f:%l:%c:%*\\d:%*\\d:\ %t%[%^:]%#:%m,
-                \%A\ %#[javac]\ %f:%l:\ %m,
-                \%A\ %#[aapt]\ %f:%l:\ %m,%-Z\ %#[javac]\ %p^,%-C%.%#,
-                \%A\ %#[exec]\ Failure\ [%m]
-
-  silent! make
-  redraw!
-
-  let &makeprg = makeprg
-  let &errorformat = errorformat
   return s:getErrorCount()
 endfunction
 
@@ -266,53 +167,10 @@ function! s:getErrorCount()
   return len(filter(l:list, "v:val['valid'] > 0"))
 endfunction
 
-function! s:callInstall(mode, device)
-  if android#isGradleProject()
-    return s:callInstallGradle(a:mode, a:device)
-  elseif android#isAntProject()
-    return s:callInstallAnt(a:mode, a:device)
-  else
-    call android#loge("Unknown build system")
-  endif
-endfunction
-
-function! s:capitalize(str)
-  return substitute(a:str, '\(^.\)', '\u&', 'g')
-endfunction
-
-function! s:callInstallGradle(mode, device)
-  let l:cmd = "ANDROID_SERIAL=" . a:device . " " . s:getGradleBin() . ' install' . s:capitalize(a:mode)
-  call android#logi("Installing " . a:mode . " to " . a:device . " (wait...)")
-  let l:output = system(l:cmd)
-  redraw!
-  let l:failure = matchstr(l:output, "Failure")
-  if empty(l:failure)
-    call android#logi("Installation finished on " . a:device)
-    return 0
-  else
-    let l:errormsg = matchstr(l:output, '\cFailure \[\zs.\{-}\ze\]')
-    call android#loge("Installation failed on " . a:device . " with error " . l:errormsg)
-    return 1
-  endif
-endfunction
-
-function! s:callInstallAnt(mode, device)
-  let l:cmd = s:getAdbBin() . ' -s ' . a:device . ' install -r ' . android#getApkPath(a:mode)
-  call android#logi("Installing " . android#getApkPath(a:mode) . " to " . a:device . " (wait...)")
-  let l:output = system(l:cmd)
-  redraw!
-  let l:success = matchstr(l:output, 'Success')
-  if empty(l:success)
-    let l:errormsg = matchstr(l:output, '\cFailure \[\zs.\{-}\ze\]')
-    call android#loge("Installation failed on " . a:device . " with error " . l:errormsg)
-    return 1
-  else
-    call android#logi("Installation finished on " . a:device)
-    return 0
-  endif
-endfunction
-
-function! s:androidPackageName()
+" Try to determine the project package name by reading the AndroidManifest.xml
+" file. Returns a string containing the package name or throws and exception if
+" not found.
+function! android#packageName()
   if ! exists("s:androidPackageName")
     if filereadable('AndroidManifest.xml')
       for line in readfile('AndroidManifest.xml')
@@ -328,29 +186,36 @@ function! s:androidPackageName()
   return s:androidPackageName
 endfunction
 
-function! s:callUninstall(device)
-  call android#logi("Uninstalling " . s:androidPackageName() . " from " . a:device)
-  let l:cmd = s:getAdbBin() .' -s ' . a:device . ' uninstall ' . s:androidPackageName()
-  execute "silent !" . l:cmd
-  redraw!
-endfunction
-
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " High level methods
 
 function! android#clean()
-  if(android#findProjectType() == "undefined")
-    return
+
+  if(!android#isAndroidCompilerSet())
+    throw "Android compiler not set"
   endif
-  return s:callClean()
+
+  let l:result = s:compile("clean")
+
+  if(l:result == 0)
+    call android#logi("Finished cleaning project")
+  else
+    call android#logw("Cleaning failed")
+  endif
 endfunction
 
 function! android#compile(mode)
-  if(android#findProjectType() == "undefined")
-    return
+
+  if(!android#isAndroidCompilerSet())
+    throw "Android compiler not set"
   endif
 
-  let l:result = s:callBuild(a:mode)
+  if(android#isGradleProject())
+    let l:result = s:compile('assemble' . android#capitalize(a:mode))
+  else
+    let l:result = s:compile(a:mode)
+  endif
+
   if(l:result == 0)
     call android#logi("Building finished successfully")
   else
@@ -359,15 +224,20 @@ function! android#compile(mode)
 endfunction
 
 function! android#install(mode)
-  if(android#findProjectType() == "undefined")
+
+  if(!android#isAndroidCompilerSet())
     return
   endif
+
+  if(!filereadable(android#getApkPath(a:mode)))
+    return
+  endif
+
   let l:mode = a:mode
-  let l:devices = s:getDevicesList()
+  let l:devices = adb#devices()
 
   " If no device found give a warning an exit
   if len(l:devices) == 0
-    call s:callBuild(a:mode)
     call android#logw("No android device/emulator found. Skipping install step.")
     return 0
   endif
@@ -375,19 +245,15 @@ function! android#install(mode)
   " If only one device is found automatically install to it.
   if len(l:devices) == 1
     let l:device = strpart(l:devices[0], 3)
-    let l:result = s:callBuild(a:mode)
-    if(l:result == 0)
-      call android#logi("Build finished without issues...")
-      return s:callInstall(a:mode, l:device)
-    else
-      call android#loge("Compilation failed... Skip installing step")
-      return l:result
-    endif
+    return adb(l:device, a:mode)
   endif
 
   " If more than one device is found give a list so the user can choose.
   let l:choice = -1
-  call add(l:devices, (len(l:devices) + 1) . ". All devices")
+
+  let l:devices = ["0. All Devices"] + l:devices
+
+  "call add(l:devices, (len(l:devices) + 1) . ". All devices")
   while(l:choice < 0 || l:choice > len(l:devices))
     echom "Select target device"
     call inputsave()
@@ -396,44 +262,39 @@ function! android#install(mode)
     echo "\n"
   endwhile
 
-  " Zero means cancel the operation
-  if l:choice == 0
-    return 0
-  endif
+  echomsg l:choice
 
-  let l:result = s:callBuild(a:mode)
-  if(l:result != 0)
-    call android#loge("Compilation failed... Skip installing step")
-    return l:result
-  endif
-
-  call android#logi("Build finished without issues...")
-
-  if l:choice == len(l:devices)
-    call android#logi("Installing on all devices")
-    call remove(l:devices, len(l:devices) - 1)
+  if l:choice == "0"
+    call android#logi("Installing on all devices... (May take some time)")
+    call remove(l:devices, 0) " Remove All Devices option
     for device in l:devices
       let l:device = strpart(device, 3)
-      let l:result = s:callInstall(a:mode, l:device)
+      let l:result = adb#install(l:device, a:mode)
       if l:result != 0
-        call android#logw("Abort installtion of all devices")
+        call android#logw("Abort installation of all devices")
         return 1
       endif
     endfor
     call android#logi ("Finished installing on the following devices " . join(l:devices, " "))
   else
-    let l:option = l:devices[l:choice - 1]
+    let l:option = l:devices[l:choice]
     let l:device = strpart(l:option, 3)
-    call s:callInstall(a:mode, l:device)
+    call android#logi("Installing on " . l:device . " ...")
+    let l:res = adb#install(l:device, a:mode)
+
+    if(!l:res)
+      call android#logi("Finished installing on " . l:device)
+    endif
   endif
 endfunction
 
 function! android#uninstall()
-  if(android#findProjectType() == "undefined")
+
+  if(!android#isAndroidCompilerSet())
     return
   endif
 
-  let l:devices = s:getDevicesList()
+  let l:devices = adb#devices()
 
   " If no device found give a warning an exit
   if len(l:devices) == 0
@@ -444,14 +305,14 @@ function! android#uninstall()
   " If only one device is found automatically uninstall app from it.
   if len(l:devices) == 1
     let l:device = strpart(l:devices[0], 3)
-    call s:callUninstall(l:device)
+    call adb#uninstall(l:device)
     call android#logi("Finished uninstalling from device " . l:device)
     return 0
   endif
 
   " If more than one device is found give a list so the user can choose.
   let l:choice = -1
-  call add(l:devices, (len(l:devices) + 1) . ". All devices")
+  let l:devices = ["0. All Devices"] + l:devices
   while(l:choice < 0 || l:choice > len(l:devices))
     echom "Select target device"
     call inputsave()
@@ -460,24 +321,18 @@ function! android#uninstall()
     echo "\n"
   endwhile
 
-  " Zero means cancel the operation
   if l:choice == 0
-    return 0
-  endif
-
-  if l:choice == len(l:devices)
-    call android#logi("Uninstalling from all devices")
-    call remove(l:devices, len(l:devices) - 1)
+    call android#logi("Uninstalling from all devices...")
+    call remove(l:devices, 0)
     for device in l:devices
       let l:device = strpart(device, 3)
-      call s:callUninstall(l:device)
-      call android#logi ("Finished uninstalling from device " . l:device)
+      call adb#uninstall(l:device)
     endfor
     call android#logi ("Finished uninstalling from the following devices " . join(l:devices, " "))
   else
-    let l:option = l:devices[l:choice - 1]
+    let l:option = l:devices[l:choice]
     let l:device = strpart(l:option, 3)
-    call s:callUninstall(l:device)
+    call adb#uninstall(l:device)
     call android#logi ("Finished uninstalling from device " . l:device)
   endif
 endfunction
@@ -490,7 +345,7 @@ function! android#setAndroidSdkTags()
   if !exists('g:android_sdk_tags')
     let g:android_sdk_tags = getcwd() . '/.tags'
   endif
-  execute 'setlocal'  'tags+=' . g:android_sdk_tags
+  execute 'silent! setlocal ' . 'tags+=' . g:android_sdk_tags
 endfunction
 
 function! android#setClassPath()
@@ -511,30 +366,45 @@ function! android#getProjectName()
 endfunction
 
 function! android#getDebugApkPath()
-  let s:androidDebugApkPath = "bin/" . android#getProjectName() . "-debug.apk"
+  if(android#isGradleProject())
+    let s:androidDebugApkPath = "build/apk/" . android#getProjectName() . "-debug-unaligned.apk"
+  else
+    let s:androidDebugApkPath = "bin/" . android#getProjectName() . "-debug.apk"
+  endif
   return s:androidDebugApkPath
 endfunction
 
 function! android#getReleaseApkPath()
-  let s:androidReleaseApkPath = "bin/" . android#getProjectName() . "-release.apk"
+  if(android#isGradleProject())
+    let s:androidReleaseApkPath = "build/apk/" . android#getProjectName() . "-release.apk"
+  else
+    let s:androidReleaseApkPath = "bin/" . android#getProjectName() . "-release.apk"
+  endif
   return s:androidReleaseApkPath
 endfunction
 
 function! android#getApkPath(mode)
   if a:mode == "release"
     return android#getReleaseApkPath()
-  else
+  elseif a:mode == "debug"
     return android#getDebugApkPath()
+  else
+    call android#logw("Could not find apk for " . a:mode . " build. Maybe need to build it first?")
   endif
 endfunction
 
 function! android#listDevices()
-  let l:devices = s:getDevicesList()
+  let l:devices = adb#devices()
   if len(l:devices) <= 0
     call android#logw("Could not find any android devices or emulators.")
   else
     call android#logi("Android Devices: " . join(l:devices, " "))
   endif
+endfunction
+
+" Upcase the first leter of string.
+function! android#capitalize(str)
+  return substitute(a:str, '\(^.\)', '\u&', 'g')
 endfunction
 
 function! android#setupAndroidCommands()

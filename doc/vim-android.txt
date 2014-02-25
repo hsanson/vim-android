@@ -43,7 +43,8 @@ The following features are supported by vim-android:
     working directory.
   - Automatically build using ant or gradle depending on the existence of the
     build.xml or build.gradle files respectively.
-  - Set errorformat values to detect ant and gradle output errors.
+  - Add android compiler that sets the appropriate errorformat and makeprg
+    options needed to build Gradle or Ant based Android projects.
   - Updates the CLASSPATH environment variable to include paths for your
     current project, external libs, external lib-projects and the current
     target Android SDK jars. This allows auto-completion of Java code using
@@ -73,6 +74,10 @@ The following requirements have to be met in order to be able to use vim-android
     have only tested Vim 7.3.
   - Android SDK installed and with the platform-tools directory set in your
     PATH environment variable.
+  - Ant 1.7+ or Gradle 1.6+ in your PATH to enable builds via ant or gradle
+    respectively.
+  - The exuberant-ctags package if you want to generate tags for the android
+    project, dependencies and the Android SDK.
 
 ==============================================================================
 3. Installation                                        *vim-android-installation*
@@ -90,7 +95,7 @@ and then inside vim run the |:BundleInstall| command.
 
 Before using this plugin you must tell it where you have the android SDK
 installed. There are two ways to do this: you can set the ANDROID_HOME
-environment variable to the absolute path of the android SDK or you can add
+environment variable to the absolute path of the android SDK or you can set
 it to the global variable g:android_sdk_path in your vimrc file.
 
 This plugin assumes your current working directory is the root path of the
@@ -100,11 +105,9 @@ load. When you open a Java or XML file this plugin checks for the presence of
 the AndroidManifest.xml and if it exists it enables several commands to build
 and install android apps into emulators and/or devices.
 
-Optionally if you use gradle to build your projects (recommended) you also
-need to tell the plugin where is your gradle installation. This can be done
-by setting the GRADLE_HOME environment variable or by adding a global
-variable g:gradle_path to your vimrc file with the absolute path to your
-gradle installation.
+Optionally you may also set *g:ant_path* and *g:gradle_path* to tell the
+plugin where to look for the ant and gradle binaries. Check the options
+documentation below for more details on these and other options.
 
 ------------------------------------------------------------------------------
 COMMANDS                                                   *vim-android-commands*
@@ -121,7 +124,9 @@ COMMANDS                                                   *vim-android-commands
     Build and installs the application in <mode> mode. In the case that you
     have several emulators running and/or several devices connected then this
     command will present you a list of emulators/devices so you can choose to
-    which one the APK should be installed to.
+    which one the APK should be installed to. If there are not apk files
+    build this command fails with an error. Ensure you build your project before
+    installing it.
 
 :AndroidUninstall                                           *:AndroidUninstall*
     This command allows to uninstall the application. If you have several
@@ -141,7 +146,8 @@ COMMANDS                                                   *vim-android-commands
     some flags available only in exuberant-ctags.
 
     You should invoke this command every time you change library dependencies,
-    the android target API, and you project source files.
+    the android target API, and you project source files. You may create an
+    command to update the tags everytime a file is saved.
 
 :AndroidDevices                                               *:AndroidDevices*
     Lists all android devices connected and all running emulators.
@@ -183,7 +189,18 @@ Default: $GRADLE_HOME
 When building gradle based projects we need to use the gradle tool to build
 and install APK files. The g:gradle_path should be set to the absolute
 directory path where gradle is installed. If g:gradle_path is not set then we
-fallback to the $GRADLE_HOME environment variable.
+fallback to the $GRADLE_HOME environment variable. If none is set then we
+search the gradle binary using the PATH environment variable.
+
+                                                               *g:ant_path*
+g:ant_path
+Default: $ANT_HOME
+
+When building ant based projects we need to use the ant tool to build
+and install APK files. The g:ant_path should be set to the absolute
+directory path where ant is installed. If g:ant_path is not set then we
+fallback to the $ANT_HOME environment variable. If none is set then we search
+for the ant command using the $PATH environment variable.
 
                                                             *g:android_adb_tool*
 g:android_adb_tool~
