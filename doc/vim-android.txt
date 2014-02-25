@@ -43,7 +43,8 @@ The following features are supported by vim-android:
     working directory.
   - Automatically build using ant or gradle depending on the existence of the
     build.xml or build.gradle files respectively.
-  - Set errorformat values to detect ant and gradle output errors.
+  - Add android compiler that sets the appropriate errorformat and makeprg
+    options needed to build Gradle or Ant based Android projects.
   - Updates the CLASSPATH environment variable to include paths for your
     current project, external libs, external lib-projects and the current
     target Android SDK jars. This allows auto-completion of Java code using
