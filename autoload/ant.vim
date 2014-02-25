@@ -5,7 +5,7 @@
 function! ant#bin()
 
   if !exists('g:ant_path')
-    let g:ant_path = $ant_HOME
+    let g:ant_path = $ANT_HOME
   endif
 
   let g:ant_bin = g:ant_path . "/bin/ant"
