@@ -143,11 +143,14 @@ endfunction
 function! s:compile(action)
   let shellpipe = &shellpipe
 
+  if(android#isGradleProject())
+    let &shellpipe = '2>'
+  endif
+
   call android#logi("Compiling " . a:action)
   "if exists('g:loaded_dispatch')
   ""  silent! exe 'Make'
   "else
-    let &shellpipe = '2>'
     execute("silent! make " . a:action)
     redraw!
   "endif
