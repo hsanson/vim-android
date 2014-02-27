@@ -105,7 +105,7 @@ load. When you open a Java or XML file this plugin checks for the presence of
 the AndroidManifest.xml and if it exists it enables several commands to build
 and install android apps into emulators and/or devices.
 
-Optionally you may also set *g:ant_path* and *g:gradle_path* to tell the
+Optionally you may also set |g:ant_path| and |g:gradle_path| to tell the
 plugin where to look for the ant and gradle binaries. Check the options
 documentation below for more details on these and other options.
 
