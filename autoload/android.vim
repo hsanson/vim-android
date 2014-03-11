@@ -226,10 +226,11 @@ endfunction
 function! android#install(mode)
 
   if(!android#isAndroidCompilerSet())
-    return
+    throw "Android compiler not set"
   endif
 
   if(!filereadable(android#getApkPath(a:mode)))
+    call android#logw("Android apk file " . android#getApkPath(a:mode) . " not found")
     return
   endif
 
@@ -291,6 +292,7 @@ endfunction
 function! android#uninstall()
 
   if(!android#isAndroidCompilerSet())
+    call android#logw("No android compiler set.")
     return
   endif
 
