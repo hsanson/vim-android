@@ -136,7 +136,13 @@ function! s:addGradleSdkJar(paths, jars)
   if filereadable('build.gradle')
     for line in readfile('build.gradle')
       if line =~ 'compileSdkVersion'
-        let l:androidTarget = split(line, ' ')[1]
+        let l:androidTarget = split(line, ' ')[-1]
+        if stridx(l:androidTarget, ':') > 0
+            let l:androidTarget = split(l:androidTarget, ':')[1]
+        endif
+        if stridx(l:androidTarget, '"') > 0
+            let l:androidTarget = split(l:androidTarget, '"')[0]
+        endif
         let l:androidTargetPlatform = 'android-' . l:androidTarget
         let l:targetAndroidJar = g:android_sdk_path . '/platforms/' . l:androidTargetPlatform . '/android.jar'
         let l:targetAndroidSrc = g:android_sdk_path . '/sources/' . l:androidTargetPlatform . '/'
