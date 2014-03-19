@@ -16,6 +16,7 @@ elseif android#isAntProject()
   exec 'CompilerSet makeprg=' . ant#bin() . '\ -find\ build.xml'
   CompilerSet errorformat=\ %#[javac]\ %#%f:%l:%c:%*\\d:%*\\d:\ %t%[%^:]%#:%m,
                 \%A\ %#[javac]\ %f:%l:\ %m,
+                \Error:\ %m,
                 \%A\ %#[aapt]\ %f:%l:\ %m,%-Z\ %#[javac]\ %p^,%-C%.%#,
                 \%A\ %#[exec]\ Failure\ [%m]
 endif
