@@ -246,7 +246,7 @@ function! android#install(mode)
   " If only one device is found automatically install to it.
   if len(l:devices) == 1
     let l:device = strpart(l:devices[0], 3)
-    return adb(l:device, a:mode)
+    return adb#install(l:device, a:mode)
   endif
 
   " If more than one device is found give a list so the user can choose.
