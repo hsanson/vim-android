@@ -381,16 +381,29 @@ function! android#setClassPath()
   call classpath#setClassPath()
 endfunction
 
+""
+" Try to find out the project name. The resulting apk files will have this name
+" as prefix so we need it to install the apk on the devices/emulators.
+"
 function! android#getProjectName()
-  " Now try to find out the project name and the apk file names for release and
-  " debug.
   if filereadable('build.xml')
+    " If there is a build.xml file (ant build) we can get the project name from
+    " it.
     for line in readfile('build.xml')
       if line =~ "project name"
         let s:androidProjectName = matchstr(line, '\cproject name=\([''"]\)\zs.\{-}\ze\1')
       endif
     endfor
-  end
+  else
+    " If there is no build.xml file (gradle build) we use the current directory
+    " name as project name.
+    "
+    " TODO: Using the folder name as project name is not reliable. In gradle
+    " 1.11 it is possible to set a different project name in the settings.gradle
+    " file. We must add a check here to find that file and if exists then
+    " extract the project name from it.
+    let s:androidProjectName = fnamemodify(".",":p:h:t")
+  endif
   return s:androidProjectName
 endfunction
 
