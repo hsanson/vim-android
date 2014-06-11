@@ -111,23 +111,21 @@ endfunction
 
 " Add the android.jar and source path for the SDK version defined in the AndroidManifest.xml
 function! s:addManifestSdkJar(paths, jars)
-  if filereadable('AndroidManifest.xml')
-    for line in readfile('AndroidManifest.xml')
-      if line =~ 'android:targetSdkVersion='
-        let l:androidTarget = matchstr(line, '\candroid:targetSdkVersion=\([''"]\)\zs.\{-}\ze\1')
-        let l:androidTargetPlatform = 'android-' . l:androidTarget
-        let l:targetAndroidJar = g:android_sdk_path . '/platforms/' . l:androidTargetPlatform . '/android.jar'
-        let l:targetAndroidSrc = g:android_sdk_path . '/sources/' . l:androidTargetPlatform . '/'
-        if index(s:oldjars, l:targetAndroidJar) == -1 && index(a:jars, l:targetAndroidJar) == -1
-          call add(a:jars, l:targetAndroidJar)
-        endif
-        if isdirectory(l:targetAndroidSrc) && index(a:paths, l:targetAndroidSrc) == -1
-          call add(a:paths, l:targetAndroidSrc)
-        endif
-        break
+  for line in readfile(android#findManifest())
+    if line =~ 'android:targetSdkVersion='
+      let l:androidTarget = matchstr(line, '\candroid:targetSdkVersion=\([''"]\)\zs.\{-}\ze\1')
+      let l:androidTargetPlatform = 'android-' . l:androidTarget
+      let l:targetAndroidJar = g:android_sdk_path . '/platforms/' . l:androidTargetPlatform . '/android.jar'
+      let l:targetAndroidSrc = g:android_sdk_path . '/sources/' . l:androidTargetPlatform . '/'
+      if index(s:oldjars, l:targetAndroidJar) == -1 && index(a:jars, l:targetAndroidJar) == -1
+        call add(a:jars, l:targetAndroidJar)
       endif
-    endfor
-  end
+      if isdirectory(l:targetAndroidSrc) && index(a:paths, l:targetAndroidSrc) == -1
+        call add(a:paths, l:targetAndroidSrc)
+      endif
+      break
+    endif
+  endfor
 endfunction
 
 " Add the android.jar for the SDK version defined in the build.gradle and the
