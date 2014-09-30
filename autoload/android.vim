@@ -407,32 +407,13 @@ function! android#getProjectName()
   return s:androidProjectName
 endfunction
 
-function! android#getDebugApkPath()
-  if(android#isGradleProject())
-    let s:androidDebugApkPath = "build/apk/" . android#getProjectName() . "-debug-unaligned.apk"
-  else
-    let s:androidDebugApkPath = "bin/" . android#getProjectName() . "-debug.apk"
-  endif
-  return s:androidDebugApkPath
-endfunction
-
-function! android#getReleaseApkPath()
-  if(android#isGradleProject())
-    let s:androidReleaseApkPath = "build/apk/" . android#getProjectName() . "-release.apk"
-  else
-    let s:androidReleaseApkPath = "bin/" . android#getProjectName() . "-release.apk"
-  endif
-  return s:androidReleaseApkPath
-endfunction
-
 function! android#getApkPath(mode)
-  if a:mode == "release"
-    return android#getReleaseApkPath()
-  elseif a:mode == "debug"
-    return android#getDebugApkPath()
-  else
-    call android#logw("Could not find apk for " . a:mode . " build. Maybe need to build it first?")
-  endif
+  let s:androidApkFile = android#getProjectName() . "-" . a:mode . ".apk"
+  let old_wildignore = &wildignore
+  let &wildignore = ""
+  let s:androidApkPath = findfile(s:androidApkFile, ".**")
+  let &wildignore = old_wildignore
+  return s:androidApkPath
 endfunction
 
 function! android#listDevices()
