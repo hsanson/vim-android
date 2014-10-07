@@ -238,7 +238,16 @@ function! android#compile(mode)
   endif
 
   if(android#isGradleProject())
-    let l:result = s:compile('assemble' . android#capitalize(a:mode))
+    "if mode == 'release' or 'debug' it should add 'assemble' (eg. assembleRelease)
+    if (a:mode !~ 'assemble')
+      if (a:mode =~ 'release' || a:mode =~ 'debug') 
+        let l:result = s:compile('assemble' . android#capitalize(a:mode))
+        return
+      endif
+    endif
+
+    "for 'test' or others it should just execute the command
+    let l:result = s:compile(a:mode)
   else
     let l:result = s:compile(a:mode)
   endif
