@@ -238,7 +238,14 @@ function! android#compile(mode)
   endif
 
   if(android#isGradleProject())
-    let l:result = s:compile('assemble' . android#capitalize(a:mode))
+    if (a:mode =~ '^test') "Starts with 'test' (allows eg. :AndroidBuild test --debug)
+      let l:result = s:compile(a:mode)
+      return
+    elseif (a:mode !~# '^assemble')
+      let l:result = s:compile('assemble' . android#capitalize(a:mode))
+      return
+    endif
+    let l:result = s:compile(a:mode)
   else
     let l:result = s:compile(a:mode)
   endif
