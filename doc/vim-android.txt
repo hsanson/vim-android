@@ -117,6 +117,10 @@ COMMANDS                                                   *vim-android-commands
     debug mode for ant projects and any  buildType (e.g. release, debug, test)
     on gradle projects.
 
+:AndroidTest                                                    *:AndroidTest*
+    Runs the tests for gradle and ant projects. This is the same and calling
+    ant test or gradle test on the terminal.
+
 :AndroidClean                                                   *:AndroidClean*
     Cleans the build auto-generated files.
 

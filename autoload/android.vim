@@ -231,7 +231,22 @@ function! android#clean()
   endif
 endfunction
 
-function! android#compile(mode)
+function! android#test()
+
+  if(!android#isAndroidCompilerSet())
+    throw "Android compiler not set"
+  endif
+
+  let l:result = s:compile("test")
+
+  if(l:result == 0)
+    call android#logi("Finished testing project")
+  else
+    call android#logw("Errors during testing project")
+  endif
+endfunction
+
+function! android#compile(...)
 
   if(!android#isAndroidCompilerSet())
     throw "Android compiler not set"
@@ -434,6 +449,7 @@ function! android#setupAndroidCommands()
   command! -nargs=1 AndroidBuild call android#compile(<f-args>)
   command! -nargs=1 AndroidInstall call android#install(<f-args>)
   command! AndroidClean call android#clean()
+  command! AndroidTest call android#test()
   command! AndroidUninstall call android#uninstall()
   command! AndroidUpdateTags call android#updateAndroidTags()
   command! AndroidDevices call android#listDevices()
