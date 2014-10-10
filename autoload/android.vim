@@ -253,10 +253,20 @@ function! android#compile(...)
   endif
 
   if(android#isGradleProject())
-    let l:result = s:compile('assemble' . android#capitalize(a:mode))
+    if(a:0 == 0)
+      let l:mode = "build"
+    else
+      let l:mode = 'assemble' . android#capitalize(a:1)
+    endif
   else
-    let l:result = s:compile(a:mode)
+    if(a:0 == 0)
+      let l:mode = "debug"
+    else
+      let l:mode = a:1
+    endif
   endif
+
+  let l:result = s:compile(l:mode)
 
   if(l:result == 0)
     call android#logi("Building finished successfully")
@@ -446,7 +456,7 @@ function! android#capitalize(str)
 endfunction
 
 function! android#setupAndroidCommands()
-  command! -nargs=1 AndroidBuild call android#compile(<f-args>)
+  command! -nargs=? AndroidBuild call android#compile(<f-args>)
   command! -nargs=1 AndroidInstall call android#install(<f-args>)
   command! AndroidClean call android#clean()
   command! AndroidTest call android#test()

@@ -114,8 +114,9 @@ COMMANDS                                                   *vim-android-commands
 
 :AndroidBuild <mode>                                            *:AndroidBuild*
     Builds the application APK. The <mode> parameter can be  release or
-    debug mode for ant projects and any  buildType (e.g. release, debug, test)
-    on gradle projects.
+    debug mode for ant projects and any  buildType (e.g. release, debug)
+    on gradle projects. If the <mode> parameter is omitted then if executes
+    the default build for gradle and debug for ant projects.
 
 :AndroidTest                                                    *:AndroidTest*
     Runs the tests for gradle and ant projects. This is the same and calling
