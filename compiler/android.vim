@@ -10,8 +10,11 @@ endif
 
 if android#isGradleProject()
   exec 'CompilerSet makeprg=' . gradle#bin() . '\ --no-color'
-  CompilerSet errorformat=%f:%l:\ %m,
-      \%A%f:%l:\ %m,%-Z%p^,%-C%.%#
+  CompilerSet errorformat=\[ant:checkstyle\]\ %f:%l:%c:\ %m,
+                          \[ant:checkstyle\]\ %f:%l:\ %m,
+                          \%EExecution\ failed\ for\ task\ '%.%#:findBugs'.,%Z>\ %m.\ See\ the\ report\ at:\ file://%f,
+                          \%f:%l:\ error:\ %m,
+                          \%A%f:%l:\ %m,%-Z%p^,%-C%.%#
 elseif android#isAntProject()
   exec 'CompilerSet makeprg=' . ant#bin() . '\ -find\ build.xml'
   CompilerSet errorformat=\ %#[javac]\ %#%f:%l:%c:%*\\d:%*\\d:\ %t%[%^:]%#:%m,
