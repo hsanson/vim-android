@@ -287,8 +287,12 @@ function! android#compile(...)
   if(android#isGradleProject())
     if(a:0 == 0)
       let l:mode = "build"
-    else
+    elseif(a:1 == "debug")
       let l:mode = 'assemble' . android#capitalize(a:1)
+    elseif(a:1 == "release")
+      let l:mode = 'assemble' . android#capitalize(a:1)
+    else
+      let l:mode = a:1
     endif
   else
     if(a:0 == 0)
