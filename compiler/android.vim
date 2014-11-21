@@ -13,6 +13,7 @@ if android#isGradleProject()
   CompilerSet errorformat=\[ant:checkstyle\]\ %f:%l:%c:\ %m,
                           \[ant:checkstyle\]\ %f:%l:\ %m,
                           \%EExecution\ failed\ for\ task\ '%.%#:findBugs'.,%Z>\ %m.\ See\ the\ report\ at:\ file://%f,
+                          \>\ There\ were\ failing\ tests.\ See\ the\ report\ at:\ file://%.%#,
                           \%f:%l:\ error:\ %m,
                           \%A%f:%l:\ %m,%-Z%p^,%-C%.%#
 elseif android#isAntProject()
