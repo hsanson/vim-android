@@ -27,7 +27,7 @@ endfunction
 " a:mode can be any of the compile modes supported by the build system (e.g.
 " debug or release).
 function! gradle#install(device, mode)
-  let l:cmd = "ANDROID_SERIAL=" . a:device . " " . gradle#bin() . ' install' . android#capitalize(a:mode)
+  let l:cmd = "ANDROID_SERIAL=" . a:device . " " . gradle#bin() . ' -f ' . g:gradle_file . ' install' . android#capitalize(a:mode)
   call android#logi("Installing " . a:mode . " to " . a:device . " (wait...)")
   let l:output = system(l:cmd)
   redraw!

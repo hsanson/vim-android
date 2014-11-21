@@ -16,11 +16,13 @@ function! android#loge(msg)
 endfunction
 
 function! android#setCompiler()
-  silent! execute("compiler android")
+  if android#isGradleProject() || android#isAntProject()
+    silent! execute("compiler android")
+  endif
 endfunction
 
 function! android#isAndroidCompilerSet()
-  if(b:current_compiler == "android")
+  if(exists("b:current_compiler") && b:current_compiler == "android")
     return 1
   else
     return 0
@@ -80,13 +82,27 @@ function! android#checkAndroidHome()
   return 1
 endfunction
 
+function! android#findGradleFile()
+  let l:file = findfile("build.gradle", expand("%:p:h") . "/**;$HOME")
+  if match(l:file, "/") != 0
+    let l:file = getcwd() . "/" . l:file
+  endif
+  return l:file
+endfunction
+
+function! android#findAntFile()
+  let l:file = findfile("build.xml", expand("%:p:h") . "/**;$HOME")
+  if match(l:file, "/") != 0
+    let l:file = getcwd() . "/" . l:file
+  endif
+  return l:file
+endfunction
+
 " Try to automagically determine the build type (gradle or ant) giving
-" preference to gradle builds. It is possible to override this preference by
-" directly setting the g:android_build_type variable to *gradle* or *ant* in
-" the vimrc file.
+" preference to gradle builds.
 function! android#getBuildType()
 
-  if(exists('g:android_build_type'))
+  if exists("g:android_build_type")
     return g:android_build_type
   endif
 
@@ -96,9 +112,9 @@ function! android#getBuildType()
     return g:android_build_type
   endif
 
-  let l:gradle_cfg_exists = filereadable('build.gradle')
+  let l:gradle_cfg_exists = filereadable(android#findGradleFile())
   let l:gradle_bin_exists = executable(gradle#bin())
-  let l:ant_cfg_exists = filereadable('build.xml')
+  let l:ant_cfg_exists = filereadable(android#findAntFile())
   let l:ant_bin_exists = executable(ant#bin())
 
   if( ! l:gradle_cfg_exists && ! l:ant_cfg_exists )
@@ -170,6 +186,14 @@ function! android#updateAndroidTags()
 endfunction
 
 function! s:compile(action)
+
+  call android#setCompiler()
+
+  if(!android#isAndroidCompilerSet())
+    call android#logw("Android compiler not set")
+    return
+  endif
+
   let shellpipe = &shellpipe
 
   if(android#isGradleProject())
@@ -218,8 +242,11 @@ endfunction
 
 function! android#clean()
 
+  call android#setCompiler()
+
   if(!android#isAndroidCompilerSet())
-    throw "Android compiler not set"
+    call android#logw("Android compiler not set")
+    return
   endif
 
   let l:result = s:compile("clean")
@@ -233,8 +260,11 @@ endfunction
 
 function! android#test()
 
+  call android#setCompiler()
+
   if(!android#isAndroidCompilerSet())
-    throw "Android compiler not set"
+    call android#logw("Android compiler not set")
+    return
   endif
 
   let l:result = s:compile("test")
@@ -247,6 +277,8 @@ function! android#test()
 endfunction
 
 function! android#compile(...)
+
+  call android#setCompiler()
 
   if(!android#isAndroidCompilerSet())
     throw "Android compiler not set"
@@ -277,8 +309,16 @@ endfunction
 
 function! android#install(mode)
 
+  call android#setCompiler()
+
   if(!android#isAndroidCompilerSet())
-    throw "Android compiler not set"
+    call android#logw("Android compiler not set")
+    return
+  endif
+
+  if(!filereadable(android#getApkPath(a:mode)))
+    call android#compile(a:mode)
+    return
   endif
 
   if(!filereadable(android#getApkPath(a:mode)))
@@ -342,6 +382,8 @@ function! android#install(mode)
 endfunction
 
 function! android#uninstall()
+
+  call android#setCompiler()
 
   if(!android#isAndroidCompilerSet())
     call android#logw("No android compiler set.")
