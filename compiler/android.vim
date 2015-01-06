@@ -15,8 +15,8 @@ if android#isGradleProject()
                           \%EExecution\ failed\ for\ task\ '%.%#:findBugs'.,%Z>\ %m.\ See\ the\ report\ at:\ file://%f,
                           \%EExecution\ failed\ for\ task\ '%.%#:lint'.,%Z>\ %m,
                           \>\ There\ were\ failing\ tests.\ See\ the\ report\ at:\ file://%.%#,
-                          \%f:%l:\ error:\ %m,
-                          \%A%f:%l:\ %m,%-Z%p^,%-C%.%#
+                          \%A%f:%l:\ %tarning:\ %m,%-Z%p^,%-C%.%#,
+                          \%A%f:%l:\ %trror:\ %m,%-Z%p^,%-C%.%#
 elseif android#isAntProject()
   exec 'CompilerSet makeprg=' . ant#bin() . '\ -f\ ' . android#findAntFile()
   CompilerSet errorformat=\ %#[javac]\ %#%f:%l:%c:%*\\d:%*\\d:\ %t%[%^:]%#:%m,
