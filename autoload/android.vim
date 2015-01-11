@@ -376,6 +376,100 @@ function! android#capitalize(str)
   return substitute(a:str, '\(^.\)', '\u&', 'g')
 endfunction
 
+""
+" Function that tries to determine the location of the android binary.
+function! android#bin()
+
+  if exists('g:android_tool')
+    return g:android_tool
+  endif
+
+  let g:android_tool = g:android_sdk_path . "/tools/android"
+
+  if(!executable(g:android_tool))
+    if executable("android")
+      let g:android_tool = "android"
+    else
+      throw "Unable to find android tool binary. Ensure you set g:android_sdk_path correctly."
+    endif
+  endif
+
+  return g:android_tool
+
+endfunction
+
+""
+" Find android emulator binary
+function! android#emulatorbin()
+
+  if exists('g:android_emulator')
+    return g:android_emulator
+  endif
+
+  let g:android_emulator = g:android_sdk_path . "/tools/emulator"
+
+  if(!executable(g:android_emulator))
+    if executable("emulator")
+      let g:android_emulator = "emulator"
+    else
+      throw "Unable to find android emulator binary. Ensure you set g:android_sdk_path correctly."
+    endif
+  endif
+
+  return g:android_emulator
+endfunction
+
+""
+" List AVD emulators
+function! android#avds()
+
+  let l:avd_output = system(android#bin() . " list avd")
+  let l:avd_devices = filter(split(l:avd_output, '\n'), 'v:val =~ "Name: "')
+  let l:avd = map(l:avd_devices, 'v:key . ". " . substitute(v:val, "Name: ", "", "")')
+
+  "call android#logi(len(l:devices) . "  Devices " . join(l:devices, " || "))
+
+  return l:avd
+endfunction
+
+function! android#emulator()
+
+  let l:avds = android#avds()
+
+  " There are no avds defined
+  if len(l:avds) == 0
+    call android#logw("No android emulator defined")
+    return 0
+  endif
+
+  " If only one device is found automatically install to it.
+  if len(l:avds) == 1
+    let l:avd = strpart(l:avds[0], 3)
+    execute 'silent !' . android#emulatorbin() . " -avd " . l:avd . " &> /dev/null &"
+    redraw!
+  endif
+
+  " If more than one emulator avd is found give a list so the user can choose.
+  let l:choice = -1
+
+  while(l:choice < 0 || l:choice >= len(l:avds))
+    echom "Select target device"
+    call inputsave()
+    let l:choice = inputlist(l:avds)
+    call inputrestore()
+    echo "\n"
+  endwhile
+
+  echomsg l:choice
+
+  let l:option = l:avds[l:choice]
+  let l:avd = strpart(l:option, 3)
+
+  execute 'silent !' . android#emulatorbin() . " -avd " . l:avd . " &> /dev/null &"
+  redraw!
+
+endfunction
+
 function! android#setupAndroidCommands()
   command! -nargs=+ Gradle call android#compile(<f-args>)
   command! -nargs=+ Android call android#compile(<f-args>)
@@ -386,4 +480,5 @@ function! android#setupAndroidCommands()
   command! AndroidUninstall call android#uninstall()
   command! AndroidUpdateTags call android#updateAndroidTags()
   command! AndroidDevices call android#listDevices()
+  command! AndroidEmulator call android#emulator()
 endfunction

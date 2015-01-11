@@ -170,6 +170,9 @@ COMMANDS                                                   *vim-android-commands
 :AndroidDevices                                               *:AndroidDevices*
     Lists all android devices connected and all running emulators.
 
+:AndroidEmulator                                             *:AndroidEmulator*
+    Allows to start defined avd emulators within vim.
+
 ------------------------------------------------------------------------------
 KEY MAPPINGS                                                  *vim-android-keys*
 By default the vim-android plugin has no mappings and all functionality is
