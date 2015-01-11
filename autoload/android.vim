@@ -15,20 +15,6 @@ function! android#loge(msg)
   echohl normal
 endfunction
 
-function! android#setCompiler()
-  if android#isGradleProject() || android#isAntProject()
-    silent! execute("compiler android")
-  endif
-endfunction
-
-function! android#isAndroidCompilerSet()
-  if(exists("b:current_compiler") && b:current_compiler == "android")
-    return 1
-  else
-    return 0
-  endif
-endfunction
-
 ""
 " Simple heuristic that tries to find the location for the AndroidManifest.xml
 " file.
@@ -62,14 +48,6 @@ function! android#isAndroidProject()
   return filereadable(android#findManifest())
 endfunction
 
-function! android#isGradleProject()
-  return android#getBuildType() == "gradle"
-endfunction
-
-function! android#isAntProject()
-  return android#getBuildType() == "ant"
-endfunction
-
 function! android#checkAndroidHome()
   if exists("g:android_sdk_path") && finddir(g:android_sdk_path) != ""
     let $ANDROID_HOME=g:android_sdk_path
@@ -80,67 +58,6 @@ function! android#checkAndroidHome()
     return 0
   endif
   return 1
-endfunction
-
-function! android#findGradleFile()
-  let l:file = findfile("build.gradle", expand("%:p:h") . "/**;$HOME")
-  if match(l:file, "/") != 0
-    let l:file = getcwd() . "/" . l:file
-  endif
-  return l:file
-endfunction
-
-function! android#findAntFile()
-  let l:file = findfile("build.xml", expand("%:p:h") . "/**;$HOME")
-  if match(l:file, "/") != 0
-    let l:file = getcwd() . "/" . l:file
-  endif
-  return l:file
-endfunction
-
-" Try to automagically determine the build type (gradle or ant) giving
-" preference to gradle builds.
-function! android#getBuildType()
-
-  if exists("g:android_build_type")
-    return g:android_build_type
-  endif
-
-  let g:android_build_type = "undefined"
-
-  if ! android#checkAndroidHome()
-    return g:android_build_type
-  endif
-
-  let l:gradle_cfg_exists = filereadable(android#findGradleFile())
-  let l:gradle_bin_exists = executable(gradle#bin())
-  let l:ant_cfg_exists = filereadable(android#findAntFile())
-  let l:ant_bin_exists = executable(ant#bin())
-
-  if( ! l:gradle_cfg_exists && ! l:ant_cfg_exists )
-    call android#loge("Could not find any build.gradle or build.xml file... aborting")
-    return g:android_build_type
-  endif
-
-  if( l:gradle_cfg_exists && l:gradle_bin_exists )
-    let g:android_build_type = "gradle"
-    return g:android_build_type
-  endif
-
-  if( l:ant_cfg_exists && l:ant_bin_exists )
-    let g:android_build_type = "ant"
-    return g:android_build_type
-  endif
-
-  if( l:gradle_cfg_exists && ! l:gradle_bin_exists )
-    call android#loge("Found build.gradle file but there is no gradle binary available. Set the g:gradle_path varible to point to your gradle installation.")
-  endif
-
-  if( l:ant_cfg_exists && ! l:ant_bin_exists )
-    call android#loge("Found build.ant file but there is not ant binary available. Make sure you installed ant and ant-optional packages on you machine.")
-  endif
-
-  return g:android_build_type
 endfunction
 
 ""
@@ -185,41 +102,6 @@ function! android#updateAndroidTags()
   "endif
 endfunction
 
-function! s:compile(action)
-
-  call android#setCompiler()
-
-  if(!android#isAndroidCompilerSet())
-    call android#logw("Android compiler not set")
-    return
-  endif
-
-  let shellpipe = &shellpipe
-
-  if(android#isGradleProject())
-    let &shellpipe = '2>'
-  endif
-
-  call android#logi("Compiling " . a:action)
-  "if exists('g:loaded_dispatch')
-  ""  silent! exe 'Make'
-  "else
-    execute("silent! make " . a:action)
-    redraw!
-  "endif
-
-  " Restore previous values
-  let &shellpipe = shellpipe
-  return s:getErrorCount()
-endfunction
-
-" This method returns the number of valid errors in the quickfix window. This
-" allows us to check if there are errors after compilation.
-function! s:getErrorCount()
-  let l:list = deepcopy(getqflist())
-  return len(filter(l:list, "v:val['valid'] > 0"))
-endfunction
-
 " Try to determine the project package name by reading the AndroidManifest.xml
 " file. Returns a string containing the package name or throws and exception if
 " not found.
@@ -242,9 +124,9 @@ endfunction
 
 function! android#clean()
 
-  call android#setCompiler()
+  call gradle#setCompiler()
 
-  if(!android#isAndroidCompilerSet())
+  if(!gradle#isCompilerSet())
     call android#logw("Android compiler not set")
     return
   endif
@@ -260,9 +142,9 @@ endfunction
 
 function! android#test()
 
-  call android#setCompiler()
+  call gradle#setCompiler()
 
-  if(!android#isAndroidCompilerSet())
+  if(!gradle#isCompilerSet())
     call android#logw("Android compiler not set")
     return
   endif
@@ -278,31 +160,24 @@ endfunction
 
 function! android#compile(...)
 
-  call android#setCompiler()
+  call gradle#setCompiler()
 
-  if(!android#isAndroidCompilerSet())
+  if(!gradle#isCompilerSet())
     throw "Android compiler not set"
   endif
 
-  if(android#isGradleProject())
-    if(a:0 == 0)
-      let l:mode = "build"
-    elseif(a:1 == "debug")
-      let l:mode = 'assemble' . android#capitalize(a:1)
-    elseif(a:1 == "release")
-      let l:mode = 'assemble' . android#capitalize(a:1)
-    else
-      let l:mode = a:1
-    endif
+  if(a:0 == 0)
+    let l:mode = "build"
+    let l:result = gradle#run(l:mode)
+  elseif(a:0 == 1 && a:1 == "debug")
+    let l:mode = 'assemble' . android#capitalize(a:1)
+    let l:result = gradle#run(l:mode)
+  elseif(a:0 == 0 && a:1 == "release")
+    let l:mode = 'assemble' . android#capitalize(a:1)
+    let l:result = gradle#run(l:mode)
   else
-    if(a:0 == 0)
-      let l:mode = "debug"
-    else
-      let l:mode = a:1
-    endif
+    let l:result = call("gradle#run", a:000)
   endif
-
-  let l:result = s:compile(l:mode)
 
   if(l:result == 0)
     call android#logi("Building finished successfully")
@@ -313,9 +188,9 @@ endfunction
 
 function! android#install(mode)
 
-  call android#setCompiler()
+  call gradle#setCompiler()
 
-  if(!android#isAndroidCompilerSet())
+  if(!gradle#isCompilerSet())
     call android#logw("Android compiler not set")
     return
   endif
@@ -387,9 +262,9 @@ endfunction
 
 function! android#uninstall()
 
-  call android#setCompiler()
+  call gradle#setCompiler()
 
-  if(!android#isAndroidCompilerSet())
+  if(!gradle#isCompilerSet())
     call android#logw("No android compiler set.")
     return
   endif
@@ -502,6 +377,8 @@ function! android#capitalize(str)
 endfunction
 
 function! android#setupAndroidCommands()
+  command! -nargs=+ Gradle call android#compile(<f-args>)
+  command! -nargs=+ Android call android#compile(<f-args>)
   command! -nargs=? AndroidBuild call android#compile(<f-args>)
   command! -nargs=1 AndroidInstall call android#install(<f-args>)
   command! AndroidClean call android#clean()

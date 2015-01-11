@@ -9,6 +9,7 @@ Version:        1.2.0
 Contents                                   *vim-android* *vim-android-contents*
 
          1. Intro ........................... |vim-android-intro|
+              Changelog                       |vim-android-changelog|
               Supported Features              |vim-android-features|
               Known Issues                    |vim-android-issues|
          2. Requirements .................... |vim-android-requirements|
@@ -29,9 +30,13 @@ to find an AndroidManifest.xml file in the current directory and if found it
 cofigures a set of variables and commands that allows easier development for
 Android applications.
 
-The latest version of this plugin can also build and install gradle based
-projects that is the new build system used by the android build tools and
-AndroidStudio.
+------------------------------------------------------------------------------
+Changelog                                                  *vim-android-changelog*
+
+IMPORTANT: Since I do not use ant anymore for android development and Android
+Studio with the gradle plugin has come a long way now I am removing all ant
+related functions from the plugin. It is difficult to maintain funcionality
+that I do not use.
 
 ------------------------------------------------------------------------------
 SUPPORTED FEATURES                                         *vim-android-features*
@@ -41,10 +46,8 @@ The following features are supported by vim-android:
   - Auto-detection of Android projects when opening a Java or XML file. This
     relies on the AndroidManifest.xml file being located on the current
     working directory.
-  - Automatically build using ant or gradle depending on the existence of the
-    build.xml or build.gradle files respectively.
   - Add android compiler that sets the appropriate errorformat and makeprg
-    options needed to build Gradle or Ant based Android projects.
+    options needed to build Gradle based Android projects.
   - Updates the CLASSPATH environment variable to include paths for your
     current project, external libs, external lib-projects and the current
     target Android SDK jars. This allows auto-completion of Java code using
@@ -61,6 +64,9 @@ Known Issues                                             *vim-android-issues*
     filename. Instead they show a temporary file stored in the build folder.
     For this reason we cannot jump to the source file when browsing build
     errors in the quickfix window.
+
+      See: https://code.google.com/p/android/issues/detail?id=57513
+
   - The javacomplete plugin is nice but in some situations it hangs or spits
     thousands of incomprensible error messages. For this reason I recommend
     disabling it.
@@ -74,8 +80,7 @@ The following requirements have to be met in order to be able to use vim-android
     have only tested Vim 7.3.
   - Android SDK installed and with the platform-tools directory set in your
     PATH environment variable.
-  - Ant 1.7+ or Gradle 1.6+ in your PATH to enable builds via ant or gradle
-    respectively.
+  - Gradle 1.6+ in your PATH to enable builds via ant or gradle respectively.
   - The exuberant-ctags package if you want to generate tags for the android
     project, dependencies and the Android SDK.
 
@@ -105,18 +110,26 @@ load. When you open a Java or XML file this plugin checks for the presence of
 the AndroidManifest.xml and if it exists it enables several commands to build
 and install android apps into emulators and/or devices.
 
-Optionally you may also set |g:ant_path| and |g:gradle_path| to tell the
-plugin where to look for the ant and gradle binaries. Check the options
-documentation below for more details on these and other options.
+Optionally you may also set |g:gradle_path| to tell the plugin where to look
+for the gradle binaries. Check the options documentation below for more
+details on these and other options.
 
 ------------------------------------------------------------------------------
 COMMANDS                                                   *vim-android-commands*
 
+:Gradle <options>
+    Invokes gradle passing the <options> verbatim. You command accepted by
+    gradle using this command.
+
+:Android <options>
+    This is an alias to the Gradle command.
+
 :AndroidBuild <mode>                                            *:AndroidBuild*
-    Builds the application APK. The <mode> parameter can be  release or
-    debug mode for ant projects and any  buildType (e.g. release, debug)
-    on gradle projects. If the <mode> parameter is omitted then if executes
-    the default build for gradle and debug for ant projects.
+    This command is left for backward compatibility. Instead use the Android
+    or Gradle commands. Builds the application APK. The <mode> parameter can
+    be release or debug mode for ant projects and any  buildType (e.g. release,
+    debug) on gradle projects. If the <mode> parameter is omitted then if
+    executes the default build for gradle and debug for ant projects.
 
 :AndroidTest                                                    *:AndroidTest*
     Runs the tests for gradle and ant projects. This is the same and calling
@@ -197,16 +210,6 @@ directory path where gradle is installed. If g:gradle_path is not set then we
 fallback to the $GRADLE_HOME environment variable. If none is set then we
 search the gradle binary using the PATH environment variable.
 
-                                                               *g:ant_path*
-g:ant_path
-Default: $ANT_HOME
-
-When building ant based projects we need to use the ant tool to build
-and install APK files. The g:ant_path should be set to the absolute
-directory path where ant is installed. If g:ant_path is not set then we
-fallback to the $ANT_HOME environment variable. If none is set then we search
-for the ant command using the $PATH environment variable.
-
                                                             *g:android_adb_tool*
 g:android_adb_tool~
 Default: {g:android_sdk_path}/tools/adb
@@ -256,9 +259,6 @@ auto-completion dictionary.
 ==============================================================================
 9. Todo                                                       *vim-android-todo*
 
-  - Add secure prompt to AndroidReleaseInstall that requires users to input
-    the keystore and sign key passwords. Not sure how to make Vim not display
-    the input text on screen.
   - Better Android XML omni-completion.
   - Maybe add one of the LogCat plugins arround to show the log directly
     inside Vim. This is low priority for me as the Android monitor is good for

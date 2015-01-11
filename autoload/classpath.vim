@@ -172,7 +172,7 @@ function! classpath#setClassPath()
   let s:oldjars = split($CLASSPATH, ':')
 
   call s:addProjectClassPath(s:paths, s:jars)
-  if android#isGradleProject()
+  if gradle#isGradleProject()
     call s:addGradleSdkJar(s:paths, s:jars)
     call s:addGradleClassPath(getcwd(), s:paths, s:jars)
   else

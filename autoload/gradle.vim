@@ -22,6 +22,26 @@ function! gradle#bin()
 
 endfunction
 
+" Verifies if the android sdk is available and if the gradle build and binary
+" are present.
+function! gradle#isGradleProject()
+
+  let l:gradle_cfg_exists = filereadable(gradle#findGradleFile())
+  let l:gradle_bin_exists = executable(gradle#bin())
+
+  if( ! l:gradle_cfg_exists )
+    call android#loge("Could not find any build.gradle or build.xml file... aborting")
+    return 0
+  endif
+
+  if( ! l:gradle_bin_exists )
+    call android#loge("Could not find gradle binay")
+    return 0
+  endif
+
+  return 1
+endfunction
+
 " Function that compiles and installs the android app into a device.
 " a:device is the device or emulator to which we want to install
 " a:mode can be any of the compile modes supported by the build system (e.g.
@@ -40,5 +60,61 @@ function! gradle#install(device, mode)
     call android#loge("Installation failed on " . a:device . " with error " . l:errormsg)
     return 1
   endif
+endfunction
+
+function! gradle#findGradleFile()
+  let l:file = findfile("build.gradle", expand("%:p:h") . "/**;$HOME")
+  if match(l:file, "/") != 0
+    let l:file = getcwd() . "/" . l:file
+  endif
+  return l:file
+endfunction
+
+function! gradle#setCompiler()
+  if gradle#isGradleProject()
+    silent! execute("compiler gradle")
+  endif
+endfunction
+
+function! gradle#isCompilerSet()
+  if(exists("b:current_compiler") && b:current_compiler == "gradle")
+    return 1
+  else
+    return 0
+  endif
+endfunction
+
+function! gradle#run(...)
+
+  call gradle#setCompiler()
+
+  if(!gradle#isCompilerSet())
+    call android#logw("Android compiler not set")
+    return 1
+  endif
+
+  let shellpipe = &shellpipe
+
+  let &shellpipe = '2>'
+
+  call android#logi("Compiling " . join(a:000, " "))
+
+  "if exists('g:loaded_dispatch')
+  ""  silent! exe 'Make'
+  "else
+    execute("silent! make " . join(a:000, " "))
+    redraw!
+  "endif
+
+  " Restore previous values
+  let &shellpipe = shellpipe
+  return s:getErrorCount()
+endfunction
+
+" This method returns the number of valid errors in the quickfix window. This
+" allows us to check if there are errors after compilation.
+function! s:getErrorCount()
+  let l:list = deepcopy(getqflist())
+  return len(filter(l:list, "v:val['valid'] > 0"))
 endfunction
 
