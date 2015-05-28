@@ -2,7 +2,7 @@
 " Adds the current android project classes to the classpath
 function! s:addProjectClassPath(paths, jars)
   " Add our project classes path
-  let l:local = fnamemodify('./bin/classes', ':p')
+  let l:local = fnamemodify('build/intermediates/classes/debug', ':p')
   if index(s:oldjars, l:local) == -1 && index(a:jars, l:local) == -1
     call add(a:jars, l:local)
   endif
@@ -131,29 +131,14 @@ endfunction
 " Add the android.jar for the SDK version defined in the build.gradle and the
 " android sources path.
 function! s:addGradleSdkJar(paths, jars)
-  if filereadable('build.gradle')
-    for line in readfile('build.gradle')
-      if line =~ 'compileSdkVersion'
-        let l:androidTarget = split(line, ' ')[-1]
-        if stridx(l:androidTarget, ':') > 0
-            let l:androidTarget = split(l:androidTarget, ':')[1]
-        endif
-        if stridx(l:androidTarget, '"') > 0
-            let l:androidTarget = split(l:androidTarget, '"')[0]
-        endif
-        let l:androidTargetPlatform = 'android-' . l:androidTarget
-        let l:targetAndroidJar = g:android_sdk_path . '/platforms/' . l:androidTargetPlatform . '/android.jar'
-        let l:targetAndroidSrc = g:android_sdk_path . '/sources/' . l:androidTargetPlatform . '/'
-        if index(s:oldjars, l:targetAndroidJar) == -1 && index(a:jars, l:targetAndroidJar) == -1
-          call add(a:jars, l:targetAndroidJar)
-        endif
-        if isdirectory(l:targetAndroidSrc) && index(a:paths, l:targetAndroidSrc) == -1
-          call add(a:paths, l:targetAndroidSrc)
-        endif
-        break
-      endif
-    endfor
-  end
+  let l:targetAndroidJar = gradle#getTargetJarPath()
+  let l:targetAndroidSrc = gradle#getTargetSrcPath()
+  if index(s:oldjars, l:targetAndroidJar) == -1 && index(a:jars, l:targetAndroidJar) == -1
+    call add(a:jars, l:targetAndroidJar)
+  endif
+  if isdirectory(l:targetAndroidSrc) && index(a:paths, l:targetAndroidSrc) == -1
+    call add(a:paths, l:targetAndroidSrc)
+  endif
 endfunction
 
 ""
@@ -190,5 +175,9 @@ function! classpath#setClassPath()
   silent! call javacomplete#SetClassPath($CLASSPATH)
   silent! call javacomplete#SetSourcePath($SRCPATH)
 
+  let g:JavaComplete_LibsPath = $CLASSPATH
+  let g:JavaComplete_SourcesPath = $SRCPATH
+
+  silent! call javacomplete#StartServer()
 
 endfunction
