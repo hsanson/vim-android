@@ -51,7 +51,7 @@ The following features are supported by vim-android:
   - Updates the CLASSPATH environment variable to include paths for your
     current project, external libs, external lib-projects and the current
     target Android SDK jars. This allows auto-completion of Java code using
-    other plugins such as javacomplete.
+    other plugins such as javacomplete2.
   - Adds useful commands to compile and install your application APK into
     your emulator/devices.
   - Adds useful commands to generate tags for the current project source and
@@ -69,15 +69,17 @@ Known Issues                                             *vim-android-issues*
 
   - The javacomplete plugin is nice but in some situations it hangs or spits
     thousands of incomprensible error messages. For this reason I recommend
-    disabling it.
+    you use the new javacomplete2 pluting instead:
+
+      See: https://github.com/artur-shaik/vim-javacomplete2
 
 ==============================================================================
 2. Requirements                                        *vim-android-requirements*
 
 The following requirements have to be met in order to be able to use vim-android:
 
-  - Vim 7.3 or higher. This plugin may also work with previous versions but I
-    have only tested Vim 7.3.
+  - Vim 7.3 or Latest Neovim. This plugin may also work with previous versions
+    but I have only tested Vim 7.3 and latest Neovim.
   - Android SDK installed and with the platform-tools directory set in your
     PATH environment variable.
   - Gradle 1.6+ in your PATH to enable builds via ant or gradle respectively.
@@ -246,26 +248,21 @@ ANDROID OMNI-COMPLETION                             *vim-android-omnicomplete*
 
 This plugin by itself does not provide omni-completion of Android classes
 and/or methods. Instead it relies on the javacomplete plugin to handle the
-auto-completion (https://github.com/vim-scripts/javacomplete). Make sure you
-have the javacomplete plugin intalled along this one.
+auto-completion (https://github.com/artur-shaik/vim-javacomplete2). Make
+sure you have the javacomplete2 plugin intalled along this one.
 
-For the javacomplete plugin to be able to auto-complete classes and
-methods used in your Android app, it requires you to add all the JAR and source
-directories of the Android SDK, external libraries and libs it uses.
-Fortunately this plugin takes care of this for you.
-
-This plugin scans the project.properties and the build.gradle files for
-dependencies and the Android target SDK version and adds them to the
-CLASSPATH environment variable that is used by javacomplete to generate the
-auto-completion dictionary.
+This plugin takes care of updating the CLASSPATH environment variable and the
+g:JavaComplete_Libs variable needed by javacomplete2 plugin to enable completion
+of Android classes and your project classes.
 
 ==============================================================================
 9. Todo                                                       *vim-android-todo*
 
   - Better Android XML omni-completion.
-  - Maybe add one of the LogCat plugins arround to show the log directly
-    inside Vim. This is low priority for me as the Android monitor is good for
-    my purposes.
+  - Better support AndroidAnnotation errors.
+  - Parse and show lint errors in quickfix window.
+  - Parse and show test errors in quickfix window.
+  - Support for syntastic.
 
 ==============================================================================
 10. Credits                                                *vim-android-credits*
@@ -275,7 +272,7 @@ several other plugins:
 
  - https://github.com/bpowell/vim-android
  - https://github.com/mgarriott/vim-android
- - https://github.com/anddam/android-javacomplete
+ - https://github.com/artur-shaik/vim-javacomplete2
 
 ==============================================================================
  vim: tw=78 ts=8 sw=4 sts=4 et ft=help

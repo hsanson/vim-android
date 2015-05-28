@@ -70,6 +70,32 @@ function! gradle#findGradleFile()
   return l:file
 endfunction
 
+function! gradle#getTargetVersion() 
+  let l:androidTarget = "UNDEFINED"
+  let l:gradleFile = gradle#findGradleFile()
+  if filereadable(l:gradleFile)
+    for line in readfile(l:gradleFile)
+      if line =~ 'compileSdkVersion'
+        let l:androidTarget = split(substitute(line, "['\"]", '', "g"), ' ')[-1]
+        if stridx(l:androidTarget, ':') > 0
+          let l:androidTarget = split(l:androidTarget, ':')[1]
+        endif
+      endif
+    endfor
+  endif
+  return l:androidTarget
+endfunction
+
+function! gradle#getTargetJarPath()
+  let l:targetJar = g:android_sdk_path . '/platforms/android-' . gradle#getTargetVersion() . '/android.jar'
+  return l:targetJar
+endfunction
+
+function! gradle#getTargetSrcPath()
+  let l:targetSrc = g:android_sdk_path . '/sources/andoird-' . gradle#getTargetVersion() . '/'
+  return targetSrc
+endfunction
+
 function! gradle#setCompiler()
   if gradle#isGradleProject()
     silent! execute("compiler gradle")
