@@ -3,7 +3,7 @@
 function! s:addProjectClassPath(paths, jars)
   " Add our project classes path
   let l:local = fnamemodify('build/intermediates/bundles/debug/classes.jar', ':p')
-  if index(s:oldjars, l:local) == -1 && index(a:jars, l:local) == -1
+  if filereadable(l:local) && index(s:oldjars, l:local) == -1 && index(a:jars, l:local) == -1
     call add(a:jars, l:local)
   endif
 endfunction
