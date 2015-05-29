@@ -2,7 +2,7 @@
 " Adds the current android project classes to the classpath
 function! s:addProjectClassPath(paths, jars)
   " Add our project classes path
-  let l:local = fnamemodify('build/intermediates/classes/debug', ':p')
+  let l:local = fnamemodify('build/intermediates/bundles/debug/classes.jar', ':p')
   if index(s:oldjars, l:local) == -1 && index(a:jars, l:local) == -1
     call add(a:jars, l:local)
   endif
@@ -141,6 +141,15 @@ function! s:addGradleSdkJar(paths, jars)
   endif
 endfunction
 
+function! s:addGradleLibJars(jars)
+  let l:jars = gradle#getJarList()
+  for jar in l:jars
+    if index(s:oldjars, jar) == -1 && index(a:jars, jar) == -1
+      call add(a:jars, jar)
+    endif
+  endfor
+endfunction
+
 ""
 " Update the CLASSPATH environment variable to include all classes related to
 " the current Android project.
@@ -159,6 +168,7 @@ function! classpath#setClassPath()
   call s:addProjectClassPath(s:paths, s:jars)
   if gradle#isGradleProject()
     call s:addGradleSdkJar(s:paths, s:jars)
+    call s:addGradleLibJars(s:jars)
     call s:addGradleClassPath(getcwd(), s:paths, s:jars)
   else
     call s:addManifestSdkJar(s:paths, s:jars)

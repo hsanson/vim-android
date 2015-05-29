@@ -22,6 +22,13 @@ function! gradle#bin()
 
 endfunction
 
+function! s:gradleCacheDir()
+  if ! exists('g:gradle_cache_dir')
+    let g:gradle_cache_dir = $HOME . "/.gradle/caches"
+  endif
+  return g:gradle_cache_dir
+endfunction
+
 " Verifies if the android sdk is available and if the gradle build and binary
 " are present.
 function! gradle#isGradleProject()
@@ -68,6 +75,10 @@ function! gradle#findGradleFile()
     let l:file = getcwd() . "/" . l:file
   endif
   return l:file
+endfunction
+
+function! gradle#findRoot()
+  return fnamemodify(gradle#findGradleFile(), ":p:h")
 endfunction
 
 function! gradle#getTargetVersion() 
@@ -144,3 +155,52 @@ function! s:getErrorCount()
   return len(filter(l:list, "v:val['valid'] > 0"))
 endfunction
 
+" Find jar file locations for all libraries declared in the build.gradle file
+" via compile directive.
+function! gradle#getJarList()
+
+  let l:jars = []
+  let l:gradleFile = gradle#findGradleFile()
+
+
+  if ! filereadable(l:gradleFile)
+    call android#logw("Android compiler not set")
+    return l:jars
+  endif
+
+  for line in readfile(l:gradleFile)
+    let sanitized_line = substitute(line, "\'", '"', "g")
+    " Match strings of the form: compile 'com.squareup.okhttp:okhttp-urlconnection:2.0.0' with
+    " the library part and version separated into mlist[2] and mlist[3]
+    let mlist = matchlist(sanitized_line,  '^\s*compile\s\+"\(.\+\):\(.\+\):\(.\+\)"')
+    if empty(mlist) == 0 && len(mlist[1]) > 0 && len(mlist[2]) > 0 && len(mlist[3]) > 0
+      if ! s:addJar(mlist[2], mlist[3], l:jars)
+        call s:addAar(mlist[1], mlist[2], mlist[3], l:jars)
+      endif
+    endif
+  endfor
+
+  return l:jars
+endfunction
+
+" Look for jar files in the gradle caches directories and android sdk extras and
+" add them to the argument list.
+function! s:addJar(name, version, list)
+  let l:jarName = a:name . "-" . a:version . ".jar"
+  let l:jar = findfile(l:jarName, s:gradleCacheDir() . "/**," . g:android_sdk_path . "/extras/**")
+  if len(l:jar) > 0
+    call add(a:list, l:jar)
+    return 1
+  else
+    return 0
+  end
+endfunction
+
+" Look for jar files for libraries inside the exploded-aar folder within the
+" gradle project.
+function! s:addAar(package, name, version, list)
+  let l:path = gradle#findRoot() . "/build/intermediates/exploded-aar/" . a:package . "/" . a:name . "/" . a:version . "/classes.jar"
+  if filereadable(l:path)
+    call add(a:list, l:path)
+  endif
+endfunction
