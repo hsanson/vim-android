@@ -22,18 +22,16 @@ function! s:addLibJarClassPath(dir, jars)
 endfunction
 
 function! s:addGradlePaths(dir, paths)
-
-    " By default gradle projects have well defined source structure. Make sure
-    " we add it the the path
-    let l:javapath = fnamemodify(a:dir . "/src/main/java", ':p')
-    let l:respath = fnamemodify(a:dir . "/src/main/res", ':p')
-    if isdirectory(l:javapath) && index(a:paths, l:javapath) == -1
-      call add(a:paths, l:javapath)
-    endif
-    if isdirectory(l:respath) && index(a:paths, l:respath) == -1
-      call add(a:paths, l:respath)
-    endif
-  end
+  " By default gradle projects have well defined source structure. Make sure
+  " we add it the the path
+  let l:javapath = fnamemodify(a:dir . "/src/main/java", ':p')
+  let l:respath = fnamemodify(a:dir . "/src/main/res", ':p')
+  if isdirectory(l:javapath) && index(a:paths, l:javapath) == -1
+    call add(a:paths, l:javapath)
+  endif
+  if isdirectory(l:respath) && index(a:paths, l:respath) == -1
+    call add(a:paths, l:respath)
+  endif
 endfunction
 
 " Add the android.jar for the SDK version defined in the build.gradle and the
