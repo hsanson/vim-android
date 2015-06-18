@@ -163,7 +163,6 @@ function! gradle#getJarList()
   let l:dependencies = gradle#getDependencies(android#getProjectName())
 
   for dep in l:dependencies
-    call s:addAar(dep[0], dep[1], dep[2], l:jars)
     call s:addJar(dep[1], dep[2], l:jars)
   endfor
 
@@ -252,35 +251,63 @@ function! gradle#getDependencies(project)
 
   echon " finished."
 
-  silent! redraw
+  redraw!
 
   return l:dependencies
 endfunction
 
 function! s:getCache()
-  if !exists('s:cache')
-    let s:cache = {}
-  endif
-  return s:cache
-endfunction
-
-function! s:findInCache(name)
-  let l:cache = s:getCache()
-  return has_key(s:getCache(), a:name)
+  return s:preloadCache()
 endfunction
 
 function! s:getFromCache(name)
   let l:cache = s:getCache()
-  return l:cache[a:name]
+  if has_key(l:cache, a:name)
+    return l:cache[a:name]
+  end
 endfunction
 
-function! s:addToCache(name, path)
-  let l:cache = s:getCache()
-  let l:cache[a:name] = a:path
+" Force preloading of jar list cache
+function! gradle#loadCache()
+  return s:loadCache()
 endfunction
 
-function! s:findInFileSystem(name)
-  return findfile(a:name, s:gradleCacheDir() . "/**," . g:android_sdk_path . "/extras/**")
+" Preload jar list cache only if not loaded already.
+function! s:preloadCache()
+
+  if exists("s:cache")
+    return s:cache
+  endif
+
+  return s:loadCache()
+
+endfunction
+
+" Load list of jar files located in the android sdk
+" extras, exploded aars and the gradle cache.
+function! s:loadCache()
+
+  echo "Preloading cache"
+
+  let s:cache = {}
+
+  let l:jars = globpath(g:android_sdk_path . "extras," . s:gradleCacheDir(), "**/*.jar", 1,1)
+  for jar in l:jars
+    let l:basename = fnamemodify(jar, ":t:r")
+    let s:cache[l:basename] = jar
+  endfor
+
+  let l:aars = globpath(gradle#findRoot() . "/build/intermediates/exploded-aar", "**/classes.jar", 1, 1)
+  for aar in l:aars
+    let mlist = split(aar,  '/')
+    if mlist[-1] == "classes.jar"
+      let l:name = mlist[-3] . "-" . mlist[-2]
+      let s:cache[l:name] = aar
+    endif
+  endfor
+
+  return s:cache
+
 endfunction
 
 " Look for jar files in the gradle caches directories and android sdk extras and
@@ -288,45 +315,11 @@ endfunction
 function! s:addJar(name, version, list)
   let l:name = a:name . "-" . a:version
   let l:jarName = l:name . ".jar"
-  let l:jar = s:findInCache(l:jarName)
 
-  if s:findInCache(l:name)
-    let l:jar = s:getFromCache(l:name)
-  else
-    let l:jar = s:findInFileSystem(l:jarName)
-    call s:addToCache(l:name, l:jar)
-  endif
+  let l:jar = s:getFromCache(l:name)
 
   if len(l:jar) > 0
     call add(a:list, l:jar)
-    return 1
-  else
-    return 0
   endif
 endfunction
 
-" Look for jar files for libraries inside the exploded-aar folder within the
-" gradle project.
-function! s:addAar(package, name, version, list)
-
-  let l:name = a:name . "-" . a:version
-  let l:jar = ''
-
-  if s:findInCache(l:name)
-    let l:jar = s:getFromCache(l:name)
-  else
-    let l:path = gradle#findRoot() . "/build/intermediates/exploded-aar/" . a:package . "/" . a:name . "/" . a:version . "/classes.jar"
-    if filereadable(l:path)
-      let l:jar = l:path
-      call s:addToCache(l:name, l:jar)
-    endif
-  endif
-
-  if len(l:jar) > 0
-    call add(a:list, l:jar)
-    return 1
-  else
-    return 0
-  endif
-
-endfunction
