@@ -160,12 +160,62 @@ endfunction
 function! gradle#getJarList()
 
   let l:jars = []
+  let l:dependencies = gradle#getDependencies(android#getProjectName())
+
+  for dep in l:dependencies
+    call s:addAar(dep[0], dep[1], dep[2], l:jars)
+    call s:addJar(dep[1], dep[2], l:jars)
+  endfor
+
+  return l:jars
+endfunction
+
+function! gradle#getDependenciesCache(project)
+  if !exists('s:dependenciesCache')
+    let s:dependenciesCache = {}
+  endif
+
+  if !has_key(s:dependenciesCache, a:project)
+    let s:dependenciesCache[a:project] = []
+  endif
+
+  return s:dependenciesCache[a:project]
+endfunction
+
+function! s:addDependenciesCache(project, deps)
+  if !exists('s:dependenciesCache')
+    let s:dependenciesCache = {}
+  endif
+  let s:dependenciesCache[a:project] = a:deps
+endfunction
+
+" Executes *gradle dependencies" and parses the list of dependencies returned.
+function! gradle#getDependenciesFromGradle()
+  let l:dependencies = []
+  let l:gradle_output = split(system(gradle#bin() . ' dependencies'), '\n')
+
+  for line in l:gradle_output
+    let sanitized_line = substitute(line, "\'", '"', "g")
+    " Match strings of the form: compile 'com.squareup.okhttp:okhttp-urlconnection:2.0.0' with
+    " the library part and version separated into mlist[2] and mlist[3]
+    let mlist = matchlist(sanitized_line,  '^.*---\s\(\S\+\):\(\S\+\):\(\S\+\)\s*.*$')
+    if empty(mlist) == 0 && len(mlist[1]) > 0 && len(mlist[2]) > 0 && len(mlist[3]) > 0
+      call add(l:dependencies, [mlist[1], mlist[2], mlist[3]])
+    endif
+  endfor
+  return l:dependencies
+endfunction
+
+" Reads the build.gradle file and extracts all declared dependencies via the
+" compile keyword.
+function! gradle#getDependenciesFromBuildFile()
+
+  let l:dependencies = []
+
   let l:gradleFile = gradle#findGradleFile()
 
-
   if ! filereadable(l:gradleFile)
-    call android#logw("Android compiler not set")
-    return l:jars
+    return l:dependencies
   endif
 
   for line in readfile(l:gradleFile)
@@ -174,12 +224,37 @@ function! gradle#getJarList()
     " the library part and version separated into mlist[2] and mlist[3]
     let mlist = matchlist(sanitized_line,  '^\s*compile\s\+"\(.\+\):\(.\+\):\(.\+\)"')
     if empty(mlist) == 0 && len(mlist[1]) > 0 && len(mlist[2]) > 0 && len(mlist[3]) > 0
-      call s:addAar(mlist[1], mlist[2], mlist[3], l:jars)
-      call s:addJar(mlist[2], mlist[3], l:jars)
+      call add(l:dependencies, [mlist[1], mlist[2], mlist[3]])
     endif
   endfor
+  return l:dependencies
+endfunction
 
-  return l:jars
+" Return a list of dependencies for project
+function! gradle#getDependencies(project)
+  let l:dependencies = gradle#getDependenciesCache(a:project)
+
+  if !empty(l:dependencies)
+    return l:dependencies
+  endif
+
+  echo "Loading gradle dependencies, may take several seconds, please wait..."
+
+  let l:dependencies = gradle#getDependenciesFromGradle()
+
+  if empty(l:dependencies)
+    let l:dependencies = gradle#getDependenciesFromBuildFile()
+  endif
+
+  if !empty(l:dependencies)
+    call s:addDependenciesCache(a:project, l:dependencies)
+  endif
+
+  echon " finished."
+
+  silent! redraw
+
+  return l:dependencies
 endfunction
 
 function! s:getCache()
