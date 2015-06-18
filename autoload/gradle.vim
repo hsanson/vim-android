@@ -174,33 +174,84 @@ function! gradle#getJarList()
     " the library part and version separated into mlist[2] and mlist[3]
     let mlist = matchlist(sanitized_line,  '^\s*compile\s\+"\(.\+\):\(.\+\):\(.\+\)"')
     if empty(mlist) == 0 && len(mlist[1]) > 0 && len(mlist[2]) > 0 && len(mlist[3]) > 0
-      if ! s:addJar(mlist[2], mlist[3], l:jars)
-        call s:addAar(mlist[1], mlist[2], mlist[3], l:jars)
-      endif
+      call s:addAar(mlist[1], mlist[2], mlist[3], l:jars)
+      call s:addJar(mlist[2], mlist[3], l:jars)
     endif
   endfor
 
   return l:jars
 endfunction
 
+function! s:getCache()
+  if !exists('s:cache')
+    let s:cache = {}
+  endif
+  return s:cache
+endfunction
+
+function! s:findInCache(name)
+  let l:cache = s:getCache()
+  return has_key(s:getCache(), a:name)
+endfunction
+
+function! s:getFromCache(name)
+  let l:cache = s:getCache()
+  return l:cache[a:name]
+endfunction
+
+function! s:addToCache(name, path)
+  let l:cache = s:getCache()
+  let l:cache[a:name] = a:path
+endfunction
+
+function! s:findInFileSystem(name)
+  return findfile(a:name, s:gradleCacheDir() . "/**," . g:android_sdk_path . "/extras/**")
+endfunction
+
 " Look for jar files in the gradle caches directories and android sdk extras and
 " add them to the argument list.
 function! s:addJar(name, version, list)
-  let l:jarName = a:name . "-" . a:version . ".jar"
-  let l:jar = findfile(l:jarName, s:gradleCacheDir() . "/**," . g:android_sdk_path . "/extras/**")
+  let l:name = a:name . "-" . a:version
+  let l:jarName = l:name . ".jar"
+  let l:jar = s:findInCache(l:jarName)
+
+  if s:findInCache(l:name)
+    let l:jar = s:getFromCache(l:name)
+  else
+    let l:jar = s:findInFileSystem(l:jarName)
+    call s:addToCache(l:name, l:jar)
+  endif
+
   if len(l:jar) > 0
     call add(a:list, l:jar)
     return 1
   else
     return 0
-  end
+  endif
 endfunction
 
 " Look for jar files for libraries inside the exploded-aar folder within the
 " gradle project.
 function! s:addAar(package, name, version, list)
-  let l:path = gradle#findRoot() . "/build/intermediates/exploded-aar/" . a:package . "/" . a:name . "/" . a:version . "/classes.jar"
-  if filereadable(l:path)
-    call add(a:list, l:path)
+
+  let l:name = a:name . "-" . a:version
+  let l:jar = ''
+
+  if s:findInCache(l:name)
+    let l:jar = s:getFromCache(l:name)
+  else
+    let l:path = gradle#findRoot() . "/build/intermediates/exploded-aar/" . a:package . "/" . a:name . "/" . a:version . "/classes.jar"
+    if filereadable(l:path)
+      let l:jar = l:path
+      call s:addToCache(l:name, l:jar)
+    endif
   endif
+
+  if len(l:jar) > 0
+    call add(a:list, l:jar)
+    return 1
+  else
+    return 0
+  endif
+
 endfunction

@@ -324,7 +324,9 @@ function! android#setAndroidSdkTags()
 endfunction
 
 function! android#setClassPath()
+  call android#logi("Loading classpath, please wait...")
   call classpath#setClassPath()
+  call android#logi("")
 endfunction
 
 ""
