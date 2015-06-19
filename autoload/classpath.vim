@@ -1,59 +1,33 @@
-""
-" Adds the current android project classes to the classpath
-function! s:addProjectClassPath(paths, jars)
-  " Add our project classes path
+
+function! s:getProjectJar()
   let l:local = fnamemodify('build/intermediates/bundles/debug/classes.jar', ':p')
-  if filereadable(l:local) && index(s:oldjars, l:local) == -1 && index(a:jars, l:local) == -1
-    call add(a:jars, l:local)
+  if filereadable(l:local)
+    return l:local
   endif
 endfunction
 
 ""
-" Load all jar files inside libs folder to classpath
-function! s:addLibJarClassPath(dir, jars)
-  let wildignore = &wildignore
-  let &wildignore = ''
-  for jarfile in split(globpath(a:dir . "/libs/", "*.jar"), '\n')
-    if index(s:oldjars, jarfile) == -1 && index(a:jars, jarfile) == -1
-      call add(a:jars, jarfile)
-    endif
-  endfor
-  let &wildignore = wildignore
+" Find all jar files located inside the libs folder
+function! s:getLibJars()
+  return globpath(gradle#findRoot() . "/libs", "**/*.jar", 1,1)
 endfunction
 
-function! s:addGradlePaths(dir, paths)
+function! s:getGradleSrcPaths()
   " By default gradle projects have well defined source structure. Make sure
   " we add it the the path
-  let l:javapath = fnamemodify(a:dir . "/src/main/java", ':p')
-  let l:respath = fnamemodify(a:dir . "/src/main/res", ':p')
-  if isdirectory(l:javapath) && index(a:paths, l:javapath) == -1
-    call add(a:paths, l:javapath)
-  endif
-  if isdirectory(l:respath) && index(a:paths, l:respath) == -1
-    call add(a:paths, l:respath)
-  endif
-endfunction
+  let l:srcs = []
+  let l:javapath = fnamemodify(gradle#findRoot() . "/src/main/java", ':p')
+  let l:respath = fnamemodify(gradle#findRoot() . "/src/main/res", ':p')
 
-" Add the android.jar for the SDK version defined in the build.gradle and the
-" android sources path.
-function! s:addGradleSdkJar(paths, jars)
-  let l:targetAndroidJar = gradle#getTargetJarPath()
-  let l:targetAndroidSrc = gradle#getTargetSrcPath()
-  if index(s:oldjars, l:targetAndroidJar) == -1 && index(a:jars, l:targetAndroidJar) == -1
-    call add(a:jars, l:targetAndroidJar)
+  if isdirectory(l:javapath)
+    call add(l:srcs, l:javapath)
   endif
-  if isdirectory(l:targetAndroidSrc) && index(a:paths, l:targetAndroidSrc) == -1
-    call add(a:paths, l:targetAndroidSrc)
-  endif
-endfunction
 
-function! s:addGradleLibJars(jars)
-  let l:jars = gradle#getJarList()
-  for jar in l:jars
-    if index(s:oldjars, jar) == -1 && index(a:jars, jar) == -1
-      call add(a:jars, jar)
-    endif
-  endfor
+  if isdirectory(l:respath)
+    call add(l:srcs, l:respath)
+  endif
+
+  return l:srcs
 endfunction
 
 ""
@@ -65,24 +39,49 @@ function! classpath#setClassPath()
     return
   endif
 
-  let s:paths = []  " List of source directories
-  let s:jars  = []  " List of jar files to include in CLASSPATH
+  let l:jarList = []
 
-  " Obtain a list of current paths in the $CLASSPATH
-  let s:oldjars = split($CLASSPATH, ':')
-  let l:root = gradle#findRoot()
+  let l:oldJars = split($CLASSPATH, ':')
+  call extend(l:jarList, l:oldJars)
 
-  call s:addProjectClassPath(s:paths, s:jars)
-  call s:addGradleSdkJar(s:paths, s:jars)
-  call s:addGradleLibJars(s:jars)
-  call s:addGradlePaths(l:root, s:paths)
-  call s:addLibJarClassPath(l:root, s:jars)
+  let l:projectJar = s:getProjectJar()
+  if len(l:projectJar) > 0
+    call add(l:jarList, l:projectJar)
+  endif
 
-  call extend(s:jars, s:oldjars)
+  let l:targetJar = gradle#getTargetJarPath()
+  if len(l:projectJar) > 0
+    call add(l:jarList, l:targetJar)
+  endif
 
-  let $CLASSPATH = join(copy(s:jars), ':')
-  let $SRCPATH = join(copy(s:paths), ':')
-  exec "setlocal path=" . join(copy(s:paths), ',')
+  let l:depJars = gradle#getJarList()
+  if !empty(l:depJars)
+    call extend(l:jarList, l:depJars)
+  endif
+
+  let l:libJars = s:getLibJars()
+  if !empty(l:libJars)
+    call extend(l:jarList, l:libJars)
+  endif
+
+  let l:srcList = []
+
+  let l:targetSrc = gradle#getTargetSrcPath()
+  if len(l:targetSrc) > 0
+    call add(l:srcList, l:targetSrc)
+  endif
+
+  let l:gradleSrcPaths = s:getGradleSrcPaths()
+  if !empty(l:gradleSrcPaths)
+    call extend(l:srcList, l:gradleSrcPaths)
+  endif
+
+  let l:jarList = uniq(sort(l:jarList))
+  let l:srcList = uniq(sort(l:srcList))
+
+  let $CLASSPATH = join(l:jarList, ':')
+  let $SRCPATH = join(l:srcList, ':')
+  exec "setlocal path=" . join(l:srcList, ',')
 
   silent! call javacomplete#SetClassPath($CLASSPATH)
   silent! call javacomplete#SetSourcePath($SRCPATH)

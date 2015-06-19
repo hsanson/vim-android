@@ -22,6 +22,9 @@ function! gradle#bin()
 
 endfunction
 
+" Determines the path where the gradle cached files are located. This includes
+" dependencties jar and aar files. If the g:gradle_cache_dir variable is defined
+" it uses it as path location, otherwise it uses $HOME/.gradle/caches.
 function! s:gradleCacheDir()
   if ! exists('g:gradle_cache_dir')
     let g:gradle_cache_dir = $HOME . "/.gradle/caches"
@@ -42,7 +45,7 @@ function! gradle#isGradleProject()
   endif
 
   if( ! l:gradle_bin_exists )
-    call android#loge("Could not find gradle binay")
+    call android#loge("Could not find gradle binary. You may want to set g:gradle_bin variable")
     return 0
   endif
 
@@ -50,7 +53,7 @@ function! gradle#isGradleProject()
 endfunction
 
 " Function that compiles and installs the android app into a device.
-" a:device is the device or emulator to which we want to install
+" a:device is the device or emulator id as displayed by *adb devices* command.
 " a:mode can be any of the compile modes supported by the build system (e.g.
 " debug or release).
 function! gradle#install(device, mode)
@@ -69,6 +72,8 @@ function! gradle#install(device, mode)
   endif
 endfunction
 
+" Tries to determine the location of the build.gradle file starting from the
+" current buffer location.
 function! gradle#findGradleFile()
   let l:file = findfile("build.gradle", expand("%:p:h") . "/**;$HOME")
   if match(l:file, "/") != 0
@@ -77,10 +82,15 @@ function! gradle#findGradleFile()
   return l:file
 endfunction
 
+" Tries to find the root of the android project. It uses the build.gradle file
+" location as root. This allows vim-android to work with multi-project
+" environments.
 function! gradle#findRoot()
   return fnamemodify(gradle#findGradleFile(), ":p:h")
 endfunction
 
+" Determines the target SDK version of the project by reading the build.gradle
+" file and looking for the compileSdkVersion variable.
 function! gradle#getTargetVersion() 
   let l:androidTarget = "UNDEFINED"
   let l:gradleFile = gradle#findGradleFile()
@@ -97,14 +107,20 @@ function! gradle#getTargetVersion()
   return l:androidTarget
 endfunction
 
+" Find the android sdk jar file for the target sdk version.
 function! gradle#getTargetJarPath()
   let l:targetJar = g:android_sdk_path . '/platforms/android-' . gradle#getTargetVersion() . '/android.jar'
-  return l:targetJar
+  if filereadable(l:targetJar)
+    return l:targetJar
+  endif
 endfunction
 
+" Find the adroid sdk srouce files for the target sdk version.
 function! gradle#getTargetSrcPath()
   let l:targetSrc = g:android_sdk_path . '/sources/andoird-' . gradle#getTargetVersion() . '/'
-  return targetSrc
+  if isdirectory(l:targetSrc)
+    return targetSrc
+  endif
 endfunction
 
 function! gradle#setCompiler()
@@ -156,11 +172,13 @@ function! s:getErrorCount()
 endfunction
 
 " Find jar file locations for all libraries declared in the build.gradle file
-" via compile directive.
+" via compile directive. The first time this method runs it can take several
+" seconds because it executes the command *gradle depedencies* to find the
+" dependencies.
 function! gradle#getJarList()
 
   let l:jars = []
-  let l:dependencies = gradle#getDependencies(android#getProjectName())
+  let l:dependencies = gradle#getDependencies(android#packageName())
 
   for dep in l:dependencies
     call s:addJar(dep[1], dep[2], l:jars)
@@ -169,23 +187,23 @@ function! gradle#getJarList()
   return l:jars
 endfunction
 
-function! gradle#getDependenciesCache(project)
-  if !exists('s:dependenciesCache')
-    let s:dependenciesCache = {}
+function! gradle#getDependenciesCache(package)
+  if !exists('g:dependenciesCache')
+    let g:dependenciesCache = {}
   endif
 
-  if !has_key(s:dependenciesCache, a:project)
-    let s:dependenciesCache[a:project] = []
+  if !has_key(g:dependenciesCache, a:package)
+    let g:dependenciesCache[a:package] = []
   endif
 
-  return s:dependenciesCache[a:project]
+  return g:dependenciesCache[a:package]
 endfunction
 
-function! s:addDependenciesCache(project, deps)
-  if !exists('s:dependenciesCache')
-    let s:dependenciesCache = {}
+function! s:addDependenciesCache(package, deps)
+  if !exists('g:dependenciesCache')
+    let g:dependenciesCache = {}
   endif
-  let s:dependenciesCache[a:project] = a:deps
+  let g:dependenciesCache[a:package] = a:deps
 endfunction
 
 " Executes *gradle dependencies" and parses the list of dependencies returned.
@@ -237,7 +255,7 @@ function! gradle#getDependencies(project)
     return l:dependencies
   endif
 
-  echo "Loading gradle dependencies, may take several seconds, please wait..."
+  echo "Loading gradle dependencies for " . a:project . ", may take several seconds, please wait..."
 
   let l:dependencies = gradle#getDependenciesFromGradle()
 
@@ -287,11 +305,11 @@ endfunction
 " extras, exploded aars and the gradle cache.
 function! s:loadCache()
 
-  echo "Preloading cache"
+  echo "Preloading jar list cache"
 
   let s:cache = {}
 
-  let l:jars = globpath(g:android_sdk_path . "extras," . s:gradleCacheDir(), "**/*.jar", 1,1)
+  let l:jars = globpath(g:android_sdk_path . "/extras," . s:gradleCacheDir(), "**/*.jar", 1,1)
   for jar in l:jars
     let l:basename = fnamemodify(jar, ":t:r")
     let s:cache[l:basename] = jar

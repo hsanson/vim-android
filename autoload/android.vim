@@ -19,29 +19,27 @@ endfunction
 " Simple heuristic that tries to find the location for the AndroidManifest.xml
 " file.
 "
-" If the g:android_manifest is set then use it as location for the manifest.
-"
 " If the current opened buffer is the AndroidManifest.xml file and
 " if it is then return its absolute path.
 "
-" Finally try to find the manifest using the findfile function of vim that looks
-" recursively inside the current path.
+" Otherwise try to find the manifest using the findfile function of vim starting from
+" the location of the currently opened buffer.
 function! android#findManifest()
 
-  if exists('g:android_manifest')
-    return g:android_manifest
-  endif
-
   if(expand('%:t') == 'AndroidManifest.xml')
-    let g:android_manifest = expand('%:p')
-    return g:android_manifest
+    return expand('%:p')
   endif
 
   let old_wildignore = &wildignore
   set wildignore+=*/build/*
-  let g:android_manifest = findfile("AndroidManifest.xml")
+  let l:file = findfile("AndroidManifest.xml", expand("%:p:h") . "/**;$HOME")
   let &wildignore = old_wildignore
-  return g:android_manifest
+
+  if match(l:file, "/") != 0
+    let l:file = getcwd() . "/" . l:file
+  endif
+
+  return l:file
 endfunction
 
 function! android#isAndroidProject()
@@ -106,17 +104,15 @@ endfunction
 " file. Returns a string containing the package name or throws and exception if
 " not found.
 function! android#packageName()
-  if ! exists("s:androidPackageName")
-    for line in readfile(android#findManifest())
-      if line =~ 'package='
-        let s:androidPackageName = matchstr(line, '\cpackage=\([''"]\)\zs.\{-}\ze\1')
-        if empty("s:androidPackageName")
-          throw "Unable to get package name"
-        endif
+  for line in readfile(android#findManifest())
+    if line =~ 'package='
+      let l:androidPackageName = matchstr(line, '\cpackage=\([''"]\)\zs.\{-}\ze\1')
+      if empty("l:androidPackageName")
+        throw "Unable to get package name"
       endif
-    endfor
-  endif
-  return s:androidPackageName
+    endif
+  endfor
+  return l:androidPackageName
 endfunction
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
