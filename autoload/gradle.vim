@@ -161,14 +161,21 @@ function! gradle#run(...)
 
   " Restore previous values
   let &shellpipe = shellpipe
-  return s:getErrorCount()
+  return [s:getErrorCount(), s:getWarningCount()]
 endfunction
 
 " This method returns the number of valid errors in the quickfix window. This
 " allows us to check if there are errors after compilation.
 function! s:getErrorCount()
   let l:list = deepcopy(getqflist())
-  return len(filter(l:list, "v:val['valid'] > 0"))
+  return len(filter(l:list, "v:val['valid'] > 0 && tolower(v:val['type']) != 'w'"))
+endfunction
+
+" This method returns the number of valid warnings in the quickfix window. This
+" allows us to check if there are errors after compilation.
+function! s:getWarningCount()
+  let l:list = deepcopy(getqflist())
+  return len(filter(l:list, "v:val['valid'] > 0 && tolower(v:val['type']) == 'w'"))
 endfunction
 
 " Find jar file locations for all libraries declared in the build.gradle file

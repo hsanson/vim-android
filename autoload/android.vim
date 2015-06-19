@@ -175,10 +175,12 @@ function! android#compile(...)
     let l:result = call("gradle#run", a:000)
   endif
 
-  if(l:result == 0)
+  if(l:result[0] == 0 && l:result[1] == 0)
     call android#logi("Building finished successfully")
+  elseif(l:result[0] > 0)
+    call android#loge("Building finished with " . l:result[0] . " errors and " . l:result[1] . " warnings.")
   else
-    call android#loge("Building finished with " . l:result . " errors")
+    call android#logi("Building finished with " . l:result[1] . " warnings.")
   endif
 endfunction
 
