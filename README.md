@@ -2,7 +2,7 @@
 
 The most complete plugin there is to develop [Android](http://www.android.com) applications within vim.
 
-$ Quick Start
+# Quick Start
 
 Install the plugin using your favorite plugin manager (e.g. NeoBundle):
 
