@@ -2,6 +2,28 @@
 
 The most complete plugin there is to develop [Android](http://www.android.com) applications within vim.
 
+$ Quick Start
+
+Install the plugin using your favorite plugin manager (e.g. NeoBundle):
+
+    NeoBundle "hsanson/vim-android"
+
+Add *g:android_sdk_path* to your vimrc with the absolute path where the android sdk is installed:
+
+    let g:android_sdk_path = /path/to/android-sdk
+
+Optionally add *g:gradle_path* to the absolute path whre gradle is installed:
+
+    let g:gradle_path = /path/to/gradle
+
+Open a java or xml file of your project and use the Anroid command to compile, clean, test, lint or install your application:
+
+    :Android clean
+    :Android assembleDebug
+    :Android installDebug
+    :Android connectedCheck
+    :Android lint
+
 # Features
 
  - Automatically detect if file belongs to an android project when opening a java or xml file.
