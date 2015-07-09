@@ -35,10 +35,6 @@ endfunction
 " the current Android project.
 function! classpath#setClassPath()
 
-  if ! android#checkAndroidHome()
-    return
-  endif
-
   let l:jarList = []
 
   let l:oldJars = split($CLASSPATH, ':')

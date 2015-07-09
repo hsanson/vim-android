@@ -32,7 +32,7 @@ function! android#findManifest()
 
   let old_wildignore = &wildignore
   set wildignore+=*/build/*
-  let l:file = findfile("AndroidManifest.xml", expand("%:p:h") . "/**;$HOME")
+  let l:file = findfile("AndroidManifest.xml", expand("%:p:h") . "/;$HOME")
   let &wildignore = old_wildignore
 
   if match(l:file, "/") != 0
@@ -322,6 +322,15 @@ function! android#setAndroidSdkTags()
 endfunction
 
 function! android#setClassPath()
+
+  if ! android#isAndroidProject()
+    return
+  endif
+
+  if ! android#checkAndroidHome()
+    return
+  endif
+
   call classpath#setClassPath()
 endfunction
 
