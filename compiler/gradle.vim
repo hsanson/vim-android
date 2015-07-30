@@ -13,6 +13,8 @@ CompilerSet errorformat=\%-G%f:%l:\ %tarning:\ Element\ SubscribeHandler\ unvali
                         \[ant:checkstyle\]\ %f:%l:\ %m,
                         \Build\ file\ '%f'\ line:\ %l,
                         \%+GUnknown\ command-line\ option\ %m,
+                        \%f:%l\ :\ %trror\ parsing\ XML:\ %m,
+                        \%f:%l\ :\ %tarning\ parsing\ XML:\ %m,
                         \%E%f:%l:\ %trror:\ %m,
                         \%W%f:%l:\ %tarning:\ %m,
                         \%EFAILURE:\ %m,
