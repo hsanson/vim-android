@@ -1,9 +1,9 @@
-*vim-android.txt*    For Vim version 7.3    Last change: 2013 July 13
+*vim-android.txt*   For Vim version 7.3 or NeoVim    Last change: 2015 July 30
 
 Author:         Horacio Sanson
 Licence:        Vim licence, see |license|
 Homepage:       https://github.com/hsanson/vim-android
-Version:        1.2.0
+Version:        1.3.0
 
 ==============================================================================
 Contents                                   *vim-android* *vim-android-contents*
@@ -18,7 +18,7 @@ Contents                                   *vim-android* *vim-android-contents*
               Commands ...................... |vim-android-commands|
               Key mappings .................. |vim-android-keys|
               Omnicompletion ................ |vim-android-omnicomplete|
-              Linter ........................ |vim-android-linter|
+              Linter Support................. |vim-android-linter|
          5. Configuration ................... |vim-android-configuration|
          6. Todo ............................ |vim-android-todo|
          7. Credits ......................... |vim-android-credits|
@@ -52,7 +52,7 @@ The following features are supported by vim-android:
   - Custom gradle vim compiler that invokes gradle directly with any
     arguments passed to the command.
   - Custom errorformat that captures java errors, linter errors, test errors,
-    aapt errors, etc. and displays them in the quickfix window.
+    aapt errors and displays them in the quickfix window.
   - Updates the CLASSPATH environment variable to include paths for your
     current project, external libs, external lib-projects and the current
     target Android SDK jars. This allows auto-completion of Java code using
@@ -66,14 +66,22 @@ The following features are supported by vim-android:
     the Android SDK sources.
 
 ------------------------------------------------------------------------------
-Known Issues                                             *vim-android-issues*
+Known Issues                                                *vim-android-issues*
 
-  - The gradle build system error outputs do not show the original source
-    filename. Instead they show a temporary file stored in the build folder.
-    For this reason we cannot jump to the source file when browsing build
-    errors in the quickfix window.
+  - The first time an android java or xml file is openned we create a list of
+    dependencies for the project and a cache with all the packages found in the
+    gradle home folder. This process can be extremely slow depending on the
+    number of dependencies the project has and the number of packages cached in
+    your gradle home.
 
-      See: https://code.google.com/p/android/issues/detail?id=57513
+  - To get full support of AAPT errors in the quickfix window of vim it is
+    recommended that you use the android gradle plugin version 1.3.0 or newer.
+    Previous versions of the android gradle plugin fail to show correctly the
+    absolute path of the XML files that have errors making it difficult to jump
+    to the problem files directly within vim.
+
+        https://code.google.com/p/android/issues/detail?id=57513
+        https://code.google.com/p/android/issues/detail?id=174778
 
   - The javacomplete plugin is nice but in some situations it hangs or spits
     thousands of incomprensible error messages. For this reason I recommend
@@ -86,11 +94,13 @@ Known Issues                                             *vim-android-issues*
 
 The following requirements have to be met in order to be able to use vim-android:
 
-  - Vim 7.3 or Latest Neovim. This plugin may also work with previous versions
-    but I have only tested Vim 7.3 and latest Neovim.
+  - Vim 7.3 or a recent build of Neovim. This plugin may also work with previous
+    versions but I have only tested Vim 7.3 and Neovim.
   - Android SDK installed and with the platform-tools directory set in your
     PATH environment variable.
-  - Gradle 1.6+ in your PATH to enable builds via ant or gradle respectively.
+    - Android gradle plugin 1.3.0 or newer recommended.
+    - Android build tools 22.0.1 or newer recommended.
+  - Gradle 2.2+ in your PATH to enable builds via ant or gradle respectively.
   - The exuberant-ctags package if you want to generate tags for the android
     project, dependencies and the Android SDK.
 
@@ -116,12 +126,38 @@ it to the global variable g:android_sdk_path in your vimrc file.
 When you open a Java or XML file this plugin looks for an AndroidManifest.xml
 file starting from the location of the current open buffer upwards until your
 HOME directory. If it is found this plugin activates and enables several
-commands that faciliate working on Android projects and set environment
+commands that faciliate working on Android projects and exports environment
 variables that can be used by other plugins for omnicomplete and debugging.
 
 Optionally you may also set |g:gradle_path| to tell the plugin where to look
 for the gradle binaries. Check the options documentation below for more
 details on these and other options.
+
+------------------------------------------------------------------------------
+GRADLE BUILD                                                 *vim-android-build*
+
+For better results it is recommended to enable stderr output for the gradle linter
+and use version 1.3.0 or newer of the android gradle plugin and version 22.0.1 or
+newer of the android build tools. Below is an example of a build.gradle file that
+fullfills these requirements:
+
+    buildscript {
+      repositories {
+        mavenCentral()
+        jcenter()
+      }
+
+      dependencies {
+        classpath 'com.android.tools.build:gradle:1.3.0'
+      }
+    }
+
+    android {
+      lintOptions {
+        textReport true
+        textOutput "stderr"
+      }
+    }
 
 ------------------------------------------------------------------------------
 COMMANDS                                                   *vim-android-commands*
@@ -138,7 +174,7 @@ COMMANDS                                                   *vim-android-commands
     or Gradle commands. Builds the application APK. The <mode> parameter can
     be release or debug mode for ant projects and any  buildType (e.g. release,
     debug) on gradle projects. If the <mode> parameter is omitted then if
-    executes the default build for gradle and debug for ant projects.
+    executes the default build for gradle.
 
 :AndroidTest                                                    *:AndroidTest*
     Runs the tests for gradle and ant projects. This is the same and calling
@@ -154,14 +190,19 @@ COMMANDS                                                   *vim-android-commands
     have several emulators running and/or several devices connected then this
     command will present you a list of emulators/devices so you can choose to
     which one the APK should be installed to. If there are not apk files
-    build this command fails with an error. Ensure you build your project before
-    installing it.
+    build this command fails with an error. Current version of gradle can also
+    install the APK on all connected devices so invoking :Android installDebug
+    or :Android installRelease should have the same effect if you have a recent
+    enough version of the android gradle plugin.
 
 :AndroidUninstall                                           *:AndroidUninstall*
     This command allows to uninstall the application. If you have several
     emulators running and/or several devices connected, then this command will
     prompt you with a list of emulators/devices so you can choose from which one
-    the app should be uninstalled.
+    the app should be uninstalled. Current version of gradle can also uninstall
+    the APKs from all connected devices so invoking :Android uninstallAll should
+    have the same effect as long as you have a recent version of android gradle
+    plugin.
 
 :AndroidUpdateTags                                          *:AndroidUpdateTags*
     This is a simple helper command that generates a tags file from the
@@ -213,11 +254,11 @@ With the CLASSPATH set, plugins such as the javacomplete2 can be used to
 enable omnicompletion (https://github.com/artur-shaik/vim-javacomplete2).
 
 ------------------------------------------------------------------------------
-ANDROID LINTER                                             *vim-android-linter*
+ANDROID LINTER SUPPORT                                      *vim-android-linter*
 
-The errorformat set by this plugin is able to catch and show all linter
-errors in the quickfix window. Before this feature can be used you must
-configure your android project to output linter messages to stderr.
+By default the android gradle plugin does not print linter errors on stdout or
+stderror. In order for this plugin to be able to capture and display linter
+errors in the quickfix window we first need to enable linter output to stderr.
 
 To redirect all linter output to stderr you must add the following
 configuration to your build.gradle file within the android block:
@@ -236,11 +277,6 @@ command:
 
 that will execute the linter and show all warnings and errors within the
 quickfix window for easy navigation.
-
-In addition to the quickfix window the linter default HTML and XML reports are
-generated and stored inside the build/outputs/linter-results.html and
-build/outputs/lint-results.xml files. These contain more details on what the
-linter errors mean and how to fix or suppress them.
 
 ==============================================================================
 5. Configuration                                     *vim-android-configuration*
@@ -314,6 +350,7 @@ several other plugins:
  - https://github.com/bpowell/vim-android
  - https://github.com/mgarriott/vim-android
  - https://github.com/artur-shaik/vim-javacomplete2
+ - http://flukus.github.io/2015/07/03/2015_07_03-Vim-errorformat-Demystified/
 
 ==============================================================================
  vim: tw=78 ts=8 sw=4 sts=4 et ft=help
