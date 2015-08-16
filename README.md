@@ -16,7 +16,7 @@ Optionally add *g:gradle_path* to the absolute path whre gradle is installed:
 
     let g:gradle_path = /path/to/gradle
 
-Open a java or xml file of your project and use the Anroid command to compile, clean, test, lint or install your application:
+Open a java or xml file of your project and use the Android command to compile, clean, test, lint or install your application:
 
     :Android clean
     :Android assembleDebug
