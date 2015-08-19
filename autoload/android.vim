@@ -331,7 +331,7 @@ function! android#setClassPath()
     return
   endif
 
-  call classpath#setClassPath()
+  call gradle#setClassPath()
 endfunction
 
 ""
