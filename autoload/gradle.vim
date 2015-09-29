@@ -117,7 +117,7 @@ endfunction
 
 " Find the adroid sdk srouce files for the target sdk version.
 function! gradle#getTargetSrcPath()
-  let l:targetSrc = g:android_sdk_path . '/sources/andoird-' . gradle#getTargetVersion() . '/'
+  let l:targetSrc = g:android_sdk_path . '/sources/android-' . gradle#getTargetVersion() . '/'
   if isdirectory(l:targetSrc)
     return targetSrc
   endif
