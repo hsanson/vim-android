@@ -323,8 +323,8 @@ function! gradle#setClassPath()
     call extend(l:srcList, l:gradleSrcPaths)
   endif
 
-  let l:jarList = uniq(sort(l:jarList))
-  let l:srcList = uniq(sort(l:srcList))
+  let l:jarList = s:uniq(sort(l:jarList))
+  let l:srcList = s:uniq(sort(l:srcList))
 
   let $CLASSPATH = join(l:jarList, ':')
   let $SRCPATH = join(l:srcList, ':')
@@ -376,13 +376,13 @@ function! s:loadCache()
 
   let s:cache = {}
 
-  let l:jars = globpath(g:android_sdk_path . "/extras," . s:gradleCacheDir(), "**/*.jar", 1,1)
+  let l:jars = split(globpath(g:android_sdk_path . "/extras," . s:gradleCacheDir(), "**/*.jar", 1), "\n")
   for jar in l:jars
     let l:basename = fnamemodify(jar, ":t:r")
     let s:cache[l:basename] = jar
   endfor
 
-  let l:aars = globpath(gradle#findRoot() . "/build/intermediates/exploded-aar", "**/classes.jar", 1, 1)
+  let l:aars = split(globpath(gradle#findRoot() . "/build/intermediates/exploded-aar", "**/classes.jar", 1), "\n")
   for aar in l:aars
     let mlist = split(aar,  '/')
     if mlist[-1] == "classes.jar"
@@ -418,7 +418,7 @@ endfunction
 ""
 " Find all jar files located inside the libs folder
 function! s:getLibJars()
-  return globpath(gradle#findRoot() . "/libs", "**/*.jar", 1,1)
+  return split(globpath(gradle#findRoot() . "/libs", "**/*.jar", 1), "\n")
 endfunction
 
 function! s:getGradleSrcPaths()
@@ -439,3 +439,36 @@ function! s:getGradleSrcPaths()
   return l:srcs
 endfunction
 
+" Compatibility function.
+" This s:uniq() function will use the built in uniq() function for vim >
+" 7.4.218 and a custom implementation of older versions.
+"
+" NOTE: This method only works on sorted lists. If they are not sorted this will
+" not result in a uniq list of elements!!
+"
+" Stolen from: https://github.com/LaTeX-Box-Team/LaTeX-Box/pull/223
+function! s:uniq(list)
+
+  if exists('*uniq')
+    return uniq(a:list)
+  endif
+
+  if len(a:list) <= 1
+    return a:list
+  endif
+
+  let last_element = get(a:list,0)
+  let uniq_list = [last_element]
+
+  for i in range(1, len(a:list)-1)
+    let next_element = get(a:list, i)
+    if last_element == next_element
+      continue
+    endif
+    let last_element = next_element
+    call add(uniq_list, next_element)
+  endfor
+
+  return uniq_list
+
+endfunction
