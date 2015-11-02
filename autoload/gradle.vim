@@ -96,11 +96,9 @@ function! gradle#getTargetVersion()
   let l:gradleFile = gradle#findGradleFile()
   if filereadable(l:gradleFile)
     for line in readfile(l:gradleFile)
-      if line =~ 'compileSdkVersion'
-        let l:androidTarget = split(substitute(line, "['\"]", '', "g"), ' ')[-1]
-        if stridx(l:androidTarget, ':') > 0
-          let l:androidTarget = split(l:androidTarget, ':')[1]
-        endif
+      let l:matches = matchlist(line, 'compileSdkVersion\s\+.\+\(\d\d\).$')
+      if !empty(l:matches)
+        let l:androidTarget = l:matches[1]
       endif
     endfor
   endif
