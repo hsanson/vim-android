@@ -1,3 +1,22 @@
+function! gradle#logi(msg)
+  redraw
+  echomsg "gradle: " . a:msg
+endfunction
+
+function! gradle#logw(msg)
+  echohl warningmsg
+  echo "gradle: " . a:msg
+  echohl normal
+endfunction
+
+function! gradle#loge(msg)
+  echohl errormsg
+  echo "gradle: " . a:msg
+  echohl normal
+endfunction
+
+let s:pluginDir = expand("<sfile>:p:h:h")
+
 " Function that tries to determine the location of the gradle binary. It will
 " try first to find the executable inside g:gradle_path and if not found it will
 " try using the GRADLE_HOME environment variable. Finally it will search if
@@ -22,14 +41,12 @@ function! gradle#bin()
 
 endfunction
 
-" Determines the path where the gradle cached files are located. This includes
-" dependencties jar and aar files. If the g:gradle_cache_dir variable is defined
-" it uses it as path location, otherwise it uses $HOME/.gradle/caches.
-function! s:gradleCacheDir()
-  if ! exists('g:gradle_cache_dir')
-    let g:gradle_cache_dir = $HOME . "/.gradle/caches"
-  endif
-  return g:gradle_cache_dir
+" Create gradle init file with custom tasks used by this plugin.
+function! gradle#createGradleInitFile()
+  let srcPath = s:pluginDir . "/gradle"
+  let dstPath = $HOME . "/.gradle/init.d"
+  call mkdir(dstPath, "p")
+  call system("/bin/cp " . srcPath . "/init.gradle " . dstPath . "/vim-gradle.gradle")
 endfunction
 
 " Verifies if the android sdk is available and if the gradle build and binary
@@ -40,12 +57,12 @@ function! gradle#isGradleProject()
   let l:gradle_bin_exists = executable(gradle#bin())
 
   if( ! l:gradle_cfg_exists )
-    call android#loge("Could not find any build.gradle or build.xml file... aborting")
+    call gradle#loge("Could not find any build.gradle or build.xml file... aborting")
     return 0
   endif
 
   if( ! l:gradle_bin_exists )
-    call android#loge("Could not find gradle binary. You may want to set g:gradle_bin variable")
+    call gradle#loge("Could not find gradle binary. You may want to set g:gradle_bin variable")
     return 0
   endif
 
@@ -58,16 +75,16 @@ endfunction
 " debug or release).
 function! gradle#install(device, mode)
   let l:cmd = "ANDROID_SERIAL=" . a:device . " " . gradle#bin() . ' -f ' . g:gradle_file . ' install' . android#capitalize(a:mode)
-  call android#logi("Installing " . a:mode . " to " . a:device . " (wait...)")
+  call gradle#logi("Installing " . a:mode . " to " . a:device . " (wait...)")
   let l:output = system(l:cmd)
   redraw!
   let l:failure = matchstr(l:output, "Failure")
   if empty(l:failure)
-    call android#logi("Installation finished on " . a:device)
+    call gradle#logi("Installation finished on " . a:device)
     return 0
   else
     let l:errormsg = matchstr(l:output, '\cFailure \[\zs.\{-}\ze\]')
-    call android#loge("Installation failed on " . a:device . " with error " . l:errormsg)
+    call gradle#loge("Installation failed on " . a:device . " with error " . l:errormsg)
     return 1
   endif
 endfunction
@@ -89,38 +106,6 @@ function! gradle#findRoot()
   return fnamemodify(gradle#findGradleFile(), ":p:h")
 endfunction
 
-" Determines the target SDK version of the project by reading the build.gradle
-" file and looking for the compileSdkVersion variable.
-function! gradle#getTargetVersion() 
-  let l:androidTarget = "UNDEFINED"
-  let l:gradleFile = gradle#findGradleFile()
-  if filereadable(l:gradleFile)
-    for line in readfile(l:gradleFile)
-      let l:matches = matchlist(line, 'compileSdkVersion\s\+.\+\(\d\d\).$')
-      if !empty(l:matches)
-        let l:androidTarget = l:matches[1]
-      endif
-    endfor
-  endif
-  return l:androidTarget
-endfunction
-
-" Find the android sdk jar file for the target sdk version.
-function! gradle#getTargetJarPath()
-  let l:targetJar = g:android_sdk_path . '/platforms/android-' . gradle#getTargetVersion() . '/android.jar'
-  if filereadable(l:targetJar)
-    return l:targetJar
-  endif
-endfunction
-
-" Find the adroid sdk srouce files for the target sdk version.
-function! gradle#getTargetSrcPath()
-  let l:targetSrc = g:android_sdk_path . '/sources/android-' . gradle#getTargetVersion() . '/'
-  if isdirectory(l:targetSrc)
-    return targetSrc
-  endif
-endfunction
-
 function! gradle#setCompiler()
   if gradle#isGradleProject()
     silent! execute("compiler gradle")
@@ -135,20 +120,29 @@ function! gradle#isCompilerSet()
   endif
 endfunction
 
+function! gradle#compile(...)
+
+  let l:result = call("gradle#run", a:000)
+
+  if(l:result[0] == 0 && l:result[1] == 0)
+    call gradle#logi("Building finished successfully")
+  elseif(l:result[0] > 0)
+    call gradle#loge("Building finished with " . l:result[0] . " errors and " . l:result[1] . " warnings.")
+  else
+    call gradle#logi("Building finished with " . l:result[1] . " warnings.")
+  endif
+
+endfunction
+
 function! gradle#run(...)
 
   call gradle#setCompiler()
 
-  if(!gradle#isCompilerSet())
-    call android#logw("Android compiler not set")
-    return 1
-  endif
-
   let shellpipe = &shellpipe
 
-  let &shellpipe = '2>'
+  let &shellpipe = '2>&1 1>/dev/null |tee'
 
-  call android#logi("Compiling " . join(a:000, " "))
+  call gradle#logi("Compiling " . join(a:000, " "))
 
   "if exists('g:loaded_dispatch')
   ""  silent! exe 'Make'
@@ -176,107 +170,61 @@ function! s:getWarningCount()
   return len(filter(l:list, "v:val['valid'] > 0 && tolower(v:val['type']) == 'w'"))
 endfunction
 
-" Find jar file locations for all libraries declared in the build.gradle file
-" via compile directive. The first time this method runs it can take several
-" seconds because it executes the command *gradle depedencies* to find the
-" dependencies.
-function! gradle#getJarList()
+" Execute gradle vim task and load all information in memory dictionaries.
+function! gradle#runVimTask()
 
-  let l:jars = []
-  let l:dependencies = gradle#getDependencies(android#packageName())
+  call gradle#logi("Runing vim gradle task. wait...")
 
-  for dep in l:dependencies
-    call s:addJar(dep[1], dep[2], l:jars)
-  endfor
-
-  return l:jars
-endfunction
-
-function! gradle#getDependenciesCache(package)
-  if !exists('g:dependenciesCache')
-    let g:dependenciesCache = {}
+  if !exists('g:gradle_jars')
+    let g:gradle_jars = {}
   endif
 
-  if !has_key(g:dependenciesCache, a:package)
-    let g:dependenciesCache[a:package] = []
+  if !exists('g:target_versions')
+    let g:gradle_target_versions = {}
   endif
 
-  return g:dependenciesCache[a:package]
-endfunction
-
-function! s:addDependenciesCache(package, deps)
-  if !exists('g:dependenciesCache')
-    let g:dependenciesCache = {}
+  if !exists('g:gradle_project_names')
+    let g:gradle_project_names = {}
   endif
-  let g:dependenciesCache[a:package] = a:deps
-endfunction
-
-" Executes *gradle dependencies" and parses the list of dependencies returned.
-function! gradle#getDependenciesFromGradle()
-  let l:dependencies = []
-  let l:gradle_output = split(system(gradle#bin() . ' dependencies'), '\n')
-
-  for line in l:gradle_output
-    let sanitized_line = substitute(line, "\'", '"', "g")
-    " Match strings of the form: compile 'com.squareup.okhttp:okhttp-urlconnection:2.0.0' with
-    " the library part and version separated into mlist[2] and mlist[3]
-    let mlist = matchlist(sanitized_line,  '^.*---\s\(\S\+\):\(\S\+\):\(\S\+\)\s*.*$')
-    if empty(mlist) == 0 && len(mlist[1]) > 0 && len(mlist[2]) > 0 && len(mlist[3]) > 0
-      call add(l:dependencies, [mlist[1], mlist[2], mlist[3]])
-    endif
-  endfor
-  return l:dependencies
-endfunction
-
-" Reads the build.gradle file and extracts all declared dependencies via the
-" compile keyword.
-function! gradle#getDependenciesFromBuildFile()
-
-  let l:dependencies = []
 
   let l:gradleFile = gradle#findGradleFile()
 
-  if ! filereadable(l:gradleFile)
-    return l:dependencies
-  endif
+  let l:result = system(gradle#bin() . " --no-color -b " . l:gradleFile . " vim")
 
-  for line in readfile(l:gradleFile)
-    let sanitized_line = substitute(line, "\'", '"', "g")
-    " Match strings of the form: compile 'com.squareup.okhttp:okhttp-urlconnection:2.0.0' with
-    " the library part and version separated into mlist[2] and mlist[3]
-    let mlist = matchlist(sanitized_line,  '^\s*compile\s\+"\(.\+\):\(.\+\):\(.\+\)"')
-    if empty(mlist) == 0 && len(mlist[1]) > 0 && len(mlist[2]) > 0 && len(mlist[3]) > 0
-      call add(l:dependencies, [mlist[1], mlist[2], mlist[3]])
+  for line in split(l:result, '\n')
+    let mlist = matchlist(line, '^vim-gradle\s\(.*\.jar\)$')
+    if empty(mlist) == 0 && len(mlist[1]) > 0
+      if !has_key(g:gradle_jars, l:gradleFile)
+        let g:gradle_jars[l:gradleFile] = []
+      endif
+      call add(g:gradle_jars[l:gradleFile], mlist[1])
+    endif
+
+    let mlist = matchlist(line, '^vim-project\s\(.*\)$')
+    if empty(mlist) == 0 && len(mlist[1]) > 0
+      let g:gradle_project_names[l:gradleFile] = mlist[1]
+    endif
+
+    let mlist = matchlist(line, '^vim-target\s\(.*\)$')
+    if empty(mlist) == 0 && len(mlist[1]) > 0
+      let g:gradle_target_versions[l:gradleFile] = mlist[1]
     endif
   endfor
-  return l:dependencies
+
+  call gradle#logi("Finished vim task ")
+
 endfunction
 
-" Return a list of dependencies for project
-function! gradle#getDependencies(project)
-  let l:dependencies = gradle#getDependenciesCache(a:project)
+function! gradle#loadGradleDeps()
 
-  if !empty(l:dependencies)
-    return l:dependencies
+  let l:gradleFile = gradle#findGradleFile()
+
+  if !exists('g:gradle_jars') || !has_key(g:gradle_jars, l:gradleFile)
+    call gradle#runVimTask()
   endif
 
-  echo "Loading gradle dependencies for " . a:project . ", may take several seconds, please wait..."
+  return g:gradle_jars[l:gradleFile]
 
-  let l:dependencies = gradle#getDependenciesFromGradle()
-
-  if empty(l:dependencies)
-    let l:dependencies = gradle#getDependenciesFromBuildFile()
-  endif
-
-  if !empty(l:dependencies)
-    call s:addDependenciesCache(a:project, l:dependencies)
-  endif
-
-  echon " finished."
-
-  redraw!
-
-  return l:dependencies
 endfunction
 
 ""
@@ -285,35 +233,17 @@ endfunction
 function! gradle#setClassPath()
 
   let l:jarList = []
-
-  let l:oldJars = split($CLASSPATH, ':')
-  call extend(l:jarList, l:oldJars)
-
-  let l:projectJar = s:getProjectJar()
-  if len(l:projectJar) > 0
-    call add(l:jarList, l:projectJar)
-  endif
-
-  let l:targetJar = gradle#getTargetJarPath()
-  if len(l:projectJar) > 0
-    call add(l:jarList, l:targetJar)
-  endif
-
-  let l:depJars = gradle#getJarList()
-  if !empty(l:depJars)
-    call extend(l:jarList, l:depJars)
-  endif
-
-  let l:libJars = s:getLibJars()
-  if !empty(l:libJars)
-    call extend(l:jarList, l:libJars)
-  endif
-
   let l:srcList = []
 
-  let l:targetSrc = gradle#getTargetSrcPath()
-  if len(l:targetSrc) > 0
-    call add(l:srcList, l:targetSrc)
+  let l:oldJars = split($CLASSPATH, ':')
+  let l:oldSrcs = split($SRCPATH, ",")
+
+  call extend(l:jarList, l:oldJars)
+  call extend(l:srcList, l:oldSrcs)
+
+  let l:depJars = gradle#loadGradleDeps()
+  if !empty(l:depJars)
+    call extend(l:jarList, l:depJars)
   endif
 
   let l:gradleSrcPaths = s:getGradleSrcPaths()
@@ -321,102 +251,14 @@ function! gradle#setClassPath()
     call extend(l:srcList, l:gradleSrcPaths)
   endif
 
-  let l:jarList = s:uniq(sort(l:jarList))
-  let l:srcList = s:uniq(sort(l:srcList))
+  let l:jarList = gradle#uniq(sort(l:jarList))
+  let l:srcList = gradle#uniq(sort(l:srcList))
 
   let $CLASSPATH = join(l:jarList, ':')
   let $SRCPATH = join(l:srcList, ':')
-  exec "setlocal path=" . join(l:srcList, ',')
 
-  silent! call javacomplete#SetClassPath($CLASSPATH)
-  silent! call javacomplete#SetSourcePath($SRCPATH)
+  exec "set path=" . join(l:srcList, ',')
 
-  let g:JavaComplete_LibsPath = $CLASSPATH
-  let g:JavaComplete_SourcesPath = $SRCPATH
-
-  let g:syntastic_java_javac_classpath = $CLASSPATH
-
-  silent! call javacomplete#StartServer()
-
-endfunction
-function! s:getCache()
-  return s:preloadCache()
-endfunction
-
-function! s:getFromCache(name)
-  let l:cache = s:getCache()
-  if has_key(l:cache, a:name)
-    return l:cache[a:name]
-  end
-endfunction
-
-" Force preloading of jar list cache
-function! gradle#loadCache()
-  return s:loadCache()
-endfunction
-
-" Preload jar list cache only if not loaded already.
-function! s:preloadCache()
-
-  if exists("s:cache")
-    return s:cache
-  endif
-
-  return s:loadCache()
-
-endfunction
-
-" Load list of jar files located in the android sdk
-" extras, exploded aars and the gradle cache.
-function! s:loadCache()
-
-  echo "Preloading jar list cache"
-
-  let s:cache = {}
-
-  let l:jars = split(globpath(g:android_sdk_path . "/extras," . s:gradleCacheDir(), "**/*.jar", 1), "\n")
-  for jar in l:jars
-    let l:basename = fnamemodify(jar, ":t:r")
-    let s:cache[l:basename] = jar
-  endfor
-
-  let l:aars = split(globpath(gradle#findRoot() . "/build/intermediates/exploded-aar", "**/classes.jar", 1), "\n")
-  for aar in l:aars
-    let mlist = split(aar,  '/')
-    if mlist[-1] == "classes.jar"
-      let l:name = mlist[-3] . "-" . mlist[-2]
-      let s:cache[l:name] = aar
-    endif
-  endfor
-
-  return s:cache
-
-endfunction
-
-" Look for jar files in the gradle caches directories and android sdk extras and
-" add them to the argument list.
-function! s:addJar(name, version, list)
-  let l:name = a:name . "-" . a:version
-  let l:jarName = l:name . ".jar"
-
-  let l:jar = s:getFromCache(l:name)
-
-  if len(l:jar) > 0
-    call add(a:list, l:jar)
-  endif
-endfunction
-
-function! s:getProjectJar()
-  let l:local = fnamemodify('build/intermediates/bundles/debug/classes.jar', ':p')
-  if filereadable(l:local)
-    return l:local
-  endif
-endfunction
-
-""
-" Find all jar files located inside the libs folder
-function! s:getLibJars()
-  return split(globpath(gradle#findRoot() . "/libs", "**/*.jar", 1), "\n")
 endfunction
 
 function! s:getGradleSrcPaths()
@@ -438,14 +280,14 @@ function! s:getGradleSrcPaths()
 endfunction
 
 " Compatibility function.
-" This s:uniq() function will use the built in uniq() function for vim >
+" This gradle#uniq() function will use the built in uniq() function for vim >
 " 7.4.218 and a custom implementation of older versions.
 "
 " NOTE: This method only works on sorted lists. If they are not sorted this will
 " not result in a uniq list of elements!!
 "
 " Stolen from: https://github.com/LaTeX-Box-Team/LaTeX-Box/pull/223
-function! s:uniq(list)
+function! gradle#uniq(list)
 
   if exists('*uniq')
     return uniq(a:list)
@@ -469,4 +311,8 @@ function! s:uniq(list)
 
   return uniq_list
 
+endfunction
+
+function! gradle#setupGradleCommands()
+  command! -nargs=+ Gradle call gradle#compile(<f-args>)
 endfunction

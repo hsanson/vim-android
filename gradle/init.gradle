@@ -1,0 +1,20 @@
+/**
+ * This files contains custom tasks used by the vim-android plugin.
+ */
+
+allprojects {
+  task vim {
+    task -> doLast {
+      println "vim-project " + project.name
+      if(project.hasProperty('android')) {
+        println "vim-target " + project.android.compileSdkVersion
+      }
+      project.configurations.each {
+        conf -> conf.collect {
+          println "vim-gradle " + it
+        }
+      }
+    }
+  }
+}
+

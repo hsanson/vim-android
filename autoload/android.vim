@@ -15,35 +15,16 @@ function! android#loge(msg)
   echohl normal
 endfunction
 
-""
-" Simple heuristic that tries to find the location for the AndroidManifest.xml
-" file.
-"
-" If the current opened buffer is the AndroidManifest.xml file and
-" if it is then return its absolute path.
-"
-" Otherwise try to find the manifest using the findfile function of vim starting from
-" the location of the currently opened buffer.
-function! android#findManifest()
-
-  if(expand('%:t') == 'AndroidManifest.xml')
-    return expand('%:p')
-  endif
-
-  let old_wildignore = &wildignore
-  set wildignore+=*/build/*
-  let l:file = findfile("AndroidManifest.xml", expand("%:p:h") . "/;$HOME")
-  let &wildignore = old_wildignore
-
-  if match(l:file, "/") != 0
-    let l:file = getcwd() . "/" . l:file
-  endif
-
-  return l:file
-endfunction
-
+" If there is a target sdk version defined it means the project is an android
+" project.
 function! android#isAndroidProject()
-  return filereadable(android#findManifest())
+  if !exists('g:gradle_target_versions')
+    return 0
+  endif
+  if !has_key(g:gradle_target_versions, gradle#findGradleFile())
+    return 0
+  endif
+  return 1
 endfunction
 
 function! android#checkAndroidHome()
@@ -100,88 +81,24 @@ function! android#updateAndroidTags()
   "endif
 endfunction
 
-" Try to determine the project package name by reading the AndroidManifest.xml
-" file. Returns a string containing the package name or throws and exception if
-" not found.
-function! android#packageName()
-  for line in readfile(android#findManifest())
-    if line =~ 'package='
-      let l:androidPackageName = matchstr(line, '\cpackage=\([''"]\)\zs.\{-}\ze\1')
-      if empty("l:androidPackageName")
-        throw "Unable to get package name"
-      endif
-    endif
-  endfor
-  return l:androidPackageName
-endfunction
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" High level methods
-
-function! android#clean()
-
-  call gradle#setCompiler()
-
-  if(!gradle#isCompilerSet())
-    call android#logw("Android compiler not set")
-    return
-  endif
-
-  let l:result = s:compile("clean")
-
-  if(l:result == 0)
-    call android#logi("Finished cleaning project")
-  else
-    call android#logw("Cleaning failed")
-  endif
-endfunction
-
-function! android#test()
-
-  call gradle#setCompiler()
-
-  if(!gradle#isCompilerSet())
-    call android#logw("Android compiler not set")
-    return
-  endif
-
-  let l:result = s:compile("test")
-
-  if(l:result == 0)
-    call android#logi("Finished testing project")
-  else
-    call android#logw("Errors during testing project")
-  endif
-endfunction
-
+" Compatibility method to run android build commands. If the passed command is
+" build or debug it is converted to assembleBuild and assembleDebug before
+" passing it to gradle.
 function! android#compile(...)
-
-  call gradle#setCompiler()
-
-  if(!gradle#isCompilerSet())
-    throw "Android compiler not set"
-  endif
 
   if(a:0 == 0)
     let l:mode = "build"
-    let l:result = gradle#run(l:mode)
+    call gradle#compile(l:mode)
   elseif(a:0 == 1 && a:1 == "debug")
     let l:mode = 'assemble' . android#capitalize(a:1)
-    let l:result = gradle#run(l:mode)
+    call gradle#compile(l:mode)
   elseif(a:0 == 0 && a:1 == "release")
     let l:mode = 'assemble' . android#capitalize(a:1)
-    let l:result = gradle#run(l:mode)
+    call gradle#compile(l:mode)
   else
-    let l:result = call("gradle#run", a:000)
+    call gradle#compile(a:000)
   endif
 
-  if(l:result[0] == 0 && l:result[1] == 0)
-    call android#logi("Building finished successfully")
-  elseif(l:result[0] > 0)
-    call android#loge("Building finished with " . l:result[0] . " errors and " . l:result[1] . " warnings.")
-  else
-    call android#logi("Building finished with " . l:result[1] . " warnings.")
-  endif
 endfunction
 
 function! android#install(mode)
@@ -321,6 +238,62 @@ function! android#setAndroidSdkTags()
   execute 'silent! setlocal ' . 'tags+=' . g:android_sdk_tags
 endfunction
 
+" Find the adroid sdk srouce files for the target sdk version.
+function! android#getTargetSrcPath()
+  let l:targetSrc = g:android_sdk_path . '/sources/android-' . android#getTargetVersion() . '/'
+  if isdirectory(l:targetSrc)
+    return targetSrc
+  endif
+endfunction
+
+function! android#getProjectJar()
+  let l:path = gradle#findRoot() . '/build/intermediates/classes/debug'
+  let l:local = fnamemodify(l:path, ':p')
+  if isdirectory(l:local)
+    return l:local
+  else
+    return "."
+  endif
+endfunction
+
+function! android#getTargetVersion()
+
+  let l:gradleFile = gradle#findGradleFile()
+
+  if !exists('g:gradle_target_versions') || !has_key(g:gradle_target_versions, l:gradleFile)
+    call gradle#runVimTask()
+  endif
+
+  return g:gradle_target_versions[l:gradleFile]
+
+endfunction
+
+function! android#getGradleTargetJar()
+
+
+  let l:targetJar = g:android_sdk_path . '/platforms/' . android#getTargetVersion() . "/android.jar"
+
+  return l:targetJar
+endfunction
+
+function! android#getSdkJar()
+
+  let l:gradleFile = gradle#findGradleFile()
+
+  if !exists('g:android_versions')
+    let g:android_versions = {}
+  endif
+
+  if !has_key(g:android_versions, l:gradleFile)
+    call android#logi("Loading sdk jar, may take some time...")
+    let l:targetJar = android#getGradleTargetJar()
+    let g:android_versions[l:gradleFile] = l:targetJar
+    call android#logi("Load complete")
+  endif
+
+  return get(g:android_versions, l:gradleFile)
+endfunction
+
 function! android#setClassPath()
 
   if ! android#isAndroidProject()
@@ -331,7 +304,39 @@ function! android#setClassPath()
     return
   endif
 
-  call gradle#setClassPath()
+  let l:jarList = []
+  let l:srcList = []
+
+  let l:oldJars = split($CLASSPATH, ":")
+  let l:oldSrcs = split($SRCPATH, ",")
+
+  call extend(l:jarList, l:oldJars)
+  call extend(l:srcList, l:oldSrcs)
+
+  let l:projectJar = android#getProjectJar()
+
+  if len(l:projectJar) > 0
+    call add(l:jarList, l:projectJar)
+  endif
+
+  let l:targetJar = android#getSdkJar()
+  if len(l:targetJar) > 0
+    call add(l:jarList, l:targetJar)
+  endif
+
+  let l:targetSrc = android#getTargetSrcPath()
+  if len(l:targetSrc) > 0
+    call add(l:srcList, l:targetSrc)
+  endif
+
+  let l:jarList = gradle#uniq(sort(l:jarList))
+  let l:srcList = gradle#uniq(sort(l:srcList))
+
+  let $CLASSPATH = join(l:jarList, ':')
+  let $SRCPATH = join(l:srcList, ':')
+
+  exec "set path=" . join(l:srcList, ',')
+
 endfunction
 
 ""
@@ -478,12 +483,9 @@ function! android#emulator()
 endfunction
 
 function! android#setupAndroidCommands()
-  command! -nargs=+ Gradle call android#compile(<f-args>)
   command! -nargs=+ Android call android#compile(<f-args>)
   command! -nargs=? AndroidBuild call android#compile(<f-args>)
   command! -nargs=1 AndroidInstall call android#install(<f-args>)
-  command! AndroidClean call android#clean()
-  command! AndroidTest call android#test()
   command! AndroidUninstall call android#uninstall()
   command! AndroidUpdateTags call android#updateAndroidTags()
   command! AndroidDevices call android#listDevices()
