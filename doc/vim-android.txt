@@ -366,7 +366,19 @@ Example:
 >
         let g:android_sdk_tags=/path/to/tags/project.tags
 <
+                                                        *g:gradle_quickfix_show*
+g:gradle_quickfix_show~
+Default: 1
 
+If there are errors in the quickfix window after a gradle build the quickfix
+window will automatically be open. If there are no errors it will
+automatically be closed. If you want to disable this behavior simply set the
+above variable to 0.
+
+Example:
+>
+        let g:gradle_quickfix_show=0
+<
 ==============================================================================
 9. Todo                                                       *vim-android-todo*
 

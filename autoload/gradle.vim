@@ -117,6 +117,19 @@ function! gradle#compile(...)
   call gradle#logi("Gradle " . join(a:000, " "))
   let l:result = call("gradle#run", a:000)
 
+  if !exists('g:gradle_quickfix_show')
+    let g:gradle_quickfix_show = 1
+  endif
+
+  if g:gradle_quickfix_show
+    execute('botright cwindow')
+    " Work around bug that causes file to loose syntax after the quick fix
+    " window is closed.
+    if exists('g:syntax_on')
+      execute('syntax enable')
+    endif
+  endif
+
   if exists("g:airline_initialized")
     call gradle#logi("")
   elseif l:result[1] > 0 || l:result[0] > 0
