@@ -15,6 +15,18 @@ function! android#loge(msg)
   echohl normal
 endfunction
 
+function! android#glyph()
+  if !android#isAndroidProject()
+    return ""
+  endif
+
+  if !exists('g:gradle_airline_android_glyph')
+    let g:gradle_airline_android_glyph = "Android"
+  endif
+
+  return g:gradle_airline_android_glyph
+endfunction
+
 " If there is a target sdk version defined it means the project is an android
 " project.
 function! android#isAndroidProject()

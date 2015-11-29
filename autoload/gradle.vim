@@ -1,18 +1,11 @@
 function! gradle#logi(msg)
+  let g:gradle_airline_status = a:msg
   redraw
-  echomsg "gradle: " . a:msg
-endfunction
-
-function! gradle#logw(msg)
-  echohl warningmsg
-  echo "gradle: " . a:msg
-  echohl normal
-endfunction
-
-function! gradle#loge(msg)
-  echohl errormsg
-  echo "gradle: " . a:msg
-  echohl normal
+  if exists('g:airline_initialized')
+    call airline#update_statusline()
+  else
+    echomsg a:msg
+  endif
 endfunction
 
 let s:pluginDir = expand("<sfile>:p:h:h")
@@ -57,12 +50,12 @@ function! gradle#isGradleProject()
   let l:gradle_bin_exists = executable(gradle#bin())
 
   if( ! l:gradle_cfg_exists )
-    call gradle#loge("Could not find any build.gradle or build.xml file... aborting")
+    call gradle#logi("Gradle disabled")
     return 0
   endif
 
   if( ! l:gradle_bin_exists )
-    call gradle#loge("Could not find gradle binary. You may want to set g:gradle_bin variable")
+    call gradle#logi("Gradle disabled")
     return 0
   endif
 
@@ -75,16 +68,16 @@ endfunction
 " debug or release).
 function! gradle#install(device, mode)
   let l:cmd = "ANDROID_SERIAL=" . a:device . " " . gradle#bin() . ' -f ' . g:gradle_file . ' install' . android#capitalize(a:mode)
-  call gradle#logi("Installing " . a:mode . " to " . a:device . " (wait...)")
+  call gradle#logi("Installing " . a:mode . " to " . a:device")
   let l:output = system(l:cmd)
   redraw!
   let l:failure = matchstr(l:output, "Failure")
   if empty(l:failure)
-    call gradle#logi("Installation finished on " . a:device)
+    call gradle#logi("")
     return 0
   else
     let l:errormsg = matchstr(l:output, '\cFailure \[\zs.\{-}\ze\]')
-    call gradle#loge("Installation failed on " . a:device . " with error " . l:errormsg)
+    call gradle#logi("Install Failure")
     return 1
   endif
 endfunction
@@ -121,17 +114,14 @@ function! gradle#isCompilerSet()
 endfunction
 
 function! gradle#compile(...)
-
+  call gradle#logi("Gradle " . join(a:000, " "))
   let l:result = call("gradle#run", a:000)
 
-  if(l:result[0] == 0 && l:result[1] == 0)
-    call gradle#logi("Building finished successfully")
-  elseif(l:result[0] > 0)
-    call gradle#loge("Building finished with " . l:result[0] . " errors and " . l:result[1] . " warnings.")
-  else
-    call gradle#logi("Building finished with " . l:result[1] . " warnings.")
+  if exists("g:airline_initialized")
+    call gradle#logi("")
+  elseif l:result[1] > 0 || l:result[0] > 0
+    call gradle#logi("Gradle Errors: " . l:result[0] . " Warnings: " . l:result[1])
   endif
-
 endfunction
 
 function! gradle#run(...)
@@ -142,8 +132,6 @@ function! gradle#run(...)
 
   let &shellpipe = '2>&1 1>/dev/null |tee'
 
-  call gradle#logi("Compiling " . join(a:000, " "))
-
   "if exists('g:loaded_dispatch')
   ""  silent! exe 'Make'
   "else
@@ -153,19 +141,57 @@ function! gradle#run(...)
 
   " Restore previous values
   let &shellpipe = shellpipe
-  return [s:getErrorCount(), s:getWarningCount()]
+  return [gradle#getErrorCount(), gradle#getWarningCount()]
+endfunction
+
+function! gradle#airlineErrorStatus()
+
+  let l:errCount = gradle#getErrorCount()
+  let l:warnCount = gradle#getWarningCount()
+
+  if !exists('g:gradle_airline_error_glyph')
+    let g:gradle_airline_error_glyph = "Error: "
+  endif
+
+  if !exists('g:gradle_airline_warning_glyph')
+    let g:gradle_airline_warning_glyph = "Warning: "
+  endif
+
+  let l:errMsg = g:gradle_airline_error_glyph . '[' . l:errCount . ']'
+  let l:warnMsg = g:gradle_airline_warning_glyph . '[' . l:warnCount . ']'
+
+  if l:errCount > 0 && l:warnCount > 0
+    return l:errMsg . " " . l:warnMsg
+  elseif l:errCount > 0
+    return l:errMsg
+  elseif l:warnCount > 0
+    return l:warnMsg
+  else
+    return ""
+  endif
+
+endfunction
+
+function! gradle#airlineStatus()
+
+  if exists('g:gradle_airline_status') && len(g:gradle_airline_status) > 0
+    return android#glyph() . " " . g:gradle_airline_status
+  else
+    return android#glyph()
+  end
+
 endfunction
 
 " This method returns the number of valid errors in the quickfix window. This
 " allows us to check if there are errors after compilation.
-function! s:getErrorCount()
+function! gradle#getErrorCount()
   let l:list = deepcopy(getqflist())
   return len(filter(l:list, "v:val['valid'] > 0 && tolower(v:val['type']) != 'w'"))
 endfunction
 
 " This method returns the number of valid warnings in the quickfix window. This
 " allows us to check if there are errors after compilation.
-function! s:getWarningCount()
+function! gradle#getWarningCount()
   let l:list = deepcopy(getqflist())
   return len(filter(l:list, "v:val['valid'] > 0 && tolower(v:val['type']) == 'w'"))
 endfunction
@@ -173,7 +199,7 @@ endfunction
 " Execute gradle vim task and load all information in memory dictionaries.
 function! gradle#runVimTask()
 
-  call gradle#logi("Runing vim gradle task. wait...")
+  call gradle#logi("Run vim task...")
 
   if !exists('g:gradle_jars')
     let g:gradle_jars = {}
@@ -211,7 +237,7 @@ function! gradle#runVimTask()
     endif
   endfor
 
-  call gradle#logi("Finished vim task ")
+  call gradle#logi("")
 
 endfunction
 
@@ -223,7 +249,11 @@ function! gradle#loadGradleDeps()
     call gradle#runVimTask()
   endif
 
-  return g:gradle_jars[l:gradleFile]
+  if has_key(g:gradle_jars, l:gradleFile)
+    return g:gradle_jars[l:gradleFile]
+  else
+    return []
+  endif
 
 endfunction
 

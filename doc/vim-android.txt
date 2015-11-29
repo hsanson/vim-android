@@ -19,6 +19,7 @@ Contents                                   *vim-android* *vim-android-contents*
               Key mappings .................. |vim-android-keys|
               Omnicompletion ................ |vim-android-omnicomplete|
               Linter Support................. |vim-android-linter|
+              Airline Support................ |vim-android-airline|
          5. Configuration ................... |vim-android-configuration|
          6. Todo ............................ |vim-android-todo|
          7. Credits ......................... |vim-android-credits|
@@ -26,33 +27,40 @@ Contents                                   *vim-android* *vim-android-contents*
 ==============================================================================
 1. Intro                                                      *vim-android-intro*
 
-vim-android is a plugin that facilitates the development of Android
+vim-android is a plugin that facilitates the development of Gradle and Android
 applications within vim. When editing a java or xml file this plugin tries
-to find an AndroidManifest.xml file in the current directory and if found it
+to find gradle.build file in the current directory and if found it
 cofigures a set of variables and commands that allows easier development for
-Android applications.
+Gradle projects. If the gradle.build file contains the android gradle plugin
+then Android specific commands are also configured.
 
 ------------------------------------------------------------------------------
 Changelog                                                  *vim-android-changelog*
+
+IMPORTANT: This plugin now uses gradle itself to inspect the project and
+extract dependencies and source paths. This is faster than parsing the
+configuration files and more correct.
 
 IMPORTANT: Since I do not use ant anymore for android development and Android
 Studio with the gradle plugin has come a long way now I am removing all ant
 related functions from the plugin. It is difficult to maintain funcionality
 that I do not use.
 
+
 ------------------------------------------------------------------------------
 SUPPORTED FEATURES                                         *vim-android-features*
 
 The following features are supported by vim-android:
 
-  - Auto-detection of Android projects when opening a Java or XML file. For
-    this the plugin uses findfile function that searches from the current
-    buffer path backwards until it finds the AndroidManifest file for the
+  - Auto-detection of Gradle and Android projects when opening a Java or
+    XML file. For this the plugin uses findfile function that searches from the
+    current buffer path backwards until it finds a build.gralde file for the
     project.
   - Custom gradle vim compiler that invokes gradle directly with any
     arguments passed to the command.
   - Custom errorformat that captures java errors, linter errors, test errors,
-    aapt errors and displays them in the quickfix window.
+    aapt errors, checkstyle, pmd, findbugs and displays them in the quickfix
+    window.
   - Updates the CLASSPATH environment variable to include paths for your
     current project, external libs, external lib-projects and the current
     target Android SDK jars. This allows auto-completion of Java code using
@@ -100,7 +108,7 @@ The following requirements have to be met in order to be able to use vim-android
     PATH environment variable.
     - Android gradle plugin 1.3.0 or newer recommended.
     - Android build tools 22.0.1 or newer recommended.
-  - Gradle 2.2+ in your PATH to enable builds via ant or gradle respectively.
+  - Gradle 2.2+ in your PATH.
   - The exuberant-ctags package if you want to generate tags for the android
     project, dependencies and the Android SDK.
 
@@ -123,8 +131,8 @@ installed. There are two ways to do this: you can set the ANDROID_HOME
 environment variable to the absolute path of the android SDK or you can set
 it to the global variable g:android_sdk_path in your vimrc file.
 
-When you open a Java or XML file this plugin looks for an AndroidManifest.xml
-file starting from the location of the current open buffer upwards until your
+When you open a Java or XML file this plugin looks for a build.gradle file
+starting from the location of the current open buffer upwards until your
 HOME directory. If it is found this plugin activates and enables several
 commands that faciliate working on Android projects and exports environment
 variables that can be used by other plugins for omnicomplete and debugging.
@@ -168,22 +176,6 @@ COMMANDS                                                   *vim-android-commands
 
 :Android <options>
     This is an alias to the Gradle command.
-
-:AndroidBuild <mode>                                            *:AndroidBuild*
-    This command is left for backward compatibility. Instead use the Android
-    or Gradle commands. Builds the application APK. The <mode> parameter can
-    be release or debug mode for ant projects and any  buildType (e.g. release,
-    debug) on gradle projects. If the <mode> parameter is omitted then if
-    executes the default build for gradle.
-
-:AndroidTest                                                    *:AndroidTest*
-    Runs the tests for gradle and ant projects. This is the same and calling
-    ant test or gradle test on the terminal. This is a shortcut to invoking
-    :Android connectedCheck.
-
-:AndroidClean                                                   *:AndroidClean*
-    Cleans the build auto-generated files. This is a shortcut to invoking
-    :Android clean.
 
 :AndroidInstall <mode>                                   *:AndroidDebugInstall*
     Build and installs the application in <mode> mode. In the case that you
@@ -278,6 +270,46 @@ command:
 that will execute the linter and show all warnings and errors within the
 quickfix window for easy navigation.
 
+------------------------------------------------------------------------------
+ANDROID AIRLINE SUPPORT                                    *vim-android-airline*
+
+This plugin has custom parts that are diplayed in the airline status bar.
+There are some global configuration variables that you can set to change how
+these are displayed
+
+                                                 *g:gradle_airline_android_glyph*
+g:android_airline_android_glyph~
+Default: ""
+~
+This glyph is displayed next to the mode section if the project is an Android
+project. If you use poweline or nerd patched fonts I higly recomend you set
+the android glyph:
+>
+        let g:android_airline_android_glyph = 'U+f17b'
+<
+                                                   *g:gradle_airline_error_glyph*
+g:android_airline_error_glyph~
+Default: "Error: "
+~
+This glyph is shown in the airline warning section when the quickfix window
+contains errors after building the gradle project. If you use powerline or
+nerd patched fonts I recommend you set the alert glyph:
+>
+        let g:android_airline_error_glyph = 'U+f06a'
+<
+                                                 *g:gradle_airline_warning_glyph*
+g:android_airline_warning_glyph~
+Default: "Warning: "
+~
+This glyph is shown in the airline warning section when the quickfix window
+contains warnings after building the gradle project. If you use powerline or
+nerd patched fonts I recommend you set the warning glyph:
+>
+        let g:android_airline_warning_glyph = 'U+f071'
+<
+Note: To insert UTF codes in your vim configuration you must enter insert mode
+and then press <Ctrl+v> followed by 'u' and then the hex code.
+
 ==============================================================================
 5. Configuration                                     *vim-android-configuration*
 
@@ -293,7 +325,7 @@ Example:
 <
 
                                                                *g:gradle_path*
-g:gradle_path
+g:gradle_path~
 Default: $GRADLE_HOME
 
 When building gradle based projects we need to use the gradle tool to build
@@ -340,6 +372,7 @@ Example:
 
   - Better Android XML omni-completion.
   - Better support AndroidAnnotation errors.
+  - Project creation commands.
 
 ==============================================================================
 10. Credits                                                *vim-android-credits*
@@ -351,6 +384,9 @@ several other plugins:
  - https://github.com/mgarriott/vim-android
  - https://github.com/artur-shaik/vim-javacomplete2
  - http://flukus.github.io/2015/07/03/2015_07_03-Vim-errorformat-Demystified/
+ - https://github.com/bling/vim-airline
+ - https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts
+ - https://github.com/powerline/fonts
 
 ==============================================================================
  vim: tw=78 ts=8 sw=4 sts=4 et ft=help
