@@ -279,9 +279,9 @@ these are displayed
 
                                                  *g:gradle_airline_android_glyph*
 g:android_airline_android_glyph~
-Default: ""
+Default: "Android"
 ~
-This glyph is displayed next to the mode section if the project is an Android
+This glyph is displayed next to the filetype section if the project is an Android
 project. If you use poweline or nerd patched fonts I higly recomend you set
 the android glyph:
 >

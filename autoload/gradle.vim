@@ -1,9 +1,10 @@
 function! gradle#logi(msg)
-  let g:gradle_airline_status = a:msg
-  redraw
   if exists('g:airline_initialized')
+    let g:gradle_airline_status = a:msg
     call airline#update_statusline()
+    redraw
   else
+    redraw
     echomsg a:msg
   endif
 endfunction
