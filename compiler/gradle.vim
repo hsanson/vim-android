@@ -7,7 +7,17 @@ endif
 " Links to understand error formats
 "   http://flukus.github.io/2015/07/03/2015_07_03-Vim-errorformat-Demystified/
 
-exec 'CompilerSet makeprg=' . gradle#bin() . '\ --no-color\ -b\ ' . gradle#findGradleFile()
+let s:makeprg = [
+ \  gradle#bin(),
+ \  '--no-color',
+ \  '-I',
+ \  g:gradle_init_file,
+ \  '-b',
+ \  gradle#findGradleFile()
+ \ ]
+
+exec 'CompilerSet makeprg=' . join(s:makeprg, '\ ')
+
 CompilerSet errorformat=\%-G%f:%l:\ %tarning:\ Element\ SubscribeHandler\ unvalidated\ %.%#,
                         \[ant:checkstyle\]\ %f:%l:%c:\ %m,
                         \[ant:checkstyle\]\ %f:%l:\ %m,
