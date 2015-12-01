@@ -279,7 +279,7 @@ function! gradle#setClassPath()
   let l:jarList = []
   let l:srcList = []
 
-  let l:oldJars = split($CLASSPATH, ':')
+  let l:oldJars = split($CLASSPATH, gradle#classPathSep())
   let l:oldSrcs = split($SRCPATH, ",")
 
   call extend(l:jarList, l:oldJars)
@@ -298,8 +298,8 @@ function! gradle#setClassPath()
   let l:jarList = gradle#uniq(sort(l:jarList))
   let l:srcList = gradle#uniq(sort(l:srcList))
 
-  let $CLASSPATH = join(l:jarList, ':')
-  let $SRCPATH = join(l:srcList, ':')
+  let $CLASSPATH = join(l:jarList, gradle#classPathSep())
+  let $SRCPATH = join(l:srcList, gradle#classPathSep())
 
   exec "set path=" . join(l:srcList, ',')
 
@@ -354,6 +354,37 @@ function! gradle#uniq(list)
   endfor
 
   return uniq_list
+
+endfunction
+
+" Function tries to determine the OS that is running this plugin.
+" http://vi.stackexchange.com/a/2577
+function! gradle#getOS()
+
+  if !exists('g:gradle_os')
+    if has("win64") || has("win32") || has("win16")
+      let g:gradle_os = "Windows"
+    else
+      let g:gradle_os = substitute(system('uname'), '\n', '', '')
+    endif
+  endif
+
+  return g:gradle_os
+
+endfunction
+
+" Returns the classpath separator depending on the OS.
+function! gradle#classPathSep()
+
+  if !exists('g:gradle_sep')
+    if gradle#getOS() == "Windows"
+      let g:gradle_sep = ';'
+    else
+      let g:gradle_sep = ':'
+    endif
+  endif
+
+  return g:gradle_sep
 
 endfunction
 

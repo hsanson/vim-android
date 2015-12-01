@@ -319,7 +319,7 @@ function! android#setClassPath()
   let l:jarList = []
   let l:srcList = []
 
-  let l:oldJars = split($CLASSPATH, ":")
+  let l:oldJars = split($CLASSPATH, gradle#classPathSep())
   let l:oldSrcs = split($SRCPATH, ",")
 
   call extend(l:jarList, l:oldJars)
@@ -344,8 +344,8 @@ function! android#setClassPath()
   let l:jarList = gradle#uniq(sort(l:jarList))
   let l:srcList = gradle#uniq(sort(l:srcList))
 
-  let $CLASSPATH = join(l:jarList, ':')
-  let $SRCPATH = join(l:srcList, ':')
+  let $CLASSPATH = join(l:jarList, gradle#classPathSep())
+  let $SRCPATH = join(l:srcList, gradle#classPathSep())
 
   exec "set path=" . join(l:srcList, ',')
 
