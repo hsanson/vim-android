@@ -1,4 +1,6 @@
 
+let g:gradle_init_file = expand("<sfile>:p:h:h") . "/gradle/init.gradle"
+
 function! GradleAirlineInit()
   let g:airline_initialized = 1
   call airline#parts#define_function('vim-gradle-status', 'gradle#airlineStatus')

@@ -9,8 +9,6 @@ function! gradle#logi(msg)
   endif
 endfunction
 
-let s:pluginDir = expand("<sfile>:p:h:h")
-
 " Function that tries to determine the location of the gradle binary. It will
 " try first to find the executable inside g:gradle_path and if not found it will
 " try using the GRADLE_HOME environment variable. Finally it will search if
@@ -33,14 +31,6 @@ function! gradle#bin()
 
   return g:gradle_bin
 
-endfunction
-
-" Create gradle init file with custom tasks used by this plugin.
-function! gradle#createGradleInitFile()
-  let srcPath = s:pluginDir . "/gradle"
-  let dstPath = $HOME . "/.gradle/init.d"
-  call mkdir(dstPath, "p")
-  call system("/bin/cp " . srcPath . "/init.gradle " . dstPath . "/vim-gradle.gradle")
 endfunction
 
 " Verifies if the android sdk is available and if the gradle build and binary
@@ -229,7 +219,17 @@ function! gradle#runVimTask()
 
   let l:gradleFile = gradle#findGradleFile()
 
-  let l:result = system(gradle#bin() . " --no-color -b " . l:gradleFile . " vim")
+  let l:cmd = [
+   \ gradle#bin(),
+   \ "--no-color",
+   \ "-b",
+   \ l:gradleFile,
+   \ "-I",
+   \ g:gradle_init_file,
+   \ "vim"
+   \ ]
+
+  let l:result = system(join(l:cmd, ' '))
 
   for line in split(l:result, '\n')
     let mlist = matchlist(line, '^vim-gradle\s\(.*\.jar\)$')

@@ -1,6 +1,5 @@
 if gradle#isGradleProject()
 
-  call gradle#createGradleInitFile()
   call gradle#setClassPath()
   call gradle#setupGradleCommands()
 
