@@ -65,6 +65,14 @@ function! gradle#install(device, mode)
   unlet $ANDROID_SERIAL
 endfunction
 
+function! gradle#uninstall(device, mode)
+  let $ANDROID_SERIAL=a:device
+  let l:result = call("gradle#run", ["uninstall" . android#capitalize(a:mode)])
+  call s:showQuickfix()
+  call s:updateAirline(l:result[0], l:result[1])
+  unlet $ANDROID_SERIAL
+endfunction
+
 " Tries to determine the location of the build.gradle file starting from the
 " current buffer location.
 function! gradle#findGradleFile()

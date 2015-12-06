@@ -133,26 +133,6 @@ function! adb#getDeviceInfo(device)
 endfunction
 
 ""
-" Installs android package from device
-"  DEPRECATED
-function! adb#install(device, mode)
-
-  let l:cmd = adb#bin() . ' -s ' . a:device . ' install -r ' . android#getApkPath(a:mode)
-  "call android#logi("Installing " . android#getApkPath(a:mode) . " to " . a:device . " (wait...)")
-  let l:output = system(l:cmd)
-  redraw!
-  let l:success = matchstr(l:output, 'Success')
-  if empty(l:success)
-    let l:errormsg = matchstr(l:output, '\cFailure \[\zs.\{-}\ze\]')
-    call android#loge("Installation failed on " . a:device . " with error " . l:errormsg)
-    return 1
-  else
-    "call android#logi("Installation finished on " . a:device)
-    return 0
-  endif
-endfunction
-
-""
 " Uninstall android package from device
 function! adb#uninstall(device)
   call android#logi("Uninstalling " . android#packageName() . " from " . a:device)

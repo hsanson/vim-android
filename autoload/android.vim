@@ -136,56 +136,27 @@ function! android#install(mode)
   endfor
 endfunction
 
-function! android#uninstall()
+function! android#uninstall(mode)
 
   call gradle#setCompiler()
 
   if(!gradle#isCompilerSet())
-    call android#logw("No android compiler set.")
+    call android#logw("Android compiler not set")
     return
   endif
 
-  let l:devices = adb#devices()
+  let l:devices = adb#selectDevice()
 
-  " If no device found give a warning an exit
-  if len(l:devices) == 0
-    call android#logw("No android device/emulator found. Skipping uninstall.")
-    return 0
-  endif
-
-  " If only one device is found automatically uninstall app from it.
-  if len(l:devices) == 1
-    let l:device = split(l:devices[0], ' ')[1]
-    call adb#uninstall(l:device)
-    call android#logi("Finished uninstalling from device " . l:device)
-    return 0
-  endif
-
-  " If more than one device is found give a list so the user can choose.
-  let l:choice = -1
-  let l:devices = ["0. All Devices"] + l:devices
-  while(l:choice < 0 || l:choice > len(l:devices))
-    echom "Select target device"
-    call inputsave()
-    let l:choice = inputlist(l:devices)
-    call inputrestore()
-    echo "\n"
-  endwhile
-
-  if l:choice == 0
-    call android#logi("Uninstalling from all devices...")
-    call remove(l:devices, 0)
-    for device in l:devices
-      let l:device = split(device, ' ')[1]
-      call adb#uninstall(l:device)
-    endfor
-    call android#logi ("Finished uninstalling from the following devices " . join(l:devices, " "))
-  else
-    let l:option = l:devices[l:choice]
-    let l:device = split(l:option, ' ')[1]
-    call adb#uninstall(l:device)
-    call android#logi ("Finished uninstalling from device " . l:device)
-  endif
+  for l:device in l:devices
+    call android#logi("Uninstall " . a:mode . " " . l:device)
+    let l:result = gradle#uninstall(l:device, a:mode)
+    if (l:result[0] > 0) || (l:result[1] > 0)
+      call android#logi("Uninstall failed")
+      return
+    else
+      call android#logi ("")
+    endif
+  endfor
 endfunction
 
 ""
@@ -326,15 +297,6 @@ function! android#getProjectName()
   return s:androidProjectName
 endfunction
 
-function! android#getApkPath(mode)
-  let s:androidApkFile = android#getProjectName() . "-" . a:mode . ".apk"
-  let old_wildignore = &wildignore
-  let &wildignore = ""
-  let s:androidApkPath = findfile(s:androidApkFile, ".**")
-  let &wildignore = old_wildignore
-  return s:androidApkPath
-endfunction
-
 function! android#listDevices()
   let l:devices = adb#devices()
   if len(l:devices) <= 0
@@ -447,7 +409,7 @@ function! android#setupAndroidCommands()
   command! -nargs=+ Android call android#compile(<f-args>)
   command! -nargs=? AndroidBuild call android#compile(<f-args>)
   command! -nargs=1 AndroidInstall call android#install(<f-args>)
-  command! AndroidUninstall call android#uninstall()
+  command! -nargs=1 AndroidUninstall call android#uninstall(<f-args>)
   command! AndroidUpdateTags call android#updateAndroidTags()
   command! AndroidDevices call android#listDevices()
   command! AndroidEmulator call android#emulator()
