@@ -58,19 +58,11 @@ endfunction
 " a:mode can be any of the compile modes supported by the build system (e.g.
 " debug or release).
 function! gradle#install(device, mode)
-  let l:cmd = "ANDROID_SERIAL=" . a:device . " " . gradle#bin() . ' -f ' . g:gradle_file . ' install' . android#capitalize(a:mode)
-  call gradle#logi("Installing " . a:mode . " to " . a:device")
-  let l:output = system(l:cmd)
-  redraw!
-  let l:failure = matchstr(l:output, "Failure")
-  if empty(l:failure)
-    call gradle#logi("")
-    return 0
-  else
-    let l:errormsg = matchstr(l:output, '\cFailure \[\zs.\{-}\ze\]')
-    call gradle#logi("Install Failure")
-    return 1
-  endif
+  let $ANDROID_SERIAL=a:device
+  let l:result = call("gradle#run", ["install" . android#capitalize(a:mode)])
+  call s:showQuickfix()
+  call s:updateAirline(l:result[0], l:result[1])
+  unlet $ANDROID_SERIAL
 endfunction
 
 " Tries to determine the location of the build.gradle file starting from the
@@ -108,24 +100,8 @@ function! gradle#compile(...)
   call gradle#logi("Gradle " . join(a:000, " "))
   let l:result = call("gradle#run", a:000)
 
-  if !exists('g:gradle_quickfix_show')
-    let g:gradle_quickfix_show = 1
-  endif
-
-  if g:gradle_quickfix_show
-    execute('botright cwindow')
-    " Work around bug that causes file to loose syntax after the quick fix
-    " window is closed.
-    if exists('g:syntax_on')
-      execute('syntax enable')
-    endif
-  endif
-
-  if exists("g:airline_initialized")
-    call gradle#logi("")
-  elseif l:result[1] > 0 || l:result[0] > 0
-    call gradle#logi("Gradle Errors: " . l:result[0] . " Warnings: " . l:result[1])
-  endif
+  call s:showQuickfix()
+  call s:updateAirline(l:result[0], l:result[1])
 endfunction
 
 function! gradle#run(...)
@@ -390,4 +366,27 @@ endfunction
 
 function! gradle#setupGradleCommands()
   command! -nargs=+ Gradle call gradle#compile(<f-args>)
+endfunction
+
+function! s:showQuickfix()
+  if !exists('g:gradle_quickfix_show')
+    let g:gradle_quickfix_show = 1
+  endif
+
+  if g:gradle_quickfix_show
+    execute('botright cwindow')
+    " Work around bug that causes file to loose syntax after the quick fix
+    " window is closed.
+    if exists('g:syntax_on')
+      execute('syntax enable')
+    endif
+  endif
+endfunction
+
+function! s:updateAirline(errorCount, warningCount)
+  if exists("g:airline_initialized")
+    call gradle#logi("")
+  elseif a:errorCount > 0 || a:warningCount > 0
+    call gradle#logi("Gradle Errors: " . a:errorCount . " Warnings: " . a:warningCount)
+  endif
 endfunction

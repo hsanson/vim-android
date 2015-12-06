@@ -122,69 +122,18 @@ function! android#install(mode)
     return
   endif
 
-  if(!filereadable(android#getApkPath(a:mode)))
-    call android#compile(a:mode)
-    return
-  endif
+  let l:devices = adb#selectDevice()
 
-  if(!filereadable(android#getApkPath(a:mode)))
-    call android#logw("Android apk file " . android#getApkPath(a:mode) . " not found")
-    return
-  endif
-
-  let l:mode = a:mode
-  let l:devices = adb#devices()
-
-  " If no device found give a warning an exit
-  if len(l:devices) == 0
-    call android#logw("No android device/emulator found. Skipping install step.")
-    return 0
-  endif
-
-  " If only one device is found automatically install to it.
-  if len(l:devices) == 1
-    let l:device = strpart(l:devices[0], 3)
-    return adb#install(l:device, a:mode)
-  endif
-
-  " If more than one device is found give a list so the user can choose.
-  let l:choice = -1
-
-  let l:devices = ["0. All Devices"] + l:devices
-
-  "call add(l:devices, (len(l:devices) + 1) . ". All devices")
-  while(l:choice < 0 || l:choice > len(l:devices))
-    echom "Select target device"
-    call inputsave()
-    let l:choice = inputlist(l:devices)
-    call inputrestore()
-    echo "\n"
-  endwhile
-
-  echomsg l:choice
-
-  if l:choice == "0"
-    call android#logi("Installing on all devices... (May take some time)")
-    call remove(l:devices, 0) " Remove All Devices option
-    for device in l:devices
-      let l:device = strpart(device, 3)
-      let l:result = adb#install(l:device, a:mode)
-      if l:result != 0
-        call android#logw("Abort installation of all devices")
-        return 1
-      endif
-    endfor
-    call android#logi ("Finished installing on the following devices " . join(l:devices, " "))
-  else
-    let l:option = l:devices[l:choice]
-    let l:device = strpart(l:option, 3)
-    call android#logi("Installing on " . l:device . " ...")
-    let l:res = adb#install(l:device, a:mode)
-
-    if(!l:res)
-      call android#logi("Finished installing on " . l:device)
+  for l:device in l:devices
+    call android#logi("Install " . a:mode . " " . l:device)
+    let l:result = gradle#install(l:device, a:mode)
+    if (l:result[0] > 0) || (l:result[1] > 0)
+      call android#logi("Install failed")
+      return
+    else
+      call android#logi ("")
     endif
-  endif
+  endfor
 endfunction
 
 function! android#uninstall()
@@ -206,7 +155,7 @@ function! android#uninstall()
 
   " If only one device is found automatically uninstall app from it.
   if len(l:devices) == 1
-    let l:device = strpart(l:devices[0], 3)
+    let l:device = split(l:devices[0], ' ')[1]
     call adb#uninstall(l:device)
     call android#logi("Finished uninstalling from device " . l:device)
     return 0
@@ -227,13 +176,13 @@ function! android#uninstall()
     call android#logi("Uninstalling from all devices...")
     call remove(l:devices, 0)
     for device in l:devices
-      let l:device = strpart(device, 3)
+      let l:device = split(device, ' ')[1]
       call adb#uninstall(l:device)
     endfor
     call android#logi ("Finished uninstalling from the following devices " . join(l:devices, " "))
   else
     let l:option = l:devices[l:choice]
-    let l:device = strpart(l:option, 3)
+    let l:device = split(l:option, ' ')[1]
     call adb#uninstall(l:device)
     call android#logi ("Finished uninstalling from device " . l:device)
   endif
