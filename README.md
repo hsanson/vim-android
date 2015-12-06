@@ -20,8 +20,7 @@ If you are working in an Android project then set the *g:android_sdk_path*  with
 
 Open a java or xml source file and this plugin will automatically kick in and perform some tasks:
 
- - Create a init gradle file with special tasks to inspect gradle projects. This init gradle file will be created inside your gradle folder that is usually located at \$HOME/.gradle/init.d.
- - Execute the gradle vim task to inspect the project and extract dependencies, project names, and android sdk versions.
+ - Execute a custom vim gradle task to inspect the project and extract dependencies, project names, and android sdk versions.
  - Set CLASSPATH environment variable with the JAR dependencies of the project and the Android SDK jar.
  - Set SRCPATH environment variables with the project source sets.
  - Create Gradle and Android commands that can be used to invoke gradle tasks.

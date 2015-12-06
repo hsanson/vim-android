@@ -18,6 +18,9 @@ Contents                                   *vim-android* *vim-android-contents*
               Commands ...................... |vim-android-commands|
               Key mappings .................. |vim-android-keys|
               Omnicompletion ................ |vim-android-omnicomplete|
+              PMD Plugin .................... |vim-android-pmd|
+              FindBugs Plugin ............... |vim-android-findbugs|
+              CheckStyle Plugin ............. |vim-android-checkstyle|
               Linter Support................. |vim-android-linter|
               Airline Support................ |vim-android-airline|
          5. Configuration ................... |vim-android-configuration|
@@ -30,7 +33,7 @@ Contents                                   *vim-android* *vim-android-contents*
 vim-android is a plugin that facilitates the development of Gradle and Android
 applications within vim. When editing a java or xml file this plugin tries
 to find gradle.build file in the current directory and if found it
-cofigures a set of variables and commands that allows easier development for
+configures a set of variables and commands that allows easier development for
 Gradle projects. If the gradle.build file contains the android gradle plugin
 then Android specific commands are also configured.
 
@@ -46,7 +49,6 @@ Studio with the gradle plugin has come a long way now I am removing all ant
 related functions from the plugin. It is difficult to maintain funcionality
 that I do not use.
 
-
 ------------------------------------------------------------------------------
 SUPPORTED FEATURES                                         *vim-android-features*
 
@@ -54,13 +56,14 @@ The following features are supported by vim-android:
 
   - Auto-detection of Gradle and Android projects when opening a Java or
     XML file. For this the plugin uses findfile function that searches from the
-    current buffer path backwards until it finds a build.gralde file for the
+    current buffer path backwards until it finds a build.gradle file for the
     project.
-  - Custom gradle vim compiler that invokes gradle directly with any
+  - Custom gradle vim task that invokes gradle directly with any
     arguments passed to the command.
   - Custom errorformat that captures java errors, linter errors, test errors,
     aapt errors, checkstyle, pmd, findbugs and displays them in the quickfix
-    window.
+    window. This requires that gradle be invoked with the vim init file
+    loaded.
   - Updates the CLASSPATH environment variable to include paths for your
     current project, external libs, external lib-projects and the current
     target Android SDK jars. This allows auto-completion of Java code using
@@ -142,32 +145,6 @@ for the gradle binaries. Check the options documentation below for more
 details on these and other options.
 
 ------------------------------------------------------------------------------
-GRADLE BUILD                                                 *vim-android-build*
-
-For better results it is recommended to enable stderr output for the gradle linter
-and use version 1.3.0 or newer of the android gradle plugin and version 22.0.1 or
-newer of the android build tools. Below is an example of a build.gradle file that
-fullfills these requirements:
-
-    buildscript {
-      repositories {
-        mavenCentral()
-        jcenter()
-      }
-
-      dependencies {
-        classpath 'com.android.tools.build:gradle:1.3.0'
-      }
-    }
-
-    android {
-      lintOptions {
-        textReport true
-        textOutput "stderr"
-      }
-    }
-
-------------------------------------------------------------------------------
 COMMANDS                                                   *vim-android-commands*
 
 :Gradle <options>
@@ -246,29 +223,126 @@ With the CLASSPATH set, plugins such as the javacomplete2 can be used to
 enable omnicompletion (https://github.com/artur-shaik/vim-javacomplete2).
 
 ------------------------------------------------------------------------------
+PMD PLUGIN SUPPORT                                          *vim-android-pmd*
+
+This plugin automatically detects if the pmd gradle plugin is loaded,
+parses the xml reports it generates and populates the quickfix window with the
+errors and warnings reported by it.
+
+The pmd gradle plugin does not work by default with the android gradle plugin.
+To make it work with android applications you need to explicitly create a task
+of type *Pmd* in you build.gradle file:
+>
+    apply plugin: 'pmd'
+
+    task pmd(type: Pmd) {
+        ruleSets = ["java-basic", "java-braces", "java-strings",
+                    "java-android", "java-imports", /*"java-codesize",
+                    "java-design", */"java-unusedcode"]
+
+        source 'src'
+        include '**/*.java'
+        exclude '**/gen/**'
+        exclude '**/androidTest/**'
+
+        reports {
+            xml.enabled = true
+            html.enabled = true
+        }
+    }
+<
+After creating the task you can make it execute after running the *check* task
+by adding the following to your build.gradle file:
+>
+    check.finalizedBy 'pmd'
+<
+refer to the gradle pmd plugin documetnation for more options:
+
+  https://docs.gradle.org/current/userguide/pmd_plugin.html
+
+------------------------------------------------------------------------------
+FindBugs PLUGIN SUPPORT                                  *vim-android-findbugs*
+
+This plugin automatically detects if the findbugs gradle plugin is loaded,
+parses the xml reports it generates and populates the quickfix window with the
+errors and warnings reported by it.
+
+The findbugs gradle plugin does not work by default with the android gradle plugin.
+To make it work with android applications you need to explicitly create a task
+of type *FindBugs* in you build.gradle file:
+>
+    task findbugsMain(type: FindBugs) {
+
+        effort = "max"
+        reportLevel = "high"
+        ignoreFailures = false
+        classes = files("$project.buildDir/intermediates/classes/")
+
+        source 'src'
+        include '**/*.java'
+        exclude '**/gen/**'
+        exclude '**/androidTest/**'
+
+        reports {
+            xml {
+                destination "$project.buildDir/reports/findbugs/findbugs.xml"
+                xml.withMessages true
+            }
+        }
+
+        classpath = files()
+    }
+<
+After creating the task you can make it execute after running the *check* task
+by adding the following to your build.gradle file:
+>
+    check.finalizedBy 'findbugs'
+<
+refer to the gradle findbugs plugin documetnation for more options:
+
+  https://docs.gradle.org/current/userguide/findbugs_plugin.html
+
+------------------------------------------------------------------------------
+CHECKSTYLE PLUGIN SUPPORT                              *vim-android-checkstyle*
+
+This plugin automatically detects if the checkstyle gradle plugin is loaded,
+parses the xml reports it generates and populates the quickfix window with the
+errors and warnings reported by it.
+
+The checkstyle gradle plugin does not work by default with the android gradle plugin.
+To make it work with android applications you need to explicitly create a task
+of type *Checkstyle* in you build.gradle file:
+
+>
+    task checkstyle(type: Checkstyle) {
+        configFile file("${project.rootDir}/config/checkstyle.xml")
+        source 'src'
+        include '**/*.java'
+        exclude '**/gen/**'
+        exclude '**/androidTest/**'
+        classpath = files()
+    }
+<
+
+After creating the task you can make it execute after running the *check* task
+by adding the following to your build.gradle file:
+>
+    check.finalizedBy 'checkstyle'
+<
+refer to the gradle checkstyle plugin documetnation for more options:
+
+  https://docs.gradle.org/current/userguide/checkstyle_plugin.html
+
+------------------------------------------------------------------------------
 ANDROID LINTER SUPPORT                                      *vim-android-linter*
 
-By default the android gradle plugin does not print linter errors on stdout or
-stderror. In order for this plugin to be able to capture and display linter
-errors in the quickfix window we first need to enable linter output to stderr.
-
-To redirect all linter output to stderr you must add the following
-configuration to your build.gradle file within the android block:
-
-    android {
-      lintOptions {
-        textReport true
-        textOutput "stderr"
-      }
-    }
-
-Once this configuration is set you can run the linter within vim with the
-command:
+When gradle finishes building the project this plugin will try to find the
+lint-report.xml file, parse it and print to stderr the list of lint errors and
+warnings in a format that is easy to parse for vim error format. All that
+needs to be done is to execute the linter within vim to get the quickfix
+window populated with all linter errors and warnings:
 
     :Android lint
-
-that will execute the linter and show all warnings and errors within the
-quickfix window for easy navigation.
 
 ------------------------------------------------------------------------------
 ANDROID AIRLINE SUPPORT                                    *vim-android-airline*

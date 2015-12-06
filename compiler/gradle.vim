@@ -18,19 +18,16 @@ let s:makeprg = [
 
 exec 'CompilerSet makeprg=' . join(s:makeprg, '\ ')
 
-CompilerSet errorformat=\%-G%f:%l:\ %tarning:\ Element\ SubscribeHandler\ unvalidated\ %.%#,
-                        \[ant:checkstyle\]\ %f:%l:%c:\ %m,
-                        \[ant:checkstyle\]\ %f:%l:\ %m,
-                        \Build\ file\ '%f'\ line:\ %l,
-                        \%+GUnknown\ command-line\ option\ %m,
-                        \%+GTask\ %.%#\ not\ found\ %.%#.\ %m,
-                        \%E>\ %f:%l:%c:\ %trror:\ %m,
-                        \%W>\ %f:%l:%c:\ %tarning:\ %m,
-                        \%E%f:%l:\ %trror:\ %m,
-                        \%W%f:%l:\ %tarning:\ %m,
-                        \%EFAILURE:\ %m,
-                        \%Z%p%*[%^~],
-                        \%Z>\ %m\ file://%f,
-                        \%Z>\ %m,
-                        \%C%.%#
+CompilerSet errorformat=\%+GTask\ %.%#\ not\ found\ %.%#.,
+                       \%W\findbugs:\ %tarning\ %f:%l:%c\ %m,
+                       \%W\pmd:\ %tarning\ %f:%l:%c\ %m,
+                       \%W\checkstyle:\ %tarning\ %f:%l:%c\ %m,
+                       \%W\lint:\ %tarning\ %f:%l:%c\ %m,
+                       \%E\lint:\ %trror\ %f:%l:%c\ %m,
+                       \%E>\ %f:%l:%c:\ %trror:\ %m,
+                       \%W>\ %f:%l:%c:\ %tarning:\ %m,
+                       \%E%f:%l:\ %trror:\ %m,
+                       \%W%f:%l:\ %tarning:\ %m,
+                       \%Z%p%*[%^~],
+                       \%C%.%#
 

@@ -2,20 +2,87 @@
  * This files contains custom tasks used by the vim-android plugin.
  */
 
-allprojects {
+allprojects { project ->
+
   task vim {
     task -> doLast {
-      println "vim-project " + project.name
+      System.err.println "vim-project " + project.name
       if(project.hasProperty('android')) {
         def level = project.android.defaultConfig.targetSdkVersion.getApiLevel()
-        println "vim-target android-" + level
+        System.err.println "vim-target android-" + level
       }
       project.configurations.each {
         conf -> conf.collect {
-          println "vim-gradle " + it
+          System.err.println "vim-gradle " + it
         }
       }
     }
   }
+
+  project.gradle.buildFinished { result ->
+
+    if( project.hasProperty('android') ) {
+      def filePath = project.android.lintOptions.xmlOutput
+      if( filePath == null ) {
+        filePath = file([project.projectDir, "build", "outputs", "lint-results.xml"].join(File.separator))
+      }
+      if( filePath.exists() ) {
+        println filePath
+        def xml = (new XmlParser()).parse(filePath)
+        xml.issue.each { issue ->
+          issue.location.each { location ->
+            System.err.println "lint: ${issue.@severity} ${location.@file}:${location.@line}:${location.@column} ${issue.@message} ${issue.@explanation}"
+          }
+        }
+      }
+    }
+
+    project.tasks.withType(Pmd) { task ->
+      def report = task.reports.getXml().getDestination()
+      if(report.exists()) {
+        def xml = (new XmlParser()).parse(report)
+        xml.file.each { file ->
+          file.violation.each { violation ->
+            System.err.println "pmd: warning ${file.@name}:${violation.@beginline}:${violation.@begincolumn} ${violation.text().trim()}"
+          }
+        }
+        delete report
+      }
+    }
+
+    project.tasks.withType(Checkstyle) { task ->
+      def report = task.reports.getXml().getDestination()
+      if(report.exists()) {
+        def xml = (new XmlParser()).parse(report)
+        xml.file.each { file ->
+          file.error.each { error ->
+            System.err.println "checkstyle: warning ${file.@name}:${error.@line}:${error.@column} ${error.@message}"
+          }
+        }
+        delete report
+      }
+    }
+
+    project.tasks.withType(FindBugs) { task ->
+      def report = task.reports.getXml().getDestination()
+      if(report.exists()) {
+        def xml = (new XmlParser()).parse(report)
+        xml.BugInstance.each { bug ->
+          def message = bug.@type
+          bug.LongMessage.each { longMsg ->
+            message += " " + longMsg.text()
+          }
+          bug.SourceLine.each { line ->
+            def lineNr = line.@start == null ? 0 : line.@start
+            def columnNr = line.@startBytecode == null ? 0 : line.@startBytecode
+            def srcPath = project.hasProperty("android") ? project.android.sourceSets.main.java.srcDirs[0] : project.sourceSets.main.java.srcDirs[0]
+            System.err.println "findbugs: warning ${srcPath}/${line.@sourcepath}:${lineNr}:${columnNr} ${message}"
+          }
+        }
+        delete report
+      }
+    }
+  }
 }
+
 
