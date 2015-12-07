@@ -19,6 +19,7 @@ let s:makeprg = [
 exec 'CompilerSet makeprg=' . join(s:makeprg, '\ ')
 
 CompilerSet errorformat=\%+GTask\ %.%#\ not\ found\ %.%#.,
+                       \%-G%f:%l:\ %tarning:\ Element\ SubscribeHandler\ unvalidated\ %.%#,
                        \%+Gcom.android.ddmlib.InstallException:\ %m,
                        \%W\findbugs:\ %tarning\ %f:%l:%c\ %m,
                        \%W\pmd:\ %tarning\ %f:%l:%c\ %m,
