@@ -397,7 +397,6 @@ Example:
 >
         let g:android_sdk_path = '/opt/adroid-sdk'
 <
-
                                                                *g:gradle_path*
 g:gradle_path~
 Default: $GRADLE_HOME
@@ -411,6 +410,18 @@ search the gradle binary using the PATH environment variable.
 Example:
 >
     let g:gradle_path=/path/to/gradle/home
+<
+                                                             *g:gradle_daemon*
+g:gradle_daemon~
+Default: 0
+
+If set to a number larger than zero, then gradle will be invoked in daemon mode.
+This can greatly improve the speed of building projects by loading gradle as a
+daemon and using it for subsequent builds.
+
+Example:
+>
+    let g:gradle_daemon=1
 <
 
                                                             *g:android_adb_tool*

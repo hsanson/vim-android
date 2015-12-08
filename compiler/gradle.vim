@@ -16,6 +16,10 @@ let s:makeprg = [
  \  gradle#findGradleFile()
  \ ]
 
+if exists('g:gradle_daemon') && g:gradle_daemon > 0
+  call add(s:makeprg, "--daemon")
+endif
+
 exec 'CompilerSet makeprg=' . join(s:makeprg, '\ ')
 
 CompilerSet errorformat=
