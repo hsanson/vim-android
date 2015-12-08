@@ -19,5 +19,3 @@ let g:JavaComplete_SourcesPath = $SRCPATH
 
 let g:syntastic_java_javac_classpath = $CLASSPATH
 
-silent! call javacomplete#StartServer()
-
