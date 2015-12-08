@@ -19,25 +19,42 @@ allprojects { project ->
     }
   }
 
+  project.afterEvaluate {
+    if(project.getPlugins().hasPlugin('android') ||
+       project.getPlugins().hasPlugin('android-library')) {
+
+      // Ensure linter outputs XML report. We parse it after the build finishes.
+      configure(android.lintOptions) {
+        textReport false
+        xmlReport true
+        abortOnError true
+      }
+    }
+  }
+
   project.gradle.buildFinished { result ->
 
-    if( result.getFailure() != null ) {
 
-      if( project.hasProperty('android') ) {
-        def filePath = project.android.lintOptions.xmlOutput
-        if( filePath == null ) {
-          filePath = file([project.projectDir, "build", "outputs", "lint-results.xml"].join(File.separator))
-        }
-        if( filePath.exists() ) {
-          println filePath
-          def xml = (new XmlParser()).parse(filePath)
-          xml.issue.each { issue ->
-            issue.location.each { location ->
-              System.err.println "lint: ${issue.@severity} ${location.@file}:${location.@line}:${location.@column} ${issue.@message} ${issue.@explanation}"
+    if( project.hasProperty('android') ) {
+      def filePath = project.android.lintOptions.xmlOutput
+      if( filePath == null ) {
+        filePath = file([project.projectDir, "build", "outputs", "lint-results.xml"].join(File.separator))
+      }
+      if( filePath.exists() ) {
+        def xml = (new XmlParser()).parse(filePath)
+        xml.issue.each { issue ->
+          issue.location.each { location ->
+            def explanation = issue.@explanation.split("(?<=\\G.{70})")
+            System.err.println "lint: ${issue.@severity} ${location.@file}:${location.@line}:${location.@column} ${issue.@message}"
+            for(line in explanation) {
+              System.err.println "      ${line}"
             }
           }
         }
       }
+    }
+
+    if( result.getFailure() != null ) {
 
       project.tasks.withType(Pmd) { task ->
         def report = task.reports.getXml().getDestination()

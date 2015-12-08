@@ -129,6 +129,9 @@ function! gradle#run(...)
 
   " Restore previous values
   let &shellpipe = shellpipe
+
+  call gradle#cleanQuickFix()
+
   return [gradle#getErrorCount(), gradle#getWarningCount()]
 endfunction
 
@@ -168,6 +171,12 @@ function! gradle#airlineStatus()
     return android#glyph()
   end
 
+endfunction
+
+" Helper method to cleanup the qflist.
+function! gradle#cleanQuickFix()
+  let l:list = deepcopy(getqflist())
+  call setqflist(filter(l:list, "v:val['text'] != 'Element SubscribeHandler unvalidated by '"))
 endfunction
 
 " This method returns the number of valid errors in the quickfix window. This
