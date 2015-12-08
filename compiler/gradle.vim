@@ -32,6 +32,6 @@ CompilerSet errorformat=
     \%E%f:%l\ :\ %m,
     \%C>\ %m,
     \%-G%p^,
-    \%+G\ \ \ \%.%#,
+    \%+G\ \ %.%#,
     \%-G%.%#
 
