@@ -267,40 +267,79 @@ This plugin automatically detects if the findbugs gradle plugin is loaded,
 parses the xml reports it generates and populates the quickfix window with the
 errors and warnings reported by it.
 
-The findbugs gradle plugin does not work by default with the android gradle plugin.
-To make it work with android applications you need to explicitly create a task
-of type *FindBugs* in you build.gradle file:
+For projects that use the android gradle plugin, the findbugs plugin does not
+work by default. To make it work with android projects you need to explicitly
+create a task of type *FindBugs* in you build.gradle file:
 >
-    task findbugsMain(type: FindBugs) {
-
-        effort = "max"
-        reportLevel = "high"
-        ignoreFailures = false
-        classes = files("$project.buildDir/intermediates/classes/")
-
-        source 'src'
-        include '**/*.java'
-        exclude '**/gen/**'
-        exclude '**/androidTest/**'
-
-        reports {
-            xml {
-                destination "$project.buildDir/reports/findbugs/findbugs.xml"
-                xml.withMessages true
-            }
+    task findbugs(type: FindBugs) {
+      effort = "max"
+      reportLevel = "high"
+      ignoreFailures = false
+      excludeFilter = new File("${project.rootDir}/config/findbugs.xml")
+      classes = files("$project.buildDir/intermediates/classes/")
+      source 'src'
+      include '**/*.java'
+      classpath = files()
+      reports {
+        xml {
+          destination "${project.buildDir}/reports/findbugs/findbugs.xml"
         }
-
-        classpath = files()
+      }
     }
+<
+You also need to add this findbugs.xml filter file into a config folder. If
+you want it in another place change the excludeFilter path in the above
+FindBugs task definition:
+>
+    <?xml version="1.0" encoding="UTF-8"?>
+    <!--
+      ~ Copyright 2015 Vincent Brison.
+      ~
+      ~ Licensed under the Apache License, Version 2.0 (the "License");
+      ~ you may not use this file except in compliance with the License.
+      ~ You may obtain a copy of the License at
+      ~
+      ~    http://www.apache.org/licenses/LICENSE-2.0
+      ~
+      ~ Unless required by applicable law or agreed to in writing, software
+      ~ distributed under the License is distributed on an "AS IS" BASIS,
+      ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+      ~ See the License for the specific language governing permissions and
+      ~ limitations under the License.
+      -->
+    <FindBugsFilter>
+        <!-- http://stackoverflow.com/questions/7568579/eclipsefindbugs-exclude-filter-files-doesnt-work -->
+        <Match>
+            <Class name="~.*\.R\$.*"/>
+        </Match>
+        <Match>
+            <Class name="~.*\.Manifest\$.*"/>
+        </Match>
+        <!-- All bugs in test classes, except for JUnit-specific bugs -->
+        <Match>
+            <Class name="~.*\.*Test" />
+            <Not>
+                <Bug code="IJU" />
+            </Not>
+        </Match>
+    </FindBugsFilter>
 <
 After creating the task you can make it execute after running the *check* task
 by adding the following to your build.gradle file:
 >
     check.finalizedBy 'findbugs'
 <
-refer to the gradle findbugs plugin documetnation for more options:
+Refer to the gradle findbugs plugin documetnation for more options:
 
   https://docs.gradle.org/current/userguide/findbugs_plugin.html
+
+Pro Tip: Set *g:netrw_browsex_viewer* variable to your favorite browser and
+then with the cursor in the findbugs details URL press *gx* to open the
+detailed explanation of the error in your favorite browser:
+>
+  let g:netrw_browsex_viewer = "firefox -new-tab"
+<
+See the :h *gx* for more details on this functionality.
 
 ------------------------------------------------------------------------------
 CHECKSTYLE PLUGIN SUPPORT                              *vim-android-checkstyle*
