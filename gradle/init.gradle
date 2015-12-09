@@ -35,7 +35,8 @@ allprojects { project ->
       }
     }
 
-    // Force findbugs reports to include human readable messages.
+    // Force findbugs, checkstyle and pmd reports to output xml and include
+    // readable messages.
     tasks.withType(FindBugs) {
       configure(reports.html) {
         enabled false
@@ -45,10 +46,27 @@ allprojects { project ->
         withMessages true
       }
     }
+
+    tasks.withType(Pmd) {
+      configure(reports.html) {
+        enabled false
+      }
+      configure(reports.xml) {
+        enabled true
+      }
+    }
+
+    tasks.withType(Checkstyle) {
+      configure(reports.html) {
+        enabled false
+      }
+      configure(reports.xml) {
+        enabled true
+      }
+    }
   }
 
   project.gradle.buildFinished { result ->
-
 
     if( project.hasProperty('android') ) {
       def filePath = project.android.lintOptions.xmlOutput
@@ -73,7 +91,7 @@ allprojects { project ->
 
       project.tasks.withType(Pmd) { task ->
         def report = task.reports.getXml().getDestination()
-        if(report.exists()) {
+        if(report != null && report.exists()) {
           def xml = (new XmlParser()).parse(report)
           xml.file.each { file ->
             file.violation.each { violation ->
@@ -99,7 +117,7 @@ allprojects { project ->
 
       project.tasks.withType(FindBugs) { task ->
         def report = task.reports.getXml().getDestination()
-        if(report.exists()) {
+        if(report.exists() && report.length() > 0) {
           def xml = (new XmlParser()).parse(report)
           xml.BugInstance.each { bug ->
             def code = bug.@type
