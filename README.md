@@ -8,9 +8,13 @@ Install the plugin using your favorite plugin manager (e.g. NeoBundle):
 
     NeoBundle "hsanson/vim-android"
 
-If your gradle binary is not located in your PATH then set *g:gradle_path* to the absolute path where gradle is installed:
+If you have a gradle wrapper script (e.g gradlew or gradlew.bat) in your project rood directory or if you have gradle in your PATH environment, then you are good to go. If you prefer to setup a specific gradle version then you need to set *g:gradle_path* to the absolute path where gradle is installed:
 
-    let g:gradle_path = /path/to/gradle
+    let g:gradle_path = /path/to/gradle/folder
+
+this results in the plugin using the gradle binary located at:
+
+    /path/to/gradle/folder/bin/gradle
 
 If you are working in an Android project then set the *g:android_sdk_path*  with the absolute path where the android sdk is installed:
 

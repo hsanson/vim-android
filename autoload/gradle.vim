@@ -11,15 +11,23 @@ endfunction
 
 " Function that tries to determine the location of the gradle binary. It will
 " try first to find the executable inside g:gradle_path and if not found it will
-" try using the GRADLE_HOME environment variable. Finally it will search if
-" using the vim executable() method.
+" try to search for the Gradle wrapper then try using the GRADLE_HOME 
+" environment variable. Finally it will search if using the vim
+" executable() method.
 function! gradle#bin()
 
-  if !exists('g:gradle_path')
+  if exists('g:gradle_path')
+    let g:gradle_bin = g:gradle_path . "/bin/gradle"
+  elseif gradle#getOS() == 'Windows' 
+    if executable("\.gradlew.bat")
+      let g:gradle_bin = "\.gradlew.bat"
+    endif
+  elseif executable("./gradlew")
+    let g:gradle_bin = "./gradlew"
+  elseif !exists('g:gradle_path')
     let g:gradle_path = $GRADLE_HOME
+    let g:gradle_bin = g:gradle_path . "/bin/gradle"
   endif
-
-  let g:gradle_bin = g:gradle_path . "/bin/gradle"
 
   if(!executable(g:gradle_bin))
     if executable("gradle")

@@ -439,13 +439,17 @@ Example:
 <
                                                                *g:gradle_path*
 g:gradle_path~
-Default: $GRADLE_HOME
+Default: Gradle Wrapper
 
-When building gradle based projects we need to use the gradle tool to build
-and install APK files. The g:gradle_path should be set to the absolute
-directory path where gradle is installed. If g:gradle_path is not set then we
-fallback to the $GRADLE_HOME environment variable. If none is set then we
-search the gradle binary using the PATH environment variable.
+By default this plugin tries to use gradle wrapper script (e.g. gradlew) to
+build the project. If the gradle wrapper is not found then it tries to use the
+$GRADLE_HOME environment variable to find a gradle binary, and if that fails
+then it uses the vim executable() method to try to find a gradle executable in
+the system $PATH.
+
+To force the plugin to use a specific gradle binary you can add the
+g:gradle_path variable in your vimrc or init.vim configuration. This variable
+must be set to the absolute path where gradle is installed.
 
 Example:
 >
