@@ -38,9 +38,6 @@ allprojects { project ->
     // Force findbugs, checkstyle and pmd reports to output xml and include
     // readable messages.
     tasks.withType(FindBugs) {
-      configure(reports.html) {
-        enabled false
-      }
       configure(reports.xml) {
         enabled true
         withMessages true
@@ -48,18 +45,12 @@ allprojects { project ->
     }
 
     tasks.withType(Pmd) {
-      configure(reports.html) {
-        enabled false
-      }
       configure(reports.xml) {
         enabled true
       }
     }
 
     tasks.withType(Checkstyle) {
-      configure(reports.html) {
-        enabled false
-      }
       configure(reports.xml) {
         enabled true
       }
