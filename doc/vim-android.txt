@@ -75,6 +75,7 @@ The following features are supported by vim-android:
     your emulator/devices.
   - Adds useful commands to generate tags for the current project source and
     the Android SDK sources.
+  - Improved XML omnicompletion for Android resource and manifest XML files.
 
 ------------------------------------------------------------------------------
 Known Issues                                                *vim-android-issues*
@@ -205,7 +206,7 @@ For example you can map a function key (e.g. F5) to compile your project in
 debug mode using:
 
 >
-nmap <F5> <ESC>:Android assembleDebug<CR>
+  nmap <F5> <ESC>:Android assembleDebug<CR>
 <
 
 this way anytime you press the <F5> key it will build and install your
@@ -513,16 +514,22 @@ Example:
 ==============================================================================
 10. Credits                                                *vim-android-credits*
 
-vim-android was written from scratch but I learned and used as reference
-several other plugins:
+Contributors:
+
+ - Donnie West (https://github.com/DonnieWest)
+
+Ideas stolen from:
 
  - https://github.com/bpowell/vim-android
  - https://github.com/mgarriott/vim-android
- - https://github.com/artur-shaik/vim-javacomplete2
  - http://flukus.github.io/2015/07/03/2015_07_03-Vim-errorformat-Demystified/
- - https://github.com/bling/vim-airline
- - https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts
+
+Recommended :
+
  - https://github.com/powerline/fonts
+ - https://github.com/bling/vim-airline
+ - https://github.com/artur-shaik/vim-javacomplete2
+ - https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts
 
 ==============================================================================
  vim: tw=78 ts=8 sw=4 sts=4 et ft=help

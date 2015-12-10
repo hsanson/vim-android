@@ -44,6 +44,7 @@ If the project is also an Android project then the android command also becomes 
  - Sets an extensive errorformat that captures java errors, linter errors, test errors, aapt errors and adds them to the qflist.
  - Adds commands to build and install APK files in one or all devices/emulators present.
  - Adds commands to generate tag files for the Android SDK as well as your Android application.
+ - Improved XML omnicompletion for android resource and manifest files (Thanks to Donnie West).
 
 # Details
 
