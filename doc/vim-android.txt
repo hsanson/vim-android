@@ -251,7 +251,7 @@ of type *Pmd* in you build.gradle file:
         }
     }
 <
-After creating the task you can make it execute after running the *check* task
+After creating the task you can make it execute after running the check task
 by adding the following to your build.gradle file:
 >
     check.finalizedBy 'pmd'
@@ -324,7 +324,7 @@ FindBugs task definition:
         </Match>
     </FindBugsFilter>
 <
-After creating the task you can make it execute after running the *check* task
+After creating the task you can make it execute after running the check task
 by adding the following to your build.gradle file:
 >
     check.finalizedBy 'findbugs'
@@ -334,12 +334,12 @@ Refer to the gradle findbugs plugin documetnation for more options:
   https://docs.gradle.org/current/userguide/findbugs_plugin.html
 
 Pro Tip: Set *g:netrw_browsex_viewer* variable to your favorite browser and
-then with the cursor in the findbugs details URL press *gx* to open the
+then with the cursor in the findbugs details URL press gx to open the
 detailed explanation of the error in your favorite browser:
 >
   let g:netrw_browsex_viewer = "firefox -new-tab"
 <
-See the :h *gx* for more details on this functionality.
+See the :h gx for more details on this functionality.
 
 ------------------------------------------------------------------------------
 CHECKSTYLE PLUGIN SUPPORT                              *vim-android-checkstyle*
@@ -363,7 +363,7 @@ of type *Checkstyle* in you build.gradle file:
     }
 <
 
-After creating the task you can make it execute after running the *check* task
+After creating the task you can make it execute after running the check task
 by adding the following to your build.gradle file:
 >
     check.finalizedBy 'checkstyle'
