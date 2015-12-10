@@ -84,11 +84,17 @@ endfunction
 " Tries to determine the location of the build.gradle file starting from the
 " current buffer location.
 function! gradle#findGradleFile()
-  let l:file = findfile("build.gradle", expand("%:p:h") . ";$HOME")
-  if match(l:file, "/") != 0
-    let l:file = getcwd() . "/" . l:file
+
+  let l:file = ""
+  let l:path = expand("%:p:h")
+
+  if len(l:path) <= 0
+    let l:path = getcwd()
   endif
-  return l:file
+
+  let l:file = findfile("build.gradle", l:path . ";$HOME")
+
+  return copy(fnamemodify(l:file, ":p"))
 endfunction
 
 " Tries to find the root of the android project. It uses the build.gradle file

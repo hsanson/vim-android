@@ -30,13 +30,24 @@ endfunction
 " If there is a target sdk version defined it means the project is an android
 " project.
 function! android#isAndroidProject()
-  if !exists('g:gradle_target_versions')
-    return 0
+  return filereadable(android#findManifestFile()) && android#checkAndroidHome()
+endfunction
+
+" Tries to determine the location of the AndroidManifest.xml file relative to
+" the location of the build.gradle file.
+function! android#findManifestFile()
+
+  let l:gradlefile = gradle#findGradleFile()
+
+  if len(l:gradlefile) == 0
+    return ""
   endif
-  if !has_key(g:gradle_target_versions, gradle#findGradleFile())
-    return 0
-  endif
-  return 1
+
+  let l:gradleroot = fnamemodify(l:gradlefile, ":p:h")
+
+  let l:file = findfile("AndroidManifest.xml", l:gradleroot . "/**9")
+
+  return copy(fnamemodify(l:file, ":p"))
 endfunction
 
 function! android#checkAndroidHome()
@@ -229,10 +240,6 @@ endfunction
 function! android#setClassPath()
 
   if ! android#isAndroidProject()
-    return
-  endif
-
-  if ! android#checkAndroidHome()
     return
   endif
 
