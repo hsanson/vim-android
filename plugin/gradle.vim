@@ -10,4 +10,4 @@ function! GradleAirlineInit()
 endfunction
 
 autocmd User AirlineAfterInit call GradleAirlineInit()
-
+autocmd BufEnter AndroidManifest.xml XMLns manifest
