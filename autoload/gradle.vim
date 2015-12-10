@@ -216,7 +216,7 @@ function! gradle#runVimTask()
     let g:gradle_jars = {}
   endif
 
-  if !exists('g:target_versions')
+  if !exists('g:gradle_target_versions')
     let g:gradle_target_versions = {}
   endif
 
