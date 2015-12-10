@@ -10,4 +10,3 @@ function! GradleAirlineInit()
 endfunction
 
 autocmd User AirlineAfterInit call GradleAirlineInit()
-
