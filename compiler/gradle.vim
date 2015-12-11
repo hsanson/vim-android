@@ -33,6 +33,8 @@ CompilerSet errorformat=
     \%A>\ %f:%l:%c:\ %tarning:\ %m,
     \%A%f:%l:\ %trror:\ %m,
     \%A%f:%l:\ %tarning:\ %m,
+    \%A%f:%l:\ %trror\ -\ %m,
+    \%A%f:%l:\ %tarning\ -\ %m,
     \%E%f:%l\ :\ %m,
     \%C>\ %m,
     \%-G%p^,
