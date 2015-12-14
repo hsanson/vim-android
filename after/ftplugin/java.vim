@@ -14,8 +14,9 @@ endif
 silent! call javacomplete#SetClassPath($CLASSPATH)
 silent! call javacomplete#SetSourcePath($SRCPATH)
 
-let g:JavaComplete_LibsPath = $CLASSPATH
-let g:JavaComplete_SourcesPath = $SRCPATH
+if exists(":JCstart")
+  let $CLASSPATH = g:JavaComplete_LibsPath
+  let $SRCPATH = g:JavaComplete_SourcesPath
+endif
 
-let g:syntastic_java_javac_classpath = $CLASSPATH
-
+let g:syntastic_java_javac_classpath = $CLASSPATH . $SRCPATH

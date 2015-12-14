@@ -283,6 +283,10 @@ endfunction
 " the current Android project.
 function! gradle#setClassPath()
 
+  if exists(":JCstart")
+    return
+  endif
+
   let l:jarList = []
   let l:srcList = []
 
