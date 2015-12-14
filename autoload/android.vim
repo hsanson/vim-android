@@ -34,8 +34,14 @@ function! android#isAndroidProject()
 endfunction
 
 " Tries to determine the location of the AndroidManifest.xml file relative to
-" the location of the build.gradle file.
+" the location of the build.gradle file. Since the findfile() call can take a
+" long time to finish and we call this method several times it caches the
+" results in a script variable.
 function! android#findManifestFile()
+
+  if !exists('s:manifest_cache')
+    let s:manifest_cache = {}
+  endif
 
   let l:gradlefile = gradle#findGradleFile()
 
@@ -43,11 +49,15 @@ function! android#findManifestFile()
     return ""
   endif
 
+  if has_key(s:manifest_cache, l:gradlefile)
+    return s:manifest_cache[l:gradlefile]
+  endif
+
   let l:gradleroot = fnamemodify(l:gradlefile, ":p:h")
-
   let l:file = findfile("AndroidManifest.xml", l:gradleroot . "/**9")
+  let s:manifest_cache[l:gradlefile] = copy(fnamemodify(l:file, ":p"))
 
-  return copy(fnamemodify(l:file, ":p"))
+  return s:manifest_cache[l:gradlefile]
 endfunction
 
 function! android#checkAndroidHome()
