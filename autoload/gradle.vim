@@ -285,34 +285,35 @@ function! gradle#setClassPath()
 
   if exists(":JCstart")
     return
-  else
-    let l:jarList = []
-    let l:srcList = []
-
-    let l:oldJars = split($CLASSPATH, gradle#classPathSep())
-    let l:oldSrcs = split($SRCPATH, ",")
-
-    call extend(l:jarList, l:oldJars)
-    call extend(l:srcList, l:oldSrcs)
-
-    let l:depJars = gradle#loadGradleDeps()
-    if !empty(l:depJars)
-      call extend(l:jarList, l:depJars)
-    endif
-
-    let l:gradleSrcPaths = s:getGradleSrcPaths()
-    if !empty(l:gradleSrcPaths)
-      call extend(l:srcList, l:gradleSrcPaths)
-    endif
-
-    let l:jarList = gradle#uniq(sort(l:jarList))
-    let l:srcList = gradle#uniq(sort(l:srcList))
-
-    let $CLASSPATH = join(l:jarList, gradle#classPathSep())
-    let $SRCPATH = join(l:srcList, gradle#classPathSep())
-
-    exec "set path=" . join(l:srcList, ',')
   endif
+
+  let l:jarList = []
+  let l:srcList = []
+
+  let l:oldJars = split($CLASSPATH, gradle#classPathSep())
+  let l:oldSrcs = split($SRCPATH, ",")
+
+  call extend(l:jarList, l:oldJars)
+  call extend(l:srcList, l:oldSrcs)
+
+  let l:depJars = gradle#loadGradleDeps()
+  if !empty(l:depJars)
+    call extend(l:jarList, l:depJars)
+  endif
+
+  let l:gradleSrcPaths = s:getGradleSrcPaths()
+  if !empty(l:gradleSrcPaths)
+    call extend(l:srcList, l:gradleSrcPaths)
+  endif
+
+  let l:jarList = gradle#uniq(sort(l:jarList))
+  let l:srcList = gradle#uniq(sort(l:srcList))
+
+  let $CLASSPATH = join(l:jarList, gradle#classPathSep())
+  let $SRCPATH = join(l:srcList, gradle#classPathSep())
+
+  exec "set path=" . join(l:srcList, ',')
+
 endfunction
 
 function! s:getGradleSrcPaths()
