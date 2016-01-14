@@ -19,4 +19,4 @@ if exists(":JCstart")
   let $SRCPATH = g:JavaComplete_SourcesPath
 endif
 
-let g:syntastic_java_javac_classpath = $CLASSPATH . $SRCPATH
+let g:syntastic_java_javac_classpath = $CLASSPATH . ":" . $SRCPATH
