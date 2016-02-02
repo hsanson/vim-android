@@ -94,6 +94,10 @@ function! gradle#findGradleFile()
 
   let l:file = findfile("build.gradle", l:path . ";$HOME")
 
+  if len(l:file) == 0
+    return ""
+  endif
+
   return copy(fnamemodify(l:file, ":p"))
 endfunction
 

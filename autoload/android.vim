@@ -54,7 +54,7 @@ function! android#findManifestFile()
   endif
 
   let l:gradleroot = fnamemodify(l:gradlefile, ":p:h")
-  let l:file = findfile("AndroidManifest.xml", l:gradleroot . "/**9")
+  let l:file = findfile("AndroidManifest.xml", l:gradleroot . "/**3")
   let s:manifest_cache[l:gradlefile] = copy(fnamemodify(l:file, ":p"))
 
   return s:manifest_cache[l:gradlefile]
