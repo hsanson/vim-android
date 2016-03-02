@@ -22,7 +22,9 @@ Contents                                   *vim-android* *vim-android-contents*
               FindBugs Plugin ............... |vim-android-findbugs|
               CheckStyle Plugin ............. |vim-android-checkstyle|
               Linter Support................. |vim-android-linter|
-              Airline Support................ |vim-android-airline|
+              Status Line.................... |vim-android-statusline|
+                Airline Status Line.......... |vim-android-airline|
+                LightLine Status Line........ |vim-android-lightline|
          5. Configuration ................... |vim-android-configuration|
          6. Todo ............................ |vim-android-todo|
          7. Credits ......................... |vim-android-credits|
@@ -385,44 +387,90 @@ window populated with all linter errors and warnings:
     :Android lint
 
 ------------------------------------------------------------------------------
-ANDROID AIRLINE SUPPORT                                    *vim-android-airline*
+STATUS LINE                                             *vim-android-statusline*
 
-This plugin has custom parts that are diplayed in the airline status bar.
-There are some global configuration variables that you can set to change how
-these are displayed
-
-                                                 *g:gradle_airline_android_glyph*
-g:android_airline_android_glyph~
-Default: "Android"
-~
-This glyph is displayed next to the filetype section if the project is an Android
-project. If you use poweline or nerd patched fonts I higly recomend you set
-the android glyph:
+This plugin provides a gradle#statusLine() method that returns an string
+indiciating the plugin status. The default status line looks like below:
 >
-        let g:android_airline_android_glyph = 'U+f17b'
+    A  12 E 1 W
 <
-                                                   *g:gradle_airline_error_glyph*
-g:android_airline_error_glyph~
-Default: "Error: "
-~
-This glyph is shown in the airline warning section when the quickfix window
-contains errors after building the gradle project. If you use powerline or
-nerd patched fonts I recommend you set the alert glyph:
+The first glyph can be either A or G to indicate if the file belongs to an
+Android project or a Gradle project respectively.
+
+In the quickfix window if there are compilation errors then the number of
+errors is shown followed by E and if there are warning then the number of
+warnings is shown followed by W.
+
+It is possible to customize the glyphs shown by setting the following global
+variables:
+
+                                                 *g:gradle_glyph_gradle*
+g:gradle_glyph_gradle~
+Default: "G"
+>
+        let g:gradle_glyph_gradle = 'U+e73a'
+<
+                                                 *g:gradle_glyph_android*
+g:gradle_glyph_android~
+Default: "A"
+>
+        let g:gradle_glyph_android = 'U+f17b'
+<
+                                                   *g:gradle_glyph_error*
+g:gradle_glyph_error~
+Default: "E"
 >
         let g:android_airline_error_glyph = 'U+f06a'
 <
-                                                 *g:gradle_airline_warning_glyph*
-g:android_airline_warning_glyph~
-Default: "Warning: "
-~
-This glyph is shown in the airline warning section when the quickfix window
-contains warnings after building the gradle project. If you use powerline or
-nerd patched fonts I recommend you set the warning glyph:
+                                                 *g:gradle_glyph_warning*
+g:gradle_glyph_warning~
+Default: "W"
 >
-        let g:android_airline_warning_glyph = 'U+f071'
+        let g:gradle_glyph_warning = 'U+f071'
 <
-Note: To insert UTF codes in your vim configuration you must enter insert mode
-and then press <Ctrl+v> followed by 'u' and then the hex code.
+
+Note: To use the examples above you must have a powerline enabled font
+and to write the UTF codes in your vim configuration you must enter insert
+mode, press <Ctrl+v> followed by 'u', and then input the hex code.
+
+------------------------------------------------------------------------------
+AIRLINE STATUS LINE                                      *vim-android-airline*
+
+To show the gradle/android status line in Airline you can add the following to
+your vim configuration to create a vim-gradle-status part:
+>
+   call airline#parts#define_function('vim-gradle-status', 'gradlestatusLine')
+<
+then you can add to any airline section you want:
+>
+   let g:airline_section_x= airline#section#create_right(['tagbar', 'filetype', 'vim-gradle-status'])
+<
+
+refer to airline documentation for details on how parts and sections are
+defined and used.
+
+------------------------------------------------------------------------------
+LIGHTLINE STATUS LINE                                    *vim-android-lightline*
+
+To show the gradle/android status line in Lightline you can add the following
+to your vim configuration:
+
+let g:lightline = {
+  \ 'colorcheme': 'PaperColor',
+  \ 'active': {
+  \    'left': [ [ 'mode', 'paste' ], [ 'fugitive', 'readonly', 'filename', 'modified' ] ],
+  \    'right': [ ['lineinfo'], ['percent'], ['gradle'] ]
+  \ },
+  \ 'component': {
+  \    'gradle': '%{exists("*gradle#statusLine")?gradle#statusLine():""}'
+  \    },
+  \ 'component_visible_condition': {
+  \    'gradle': '(exists("*gradle#statusLine") && ""!=gradle#statusLine())'
+  \    }
+  \ }
+
+make sure you read the Lightline documentation for details on how this
+configuration works and adapt to your own usage.
 
 ==============================================================================
 5. Configuration                                     *vim-android-configuration*

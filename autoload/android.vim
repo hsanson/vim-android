@@ -16,15 +16,12 @@ function! android#loge(msg)
 endfunction
 
 function! android#glyph()
-  if !android#isAndroidProject()
-    return ""
+
+  if !exists('g:gradle_glyph_android')
+    let g:gradle_glyph_android = "A"
   endif
 
-  if !exists('g:gradle_airline_android_glyph')
-    let g:gradle_airline_android_glyph = "Android"
-  endif
-
-  return g:gradle_airline_android_glyph
+  return g:gradle_glyph_android
 endfunction
 
 " If there is a target sdk version defined it means the project is an android

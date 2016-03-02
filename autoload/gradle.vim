@@ -1,12 +1,6 @@
 function! gradle#logi(msg)
-  if exists('g:airline_initialized')
-    let g:gradle_airline_status = a:msg
-    call airline#update_statusline()
-    redraw
-  else
-    redraw
-    echomsg a:msg
-  endif
+  redraw
+  echomsg a:msg
 endfunction
 
 " Function that tries to determine the location of the gradle binary. It will
@@ -69,7 +63,6 @@ function! gradle#install(device, mode)
   let $ANDROID_SERIAL=a:device
   let l:result = call("gradle#run", ["install" . android#capitalize(a:mode)])
   call s:showQuickfix()
-  call s:updateAirline(l:result[0], l:result[1])
   unlet $ANDROID_SERIAL
 endfunction
 
@@ -77,7 +70,6 @@ function! gradle#uninstall(device, mode)
   let $ANDROID_SERIAL=a:device
   let l:result = call("gradle#run", ["uninstall" . android#capitalize(a:mode)])
   call s:showQuickfix()
-  call s:updateAirline(l:result[0], l:result[1])
   unlet $ANDROID_SERIAL
 endfunction
 
@@ -127,7 +119,6 @@ function! gradle#compile(...)
   let l:result = call("gradle#run", a:000)
 
   call s:showQuickfix()
-  call s:updateAirline(l:result[0], l:result[1])
 endfunction
 
 function! gradle#run(...)
@@ -153,24 +144,37 @@ function! gradle#run(...)
   return [gradle#getErrorCount(), gradle#getWarningCount()]
 endfunction
 
-function! gradle#airlineErrorStatus()
+function! gradle#glyph()
+
+  if !exists('g:gradle_glyph_gradle')
+    let g:gradle_glyph_gradle = "G"
+  endif
+
+  return g:gradle_glyph_gradle
+endfunction
+
+function! gradle#statusLineError()
+
+  if(&ft != 'qf')
+    return ''
+  endif
 
   let l:errCount = gradle#getErrorCount()
   let l:warnCount = gradle#getWarningCount()
 
-  if !exists('g:gradle_airline_error_glyph')
-    let g:gradle_airline_error_glyph = "Error: "
+  if !exists('g:gradle_glyph_error')
+    let g:gradle_glyph_error = "E"
   endif
 
-  if !exists('g:gradle_airline_warning_glyph')
-    let g:gradle_airline_warning_glyph = "Warning: "
+  if !exists('g:gradle_glyph_warning')
+    let g:gradle_glyph_warning = "W"
   endif
 
-  let l:errMsg = g:gradle_airline_error_glyph . '[' . l:errCount . ']'
-  let l:warnMsg = g:gradle_airline_warning_glyph . '[' . l:warnCount . ']'
+  let l:errMsg = l:errCount . g:gradle_glyph_error
+  let l:warnMsg = l:warnCount . g:gradle_glyph_warning
 
   if l:errCount > 0 && l:warnCount > 0
-    return l:errMsg . " " . l:warnMsg
+    return l:errMsg . ' ' . l:warnMsg
   elseif l:errCount > 0
     return l:errMsg
   elseif l:warnCount > 0
@@ -181,13 +185,15 @@ function! gradle#airlineErrorStatus()
 
 endfunction
 
-function! gradle#airlineStatus()
+function! gradle#statusLine()
 
-  if exists('g:gradle_airline_status') && len(g:gradle_airline_status) > 0
-    return android#glyph() . " " . g:gradle_airline_status
+  if(android#isAndroidProject())
+    return android#glyph() . ' ' . gradle#statusLineError()
+  elseif(gradle#isGradleProject())
+    return gradle#glyph() . ' ' . gradle#statusLineError()
   else
-    return android#glyph()
-  end
+    return ""
+  endif
 
 endfunction
 
@@ -419,13 +425,5 @@ function! s:showQuickfix()
     if exists('g:syntax_on')
       execute('syntax enable')
     endif
-  endif
-endfunction
-
-function! s:updateAirline(errorCount, warningCount)
-  if exists("g:airline_initialized")
-    call gradle#logi("")
-  elseif a:errorCount > 0 || a:warningCount > 0
-    call gradle#logi("Gradle Errors: " . a:errorCount . " Warnings: " . a:warningCount)
   endif
 endfunction
