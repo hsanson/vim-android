@@ -62,14 +62,12 @@ endfunction
 function! gradle#install(device, mode)
   let $ANDROID_SERIAL=a:device
   let l:result = call("gradle#run", ["install" . android#capitalize(a:mode)])
-  call s:showQuickfix()
   unlet $ANDROID_SERIAL
 endfunction
 
 function! gradle#uninstall(device, mode)
   let $ANDROID_SERIAL=a:device
   let l:result = call("gradle#run", ["uninstall" . android#capitalize(a:mode)])
-  call s:showQuickfix()
   unlet $ANDROID_SERIAL
 endfunction
 
@@ -100,12 +98,6 @@ function! gradle#findRoot()
   return fnamemodify(gradle#findGradleFile(), ":p:h")
 endfunction
 
-function! gradle#setCompiler()
-  if gradle#isGradleProject()
-    silent! execute("compiler gradle")
-  endif
-endfunction
-
 function! gradle#isCompilerSet()
   if(exists("b:current_compiler") && b:current_compiler == "gradle")
     return 1
@@ -117,31 +109,41 @@ endfunction
 function! gradle#compile(...)
   call gradle#logi("Gradle " . join(a:000, " "))
   let l:result = call("gradle#run", a:000)
-
-  call s:showQuickfix()
 endfunction
 
 function! gradle#run(...)
 
-  call gradle#setCompiler()
-
   let shellpipe = &shellpipe
-
   let &shellpipe = '2>&1 1>/dev/null |tee'
 
-  "if exists('g:loaded_dispatch')
-  ""  silent! exe 'Make'
-  "else
-    execute("silent! make " . join(a:000, " "))
+  if has('nvim') && exists('*jobstart')
+    let s:errorfile = tempname()
+    let s:callbacks = {
+          \ 'on_stdout': function('s:runHandler'),
+          \ 'on_stderr': function('s:runHandler'),
+          \ 'on_exit':   function('s:runHandler'),
+          \ 'errorfile': s:errorfile
+          \ }
+    execute("compiler gradle")
+    let l:cmd = &makeprg . ' ' . join(a:000, ' ') . ' ' . &shellpipe . ' ' . s:errorfile
+    let vimTaskJob = jobstart(l:cmd, s:callbacks)
+  else
+    execute("compiler gradle | silent! make " . join(a:000, " "))
     redraw!
-  "endif
+    call s:showQuickfix()
+  endif
 
-  " Restore previous values
   let &shellpipe = shellpipe
 
-  call gradle#cleanQuickFix()
-
   return [gradle#getErrorCount(), gradle#getWarningCount()]
+
+endfunction
+
+function! s:runHandler(id, data, event)
+  if a:event == 'exit'
+    execute('cgetfile ' . self.errorfile)
+    call s:showQuickfix()
+  endif
 endfunction
 
 function! gradle#glyph()
@@ -198,7 +200,7 @@ function! gradle#statusLine()
 endfunction
 
 " Helper method to cleanup the qflist.
-function! gradle#cleanQuickFix()
+function! s:cleanQuickFix()
   let l:list = deepcopy(getqflist())
   call setqflist(filter(l:list, "v:val['text'] != 'Element SubscribeHandler unvalidated by '"))
 endfunction
@@ -451,16 +453,22 @@ function! gradle#setupGradleCommands()
 endfunction
 
 function! s:showQuickfix()
+
   if !exists('g:gradle_quickfix_show')
     let g:gradle_quickfix_show = 1
   endif
 
   if g:gradle_quickfix_show
-    execute('botright cwindow')
-    " Work around bug that causes file to loose syntax after the quick fix
-    " window is closed.
-    if exists('g:syntax_on')
-      execute('syntax enable')
+    call s:cleanQuickFix()
+    if gradle#getErrorCount() > 0
+      execute('botright copen | wincmd p')
+    else
+      execute('cclose')
+      " Work around bug that causes file to loose syntax after the quick fix
+      " window is closed.
+      if exists('g:syntax_on')
+        execute('syntax enable')
+      endif
     endif
   endif
 endfunction
