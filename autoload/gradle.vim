@@ -147,12 +147,24 @@ function! s:runHandler(id, data, event)
 endfunction
 
 function! gradle#glyph()
-
   if !exists('g:gradle_glyph_gradle')
     let g:gradle_glyph_gradle = "G"
   endif
-
   return g:gradle_glyph_gradle
+endfunction
+
+function! gradle#glyphError()
+  if !exists('g:gradle_glyph_error')
+    let g:gradle_glyph_error = "E"
+  endif
+  return g:gradle_glyph_error
+endfunction
+
+function! gradle#glyphWarning()
+  if !exists('g:gradle_glyph_warning')
+    let g:gradle_glyph_warning = "W"
+  endif
+  return g:gradle_glyph_warning
 endfunction
 
 function! gradle#statusLineError()
@@ -164,16 +176,8 @@ function! gradle#statusLineError()
   let l:errCount = gradle#getErrorCount()
   let l:warnCount = gradle#getWarningCount()
 
-  if !exists('g:gradle_glyph_error')
-    let g:gradle_glyph_error = "E"
-  endif
-
-  if !exists('g:gradle_glyph_warning')
-    let g:gradle_glyph_warning = "W"
-  endif
-
-  let l:errMsg = l:errCount . g:gradle_glyph_error
-  let l:warnMsg = l:warnCount . g:gradle_glyph_warning
+  let l:errMsg = l:errCount . gradle#glyphError()
+  let l:warnMsg = l:warnCount . gradle#glyphWarning()
 
   if l:errCount > 0 && l:warnCount > 0
     return l:errMsg . ' ' . l:warnMsg
@@ -452,6 +456,27 @@ function! gradle#setupGradleCommands()
   command! GradleSync call gradle#sync()
 endfunction
 
+function! s:showSigns()
+
+  execute("sign unplace *")
+  execute("sign define gradleErrorSign text=" . gradle#glyphError() . " texthl=Error")
+  execute("sign define gradleWarningSign text=" . gradle#glyphWarning() . " texthl=Warning")
+
+  for item in getqflist()
+    if item.valid
+      let l:signId = s:lpad(item.bufnr) . s:lpad(item.lnum) . s:lpad(item.col)
+      let l:sign = "sign place " . l:signId . " line=" . item.lnum
+      if item.type == 'e'
+        let l:sign = l:sign . " name=gradleErrorSign"
+      else
+        let l:sign = l:sign . " name=gradleWarningSign"
+      endif
+      let l:sign = l:sign . " buffer=" . item.bufnr
+      execute(l:sign)
+    endif
+  endfor
+endfunction
+
 function! s:showQuickfix()
 
   if !exists('g:gradle_quickfix_show')
@@ -460,6 +485,7 @@ function! s:showQuickfix()
 
   if g:gradle_quickfix_show
     call s:cleanQuickFix()
+    call s:showSigns()
     if gradle#getErrorCount() > 0
       execute('botright copen | wincmd p')
     else
@@ -471,4 +497,10 @@ function! s:showQuickfix()
       endif
     endif
   endif
+endfunction
+
+" Add left zero padding to input number.
+"   call s:lpad(20) -> 00020
+function! s:lpad(s)
+  return repeat('0', 5 - len(a:s)) . a:s
 endfunction
