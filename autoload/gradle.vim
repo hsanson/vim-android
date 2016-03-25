@@ -217,10 +217,8 @@ function! gradle#getWarningCount()
   return len(filter(l:list, "v:val['valid'] > 0 && tolower(v:val['type']) == 'w'"))
 endfunction
 
-" Execute gradle vim task and load all information in memory dictionaries.
-function! gradle#runVimTask()
-
-  call gradle#logi("Run vim task...")
+" Sync vim-android environment with build.gradle file.
+function! gradle#sync()
 
   if !exists('g:gradle_jars')
     let g:gradle_jars = {}
@@ -246,39 +244,77 @@ function! gradle#runVimTask()
    \ "vim"
    \ ]
 
-  let l:result = system(join(l:cmd, ' '))
+  if has('nvim') && exists('*jobstart')
+    let s:callbacks = {
+          \ 'on_stdout': function('s:vimTaskHandler'),
+          \ 'on_stderr': function('s:vimTaskHandler'),
+          \ 'on_exit':   function('s:vimTaskHandler'),
+          \ 'gradleFile': l:gradleFile
+          \ }
 
-  for line in split(l:result, '\n')
+    let vimTaskJob = jobstart(join(l:cmd, ' '), s:callbacks)
+  else
+    call gradle#logi("Gradle sync, please wait...")
+    let l:result = system(join(l:cmd, ' '))
+    call s:parseVimTaskOutput(l:gradleFile, split(l:result, "\n"))
+    call s:setup()
+    call gradle#logi("")
+  endif
+
+endfunction
+
+" Helper method to setup all gradle/android environments. This task must be
+" called only after the gradle#sync() method finishes.
+function! s:setup()
+  call gradle#setClassPath()
+  call gradle#setupGradleCommands()
+
+  if android#isAndroidProject()
+    call android#setAndroidSdkTags()
+    call android#setClassPath()
+    call android#setupAndroidCommands()
+  endif
+
+endfunction
+
+" Callback invoked when the gradle#sync() method finishes processing. Used when
+" using nvim async functionality.
+function! s:vimTaskHandler(id, data, event)
+
+  if a:event == 'stdout' || a:event == 'stderr'
+    call s:parseVimTaskOutput(self.gradleFile, a:data)
+  elseif a:event == 'exit' && a:data != 0
+    call gradle#loge("Gradle sync task failed")
+  endif
+
+  call s:setup()
+endfunction
+
+function! s:parseVimTaskOutput(gradleFile, result)
+  for line in a:result
     let mlist = matchlist(line, '^vim-gradle\s\(.*\.jar\)$')
     if empty(mlist) == 0 && len(mlist[1]) > 0
-      if !has_key(g:gradle_jars, l:gradleFile)
-        let g:gradle_jars[l:gradleFile] = []
+      if !has_key(g:gradle_jars, a:gradleFile)
+        let g:gradle_jars[a:gradleFile] = []
       endif
-      call add(g:gradle_jars[l:gradleFile], mlist[1])
+      call add(g:gradle_jars[a:gradleFile], mlist[1])
     endif
 
     let mlist = matchlist(line, '^vim-project\s\(.*\)$')
     if empty(mlist) == 0 && len(mlist[1]) > 0
-      let g:gradle_project_names[l:gradleFile] = mlist[1]
+      let g:gradle_project_names[a:gradleFile] = mlist[1]
     endif
 
     let mlist = matchlist(line, '^vim-target\s\(.*\)$')
     if empty(mlist) == 0 && len(mlist[1]) > 0
-      let g:gradle_target_versions[l:gradleFile] = mlist[1]
+      let g:gradle_target_versions[a:gradleFile] = mlist[1]
     endif
   endfor
-
-  call gradle#logi("")
-
 endfunction
 
-function! gradle#loadGradleDeps()
+function! gradle#getGradleDeps()
 
   let l:gradleFile = gradle#findGradleFile()
-
-  if !exists('g:gradle_jars') || !has_key(g:gradle_jars, l:gradleFile)
-    call gradle#runVimTask()
-  endif
 
   if has_key(g:gradle_jars, l:gradleFile)
     return g:gradle_jars[l:gradleFile]
@@ -306,7 +342,7 @@ function! gradle#setClassPath()
   call extend(l:jarList, l:oldJars)
   call extend(l:srcList, l:oldSrcs)
 
-  let l:depJars = gradle#loadGradleDeps()
+  let l:depJars = gradle#getGradleDeps()
   if !empty(l:depJars)
     call extend(l:jarList, l:depJars)
   endif
@@ -411,6 +447,7 @@ endfunction
 
 function! gradle#setupGradleCommands()
   command! -nargs=+ Gradle call gradle#compile(<f-args>)
+  command! GradleSync call gradle#sync()
 endfunction
 
 function! s:showQuickfix()

@@ -78,6 +78,8 @@ The following features are supported by vim-android:
   - Adds useful commands to generate tags for the current project source and
     the Android SDK sources.
   - Improved XML omnicompletion for Android resource and manifest XML files.
+  - Takes advantage of NVIM async functions to perfom long running tasks in
+    the background (e.g. GradleSync)
 
 ------------------------------------------------------------------------------
 Known Issues                                                *vim-android-issues*
@@ -86,7 +88,9 @@ Known Issues                                                *vim-android-issues*
     dependencies for the project and a cache with all the packages found in the
     gradle home folder. This process can be extremely slow depending on the
     number of dependencies the project has and the number of packages cached in
-    your gradle home.
+    your gradle home. When running in NVIM with async functions these tasks do
+    not block the interface but all Gradle and Android commands won't be
+    available until the tasks complete in the background.
 
   - To get full support of AAPT errors in the quickfix window of vim it is
     recommended that you use the android gradle plugin version 1.3.0 or newer.
@@ -150,9 +154,16 @@ details on these and other options.
 ------------------------------------------------------------------------------
 COMMANDS                                                   *vim-android-commands*
 
+:GradleSync
+    Synchronizes the vim-android environment with that of the gradle.build
+    file. This is run automatically when opening a buffer with a xml or java
+    file inside a gradle or android project. You should execute this command
+    everytime you make changes to your build.gradle file.
+
 :Gradle <options>
     Invokes gradle passing the <options> verbatim. Any gradle options
-    available via command line can be used using this command.
+    available via command line can be used using this command (e.g. :Gradle
+    build).
 
 :Android <options>
     This is an alias to the Gradle command.
@@ -208,7 +219,7 @@ For example you can map a function key (e.g. F5) to compile your project in
 debug mode using:
 
 >
-  nmap <F5> <ESC>:Android assembleDebug<CR>
+  nmap <F5> <ESC>:Gradle assembleDebug<CR>
 <
 
 this way anytime you press the <F5> key it will build and install your
@@ -518,7 +529,7 @@ Example:
 
                                                             *g:android_adb_tool*
 g:android_adb_tool~
-Default: {g:android_sdk_path}/tools/adb
+Default: ${g:android_sdk_path}/tools/adb
 
 This plugin relies heavily on the Android ADB tool to query devices/emulators
 and to install the APK files. By default this tool is found inside the
@@ -559,8 +570,6 @@ Example:
 ==============================================================================
 9. Todo                                                       *vim-android-todo*
 
-  - Better Android XML omni-completion.
-  - Better support AndroidAnnotation errors.
   - Project creation commands.
 
 ==============================================================================
