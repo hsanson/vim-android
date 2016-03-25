@@ -210,11 +210,11 @@ function! android#getTargetVersion()
 
   let l:gradleFile = gradle#findGradleFile()
 
-  if !exists('g:gradle_target_versions') || !has_key(g:gradle_target_versions, l:gradleFile)
-    call gradle#runVimTask()
+  if has_key(g:gradle_target_versions, l:gradleFile)
+    return g:gradle_target_versions[l:gradleFile]
+  else
+    return ''
   endif
-
-  return g:gradle_target_versions[l:gradleFile]
 
 endfunction
 
@@ -235,10 +235,8 @@ function! android#getSdkJar()
   endif
 
   if !has_key(g:android_versions, l:gradleFile)
-    call android#logi("Loading sdk jar, may take some time...")
     let l:targetJar = android#getGradleTargetJar()
     let g:android_versions[l:gradleFile] = l:targetJar
-    call android#logi("Load complete")
   endif
 
   return get(g:android_versions, l:gradleFile)

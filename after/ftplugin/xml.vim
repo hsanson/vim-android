@@ -1,13 +1,8 @@
 if gradle#isGradleProject()
 
-  call gradle#setClassPath()
-  call gradle#setupGradleCommands()
+  call gradle#sync()
 
   if android#isAndroidProject()
-    call android#setAndroidSdkTags()
-    call android#setClassPath()
-    call android#setupAndroidCommands()
-
     if expand('%:t') == 'AndroidManifest.xml'
       XMLns manifest
     else

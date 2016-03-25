@@ -62,14 +62,12 @@ endfunction
 function! gradle#install(device, mode)
   let $ANDROID_SERIAL=a:device
   let l:result = call("gradle#run", ["install" . android#capitalize(a:mode)])
-  call s:showQuickfix()
   unlet $ANDROID_SERIAL
 endfunction
 
 function! gradle#uninstall(device, mode)
   let $ANDROID_SERIAL=a:device
   let l:result = call("gradle#run", ["uninstall" . android#capitalize(a:mode)])
-  call s:showQuickfix()
   unlet $ANDROID_SERIAL
 endfunction
 
@@ -100,12 +98,6 @@ function! gradle#findRoot()
   return fnamemodify(gradle#findGradleFile(), ":p:h")
 endfunction
 
-function! gradle#setCompiler()
-  if gradle#isGradleProject()
-    silent! execute("compiler gradle")
-  endif
-endfunction
-
 function! gradle#isCompilerSet()
   if(exists("b:current_compiler") && b:current_compiler == "gradle")
     return 1
@@ -117,31 +109,41 @@ endfunction
 function! gradle#compile(...)
   call gradle#logi("Gradle " . join(a:000, " "))
   let l:result = call("gradle#run", a:000)
-
-  call s:showQuickfix()
 endfunction
 
 function! gradle#run(...)
 
-  call gradle#setCompiler()
-
   let shellpipe = &shellpipe
-
   let &shellpipe = '2>&1 1>/dev/null |tee'
 
-  "if exists('g:loaded_dispatch')
-  ""  silent! exe 'Make'
-  "else
-    execute("silent! make " . join(a:000, " "))
+  if has('nvim') && exists('*jobstart')
+    let s:errorfile = tempname()
+    let s:callbacks = {
+          \ 'on_stdout': function('s:runHandler'),
+          \ 'on_stderr': function('s:runHandler'),
+          \ 'on_exit':   function('s:runHandler'),
+          \ 'errorfile': s:errorfile
+          \ }
+    execute("compiler gradle")
+    let l:cmd = &makeprg . ' ' . join(a:000, ' ') . ' ' . &shellpipe . ' ' . s:errorfile
+    let vimTaskJob = jobstart(l:cmd, s:callbacks)
+  else
+    execute("compiler gradle | silent! make " . join(a:000, " "))
     redraw!
-  "endif
+    call s:showQuickfix()
+  endif
 
-  " Restore previous values
   let &shellpipe = shellpipe
 
-  call gradle#cleanQuickFix()
-
   return [gradle#getErrorCount(), gradle#getWarningCount()]
+
+endfunction
+
+function! s:runHandler(id, data, event)
+  if a:event == 'exit'
+    execute('cgetfile ' . self.errorfile)
+    call s:showQuickfix()
+  endif
 endfunction
 
 function! gradle#glyph()
@@ -198,7 +200,7 @@ function! gradle#statusLine()
 endfunction
 
 " Helper method to cleanup the qflist.
-function! gradle#cleanQuickFix()
+function! s:cleanQuickFix()
   let l:list = deepcopy(getqflist())
   call setqflist(filter(l:list, "v:val['text'] != 'Element SubscribeHandler unvalidated by '"))
 endfunction
@@ -217,10 +219,8 @@ function! gradle#getWarningCount()
   return len(filter(l:list, "v:val['valid'] > 0 && tolower(v:val['type']) == 'w'"))
 endfunction
 
-" Execute gradle vim task and load all information in memory dictionaries.
-function! gradle#runVimTask()
-
-  call gradle#logi("Run vim task...")
+" Sync vim-android environment with build.gradle file.
+function! gradle#sync()
 
   if !exists('g:gradle_jars')
     let g:gradle_jars = {}
@@ -246,39 +246,77 @@ function! gradle#runVimTask()
    \ "vim"
    \ ]
 
-  let l:result = system(join(l:cmd, ' '))
+  if has('nvim') && exists('*jobstart')
+    let s:callbacks = {
+          \ 'on_stdout': function('s:vimTaskHandler'),
+          \ 'on_stderr': function('s:vimTaskHandler'),
+          \ 'on_exit':   function('s:vimTaskHandler'),
+          \ 'gradleFile': l:gradleFile
+          \ }
 
-  for line in split(l:result, '\n')
+    let vimTaskJob = jobstart(join(l:cmd, ' '), s:callbacks)
+  else
+    call gradle#logi("Gradle sync, please wait...")
+    let l:result = system(join(l:cmd, ' '))
+    call s:parseVimTaskOutput(l:gradleFile, split(l:result, "\n"))
+    call s:setup()
+    call gradle#logi("")
+  endif
+
+endfunction
+
+" Helper method to setup all gradle/android environments. This task must be
+" called only after the gradle#sync() method finishes.
+function! s:setup()
+  call gradle#setClassPath()
+  call gradle#setupGradleCommands()
+
+  if android#isAndroidProject()
+    call android#setAndroidSdkTags()
+    call android#setClassPath()
+    call android#setupAndroidCommands()
+  endif
+
+endfunction
+
+" Callback invoked when the gradle#sync() method finishes processing. Used when
+" using nvim async functionality.
+function! s:vimTaskHandler(id, data, event)
+
+  if a:event == 'stdout' || a:event == 'stderr'
+    call s:parseVimTaskOutput(self.gradleFile, a:data)
+  elseif a:event == 'exit' && a:data != 0
+    call gradle#loge("Gradle sync task failed")
+  endif
+
+  call s:setup()
+endfunction
+
+function! s:parseVimTaskOutput(gradleFile, result)
+  for line in a:result
     let mlist = matchlist(line, '^vim-gradle\s\(.*\.jar\)$')
     if empty(mlist) == 0 && len(mlist[1]) > 0
-      if !has_key(g:gradle_jars, l:gradleFile)
-        let g:gradle_jars[l:gradleFile] = []
+      if !has_key(g:gradle_jars, a:gradleFile)
+        let g:gradle_jars[a:gradleFile] = []
       endif
-      call add(g:gradle_jars[l:gradleFile], mlist[1])
+      call add(g:gradle_jars[a:gradleFile], mlist[1])
     endif
 
     let mlist = matchlist(line, '^vim-project\s\(.*\)$')
     if empty(mlist) == 0 && len(mlist[1]) > 0
-      let g:gradle_project_names[l:gradleFile] = mlist[1]
+      let g:gradle_project_names[a:gradleFile] = mlist[1]
     endif
 
     let mlist = matchlist(line, '^vim-target\s\(.*\)$')
     if empty(mlist) == 0 && len(mlist[1]) > 0
-      let g:gradle_target_versions[l:gradleFile] = mlist[1]
+      let g:gradle_target_versions[a:gradleFile] = mlist[1]
     endif
   endfor
-
-  call gradle#logi("")
-
 endfunction
 
-function! gradle#loadGradleDeps()
+function! gradle#getGradleDeps()
 
   let l:gradleFile = gradle#findGradleFile()
-
-  if !exists('g:gradle_jars') || !has_key(g:gradle_jars, l:gradleFile)
-    call gradle#runVimTask()
-  endif
 
   if has_key(g:gradle_jars, l:gradleFile)
     return g:gradle_jars[l:gradleFile]
@@ -306,7 +344,7 @@ function! gradle#setClassPath()
   call extend(l:jarList, l:oldJars)
   call extend(l:srcList, l:oldSrcs)
 
-  let l:depJars = gradle#loadGradleDeps()
+  let l:depJars = gradle#getGradleDeps()
   if !empty(l:depJars)
     call extend(l:jarList, l:depJars)
   endif
@@ -411,19 +449,26 @@ endfunction
 
 function! gradle#setupGradleCommands()
   command! -nargs=+ Gradle call gradle#compile(<f-args>)
+  command! GradleSync call gradle#sync()
 endfunction
 
 function! s:showQuickfix()
+
   if !exists('g:gradle_quickfix_show')
     let g:gradle_quickfix_show = 1
   endif
 
   if g:gradle_quickfix_show
-    execute('botright cwindow')
-    " Work around bug that causes file to loose syntax after the quick fix
-    " window is closed.
-    if exists('g:syntax_on')
-      execute('syntax enable')
+    call s:cleanQuickFix()
+    if gradle#getErrorCount() > 0
+      execute('botright copen | wincmd p')
+    else
+      execute('cclose')
+      " Work around bug that causes file to loose syntax after the quick fix
+      " window is closed.
+      if exists('g:syntax_on')
+        execute('syntax enable')
+      endif
     endif
   endif
 endfunction
