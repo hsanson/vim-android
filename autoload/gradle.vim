@@ -242,7 +242,7 @@ endfunction
 " allows us to check if there are errors after compilation.
 function! gradle#getErrorCount()
   let l:list = deepcopy(getqflist())
-  return len(filter(l:list, "v:val['valid'] > 0 && tolower(v:val['type']) != 'w'"))
+  return len(filter(l:list, "v:val['valid'] > 0 && tolower(v:val['type']) == 'e'"))
 endfunction
 
 " This method returns the number of valid warnings in the quickfix window. This
@@ -517,9 +517,10 @@ function! s:showQuickfix()
     let g:gradle_quickfix_show = 0
   endif
 
+  call s:cleanQuickFix()
+  call s:showSigns()
+
   if g:gradle_quickfix_show
-    call s:cleanQuickFix()
-    call s:showSigns()
     if gradle#getErrorCount() > 0
       execute('botright copen | wincmd p')
     else
