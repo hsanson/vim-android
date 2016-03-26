@@ -461,10 +461,9 @@ function! s:showSigns()
   execute("sign unplace *")
   execute("sign define gradleErrorSign text=" . gradle#glyphError() . " texthl=Error")
   execute("sign define gradleWarningSign text=" . gradle#glyphWarning() . " texthl=Warning")
-
   for item in getqflist()
     if item.valid
-      let l:signId = s:lpad(item.bufnr) . s:lpad(item.lnum) . s:lpad(item.col)
+      let l:signId = s:lpad(item.bufnr) . s:lpad(item.lnum)
       let l:sign = "sign place " . l:signId . " line=" . item.lnum
       if item.type == 'e'
         let l:sign = l:sign . " name=gradleErrorSign"
