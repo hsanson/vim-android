@@ -58,7 +58,7 @@ Combined with the ligthline plugin my status line looks like the following scree
  - Sets an extensive errorformat that captures java errors, linter errors, test errors, aapt errors and adds them to the qflist.
  - Adds commands to build and install APK files in one or all devices/emulators present.
  - Adds commands to generate tag files for the Android SDK as well as your Android application.
- - Improved XML omnicompletion for android resource and manifest files (Thanks to Donnie West).
+ - Improved XML omnicompletion for android resource and manifest files. Thanks to [Donnie West](https://github.com/DonnieWest).
  - Takes advantage of NeoVIM async functions to run long processes in the background.
  - Customizable status line method that can be integrated with status line plugins (e.g. airline)
 
