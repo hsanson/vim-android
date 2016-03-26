@@ -8,7 +8,7 @@ Install the plugin using your favorite plugin manager (e.g. NeoBundle):
 
     NeoBundle "hsanson/vim-android"
 
-If you have a gradle wrapper script (e.g gradlew or gradlew.bat) in your project rood directory or if you have gradle in your PATH environment, then you are good to go. If you prefer to setup a specific gradle version then you need to set *g:gradle_path* to the absolute path where gradle is installed:
+If you have a gradle wrapper script (e.g gradlew or gradlew.bat) in your project root directory or if you have gradle in your PATH environment, then you are good to go. If you prefer to setup a specific gradle version then you need to set *g:gradle_path* to the absolute path where gradle is installed:
 
     let g:gradle_path = /path/to/gradle/folder
 
@@ -38,6 +38,20 @@ If the project is also an Android project then the android command also becomes 
 
     :Android <task>
 
+# Customizing Status Line
+
+Using a powerline enabled font these are the status line glyphs I use in my own configuration:
+
+    let g:gradle_glyph_error=''
+    let g:gradle_glyph_warning=''
+    let g:gradle_glyph_gradle=''
+    let g:gradle_glyph_android=''
+    let g:gradle_glyph_building=''
+
+and setting the ligthline plugin my status line looks like:
+
+  [Lightline Status](/img/vim-android-status.png?raw=true "Lightline Status Line")
+
 # Features
 
  - Automatically detect if file belongs to an android project when opening a java or xml file.
@@ -49,6 +63,8 @@ If the project is also an Android project then the android command also becomes 
  - Adds commands to build and install APK files in one or all devices/emulators present.
  - Adds commands to generate tag files for the Android SDK as well as your Android application.
  - Improved XML omnicompletion for android resource and manifest files (Thanks to Donnie West).
+ - Takes advantage of NeoVIM async functions to run long processes in the background.
+ - Customizable status line method that can be integrated with status line plugins (e.g. airline)
 
 # Details
 
