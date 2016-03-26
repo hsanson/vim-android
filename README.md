@@ -42,15 +42,11 @@ If the project is also an Android project then the android command also becomes 
 
 Using a powerline enabled font these are the status line glyphs I use in my own configuration:
 
-    let g:gradle_glyph_error=''
-    let g:gradle_glyph_warning=''
-    let g:gradle_glyph_gradle=''
-    let g:gradle_glyph_android=''
-    let g:gradle_glyph_building=''
+![Configuration](/img/vim-android-conf.png?raw=true "Configuration")
 
 and setting the ligthline plugin my status line looks like:
 
-  [Lightline Status](/img/vim-android-status.png?raw=true "Lightline Status Line")
+![Lightline Status](/img/vim-android-status.png?raw=true "Lightline Status Line")
 
 # Features
 
