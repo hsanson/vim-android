@@ -412,8 +412,13 @@ In the quickfix window if there are compilation errors then the number of
 errors is shown followed by E and if there are warning then the number of
 warnings is shown followed by W.
 
-It is possible to customize the glyphs shown by setting the following global
-variables:
+If your are running NeoVim the status will show *building...* instead in the
+status to indicate that some long background process is being executed (e.g.
+Gradle build or GradleSync).
+
+You can customize the glyphs shown in the status bar by setting the global
+variables below. This is specially useful if you have a powerline enabled
+font.
 
                                                  *g:gradle_glyph_gradle*
 g:gradle_glyph_gradle~
@@ -439,10 +444,17 @@ Default: "W"
 >
         let g:gradle_glyph_warning = 'U+f071'
 <
-
-Note: To use the examples above you must have a powerline enabled font
-and to write the UTF codes in your vim configuration you must enter insert
-mode, press <Ctrl+v> followed by 'u', and then input the hex code.
+                                                 *g:gradle_glyph_building*
+g:gradle_glyph_building~
+Default: "building..."
+>
+        let g:gradle_glyph_building... = 'U+f253'
+<
+Note: To use the examples above you must have a powerline enabled font. You
+can use a program such as fontmatrix to browse the glyphs availabe in your
+font and find the HEX representation. Once you know the HEX representation of
+the glyph you can copy/paste it or input it by presing <Ctrl+v> followed by
+'u' and the HEX code in insert mode.
 
 ------------------------------------------------------------------------------
 AIRLINE STATUS LINE                                      *vim-android-airline*
@@ -556,16 +568,14 @@ Example:
 <
                                                         *g:gradle_quickfix_show*
 g:gradle_quickfix_show~
-Default: 1
+Default: 0
 
-If there are errors in the quickfix window after a gradle build the quickfix
-window will automatically be open. If there are no errors it will
-automatically be closed. If you want to disable this behavior simply set the
-above variable to 0.
+Setting this variable to 1 causes the quickfix window to automatically open
+when there are errors after a gradle build.
 
 Example:
 >
-        let g:gradle_quickfix_show=0
+        let g:gradle_quickfix_show=1
 <
 ==============================================================================
 9. Todo                                                       *vim-android-todo*
