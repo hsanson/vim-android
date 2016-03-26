@@ -40,11 +40,11 @@ If the project is also an Android project then the android command also becomes 
 
 # Customizing Status Line
 
-Using a powerline enabled font these are the status line glyphs I use in my own configuration:
+Using the [Fantasque Sans](https://github.com/belluzj/fantasque-sans) font these are the status line glyphs I use in my own configuration:
 
 ![Configuration](/img/vim-android-conf.png?raw=true "Configuration")
 
-and setting the ligthline plugin my status line looks like:
+Combined with the ligthline plugin my status line looks like the following screen:
 
 ![Lightline Status](/img/vim-android-status.png?raw=true "Lightline Status Line")
 
