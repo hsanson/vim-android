@@ -116,6 +116,8 @@ function! gradle#run(...)
   let shellpipe = &shellpipe
   let &shellpipe = '2>&1 1>/dev/null |tee'
 
+  call s:startBuilding()
+
   if has('nvim') && exists('*jobstart')
     let s:errorfile = tempname()
     let s:callbacks = {
@@ -129,6 +131,7 @@ function! gradle#run(...)
     let vimTaskJob = jobstart(l:cmd, s:callbacks)
   else
     execute("compiler gradle | silent! make " . join(a:000, " "))
+    call s:finishBuilding()
     redraw!
     call s:showQuickfix()
   endif
@@ -141,6 +144,7 @@ endfunction
 
 function! s:runHandler(id, data, event)
   if a:event == 'exit'
+    call s:finishBuilding()
     execute('cgetfile ' . self.errorfile)
     call s:showQuickfix()
   endif
@@ -167,11 +171,14 @@ function! gradle#glyphWarning()
   return g:gradle_glyph_warning
 endfunction
 
-function! gradle#statusLineError()
-
-  if(&ft != 'qf')
-    return ''
+function! gradle#glyphBuilding()
+  if !exists('g:gradle_glyph_building')
+    let g:gradle_glyph_building = "building..."
   endif
+  return g:gradle_glyph_building
+endfunction
+
+function! gradle#statusLineError()
 
   let l:errCount = gradle#getErrorCount()
   let l:warnCount = gradle#getWarningCount()
@@ -191,16 +198,38 @@ function! gradle#statusLineError()
 
 endfunction
 
-function! gradle#statusLine()
-
+function! gradle#glyphProject()
   if(android#isAndroidProject())
-    return android#glyph() . ' ' . gradle#statusLineError()
+    return android#glyph()
   elseif(gradle#isGradleProject())
-    return gradle#glyph() . ' ' . gradle#statusLineError()
-  else
-    return ""
+    return gradle#glyph()
   endif
+endfunction
 
+function! gradle#statusLine()
+  if s:isBuilding()
+    return gradle#glyphProject() . ' ' . gradle#glyphBuilding()
+  else
+    return gradle#glyphProject() . ' ' . gradle#statusLineError()
+  endif
+endfunction
+
+function! s:isBuilding()
+  return s:isBuilding > 0
+endfunction
+
+function! s:startBuilding()
+  if ! exists('s:isBuilding')
+    let s:isBuilding = 0
+  endif
+  let s:isBuilding = s:isBuilding + 1
+endfunction
+
+function! s:finishBuilding()
+  if ! exists('s:isBuilding')
+    let s:isBuilding = 0
+  endif
+  let s:isBuilding = s:isBuilding - 1
 endfunction
 
 " Helper method to cleanup the qflist.
@@ -250,6 +279,8 @@ function! gradle#sync()
    \ "vim"
    \ ]
 
+  call s:startBuilding()
+
   if has('nvim') && exists('*jobstart')
     let s:callbacks = {
           \ 'on_stdout': function('s:vimTaskHandler'),
@@ -265,6 +296,7 @@ function! gradle#sync()
     call s:parseVimTaskOutput(l:gradleFile, split(l:result, "\n"))
     call s:setup()
     call gradle#logi("")
+    call s:finishBuilding()
   endif
 
 endfunction
@@ -289,8 +321,11 @@ function! s:vimTaskHandler(id, data, event)
 
   if a:event == 'stdout' || a:event == 'stderr'
     call s:parseVimTaskOutput(self.gradleFile, a:data)
-  elseif a:event == 'exit' && a:data != 0
-    call gradle#loge("Gradle sync task failed")
+  elseif a:event == 'exit'
+    call s:finishBuilding()
+    if a:data != 0
+      call gradle#loge("Gradle sync task failed")
+    endif
   endif
 
   call s:setup()
@@ -479,7 +514,7 @@ endfunction
 function! s:showQuickfix()
 
   if !exists('g:gradle_quickfix_show')
-    let g:gradle_quickfix_show = 1
+    let g:gradle_quickfix_show = 0
   endif
 
   if g:gradle_quickfix_show
