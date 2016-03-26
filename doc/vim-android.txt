@@ -1,15 +1,14 @@
-*vim-android.txt*   For Vim version 7.3 or NeoVim    Last change: 2015 July 30
+*vim-android.txt*   For Vim version 7.3 or NeoVim   Last change: 2016 March 26
 
 Author:         Horacio Sanson
 Licence:        Vim licence, see |license|
 Homepage:       https://github.com/hsanson/vim-android
-Version:        1.3.0
+Version:        1.4.0
 
 ==============================================================================
 Contents                                   *vim-android* *vim-android-contents*
 
          1. Intro ........................... |vim-android-intro|
-              Changelog                       |vim-android-changelog|
               Supported Features              |vim-android-features|
               Known Issues                    |vim-android-issues|
          2. Requirements .................... |vim-android-requirements|
@@ -38,18 +37,6 @@ to find gradle.build file in the current directory and if found it
 configures a set of variables and commands that allows easier development for
 Gradle projects. If the gradle.build file contains the android gradle plugin
 then Android specific commands are also configured.
-
-------------------------------------------------------------------------------
-Changelog                                                  *vim-android-changelog*
-
-IMPORTANT: This plugin now uses gradle itself to inspect the project and
-extract dependencies and source paths. This is faster than parsing the
-configuration files and more correct.
-
-IMPORTANT: Since I do not use ant anymore for android development and Android
-Studio with the gradle plugin has come a long way now I am removing all ant
-related functions from the plugin. It is difficult to maintain funcionality
-that I do not use.
 
 ------------------------------------------------------------------------------
 SUPPORTED FEATURES                                         *vim-android-features*
