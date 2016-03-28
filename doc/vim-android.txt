@@ -449,7 +449,7 @@ AIRLINE STATUS LINE                                      *vim-android-airline*
 To show the gradle/android status line in Airline you can add the following to
 your vim configuration to create a vim-gradle-status part:
 >
-   call airline#parts#define_function('vim-gradle-status', 'gradlestatusLine')
+   call airline#parts#define_function('vim-gradle-status', 'gradle#statusLine')
 <
 then you can add to any airline section you want:
 >
