@@ -43,12 +43,10 @@ function! gradle#isGradleProject()
   let l:gradle_bin_exists = executable(gradle#bin())
 
   if( ! l:gradle_cfg_exists )
-    call gradle#logi("Gradle disabled")
     return 0
   endif
 
   if( ! l:gradle_bin_exists )
-    call gradle#logi("Gradle disabled")
     return 0
   endif
 
