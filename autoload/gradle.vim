@@ -215,7 +215,7 @@ function! gradle#statusLine()
 endfunction
 
 function! s:isBuilding()
-  return s:isBuilding > 0
+  return exists('s:isBuilding') && s:isBuilding > 0
 endfunction
 
 function! s:startBuilding()
