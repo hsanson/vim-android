@@ -326,7 +326,7 @@ function! s:vimTaskHandler(id, data, event)
   elseif a:event == 'exit'
     call s:finishBuilding()
     if a:data != 0
-      call gradle#loge("Gradle sync task failed")
+      call gradle#logi("Gradle sync task failed")
     endif
   endif
 
