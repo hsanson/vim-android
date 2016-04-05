@@ -250,6 +250,20 @@ function! gradle#getWarningCount()
   return len(filter(l:list, "v:val['valid'] > 0 && tolower(v:val['type']) == 'w'"))
 endfunction
 
+function! gradle#syncCmd()
+  let l:cmd = [
+   \ gradle#bin(),
+   \ "--no-color",
+   \ "-b",
+   \ gradle#findGradleFile(),
+   \ "-I",
+   \ g:gradle_init_file,
+   \ "vim"
+   \ ]
+
+  return join(l:cmd, ' ')
+endfunction
+
 " Sync vim-android environment with build.gradle file.
 function! gradle#sync()
 
@@ -267,16 +281,6 @@ function! gradle#sync()
 
   let l:gradleFile = gradle#findGradleFile()
 
-  let l:cmd = [
-   \ gradle#bin(),
-   \ "--no-color",
-   \ "-b",
-   \ l:gradleFile,
-   \ "-I",
-   \ g:gradle_init_file,
-   \ "vim"
-   \ ]
-
   call s:startBuilding()
 
   if has('nvim') && exists('*jobstart')
@@ -287,7 +291,7 @@ function! gradle#sync()
           \ 'gradleFile': l:gradleFile
           \ }
 
-    let vimTaskJob = jobstart(join(l:cmd, ' '), s:callbacks)
+    let vimTaskJob = jobstart(gradle#syncCmd(), s:callbacks)
   else
     call gradle#logi("Gradle sync, please wait...")
     let l:result = system(join(l:cmd, ' '))
