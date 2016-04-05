@@ -327,10 +327,10 @@ function! s:vimTaskHandler(id, data, event)
     call s:finishBuilding()
     if a:data != 0
       call gradle#logi("Gradle sync task failed")
+    else
+      call s:setup()
     endif
   endif
-
-  call s:setup()
 endfunction
 
 function! s:parseVimTaskOutput(gradleFile, result)
