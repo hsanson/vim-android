@@ -328,9 +328,8 @@ function! s:vimTaskHandler(id, data, event)
     if a:data != 0
       call gradle#logi("Gradle sync task failed")
     endif
+    call s:setup()
   endif
-
-  call s:setup()
 endfunction
 
 function! s:parseVimTaskOutput(gradleFile, result)
