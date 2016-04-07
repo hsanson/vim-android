@@ -294,7 +294,7 @@ function! gradle#sync()
     let vimTaskJob = jobstart(gradle#syncCmd(), s:callbacks)
   else
     call gradle#logi("Gradle sync, please wait...")
-    let l:result = system(join(l:cmd, ' '))
+    let l:result = system(gradle#syncCmd())
     call s:parseVimTaskOutput(l:gradleFile, split(l:result, "\n"))
     call s:setup()
     call gradle#logi("")
