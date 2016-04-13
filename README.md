@@ -40,7 +40,7 @@ If the project is also an Android project then the android command also becomes 
 
 # Customizing Status Line
 
-Using the [Fantasque Sans](https://github.com/belluzj/fantasque-sans) font these are the status line glyphs I use in my own configuration:
+Using the [Fantasque Sans](https://github.com/belluzj/fantasque-sans) font patched with the [Nerd Fonts](https://github.com/ryanoasis/nerd-fonts) these are the status line glyphs I use in my own configuration:
 
 ![Configuration](/img/vim-android-conf.png?raw=true "Configuration")
 
