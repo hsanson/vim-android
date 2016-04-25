@@ -190,7 +190,7 @@ endfunction
 
 " Find the adroid sdk srouce files for the target sdk version.
 function! android#getTargetSrcPath()
-  let l:targetSrc = g:android_sdk_path . '/sources/android-' . android#getTargetVersion() . '/'
+  let l:targetSrc = g:android_sdk_path . '/sources/' . android#getTargetVersion() . '/'
   if isdirectory(l:targetSrc)
     return targetSrc
   endif
