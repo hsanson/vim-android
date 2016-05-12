@@ -27,7 +27,7 @@ function! gradle#bin()
     if executable("gradle")
       let g:gradle_bin = "gradle"
     else
-      echoerr "Gradle tool could not be found"
+      echo "WARNING: Gradle tool could not be found, vim-android is disabled"
     endif
   endif
 
