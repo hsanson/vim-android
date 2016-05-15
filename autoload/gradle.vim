@@ -26,8 +26,6 @@ function! gradle#bin()
   if(!executable(g:gradle_bin))
     if executable("gradle")
       let g:gradle_bin = "gradle"
-    else
-      echo "WARNING: Gradle tool could not be found, vim-android is disabled"
     endif
   endif
 
@@ -307,12 +305,10 @@ endfunction
 " called only after the gradle#sync() method finishes.
 function! s:setup()
   call gradle#setClassPath()
-  call gradle#setupGradleCommands()
 
   if android#isAndroidProject()
     call android#setAndroidSdkTags()
     call android#setClassPath()
-    call android#setupAndroidCommands()
   endif
 
 endfunction
@@ -488,8 +484,13 @@ function! gradle#classPathSep()
 endfunction
 
 function! gradle#setupGradleCommands()
-  command! -nargs=+ Gradle call gradle#compile(<f-args>)
-  command! GradleSync call gradle#sync()
+  if !executable(gradle#bin())
+    command! -nargs=+ Gradle call gradle#compile(<f-args>)
+    command! GradleSync call gradle#sync()
+  else
+    command! -nargs=? Gradle echoerr "Gradle binary could not be found, vim-android gradle commands are disabled"
+    command! GradleSync echoerr "Gradle binary could not be found, vim-android gradle commands are disabled"
+  endif
 endfunction
 
 function! s:showSigns()

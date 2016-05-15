@@ -11,3 +11,6 @@ if exists(":JCstart")
 endif
 
 let g:syntastic_java_javac_classpath = $CLASSPATH . ":" . $SRCPATH
+
+call gradle#setupGradleCommands()
+call android#setupAndroidCommands()

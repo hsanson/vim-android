@@ -11,3 +11,6 @@ if gradle#isGradleProject()
   endif
 
 endif
+
+call gradle#setupGradleCommands()
+call android#setupAndroidCommands()

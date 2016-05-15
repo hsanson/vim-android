@@ -63,7 +63,6 @@ function! android#checkAndroidHome()
   elseif exists("$ANDROID_HOME") && finddir($ANDROID_HOME) != ""
     let g:android_sdk_path = $ANDROID_HOME
   else
-    call android#loge("Could not find android SDK. Ensure the g:android_sdk_path variable or ANDROID_HOME env variable are set and correct.")
     return 0
   endif
   return 1
@@ -422,11 +421,16 @@ function! android#emulator()
 endfunction
 
 function! android#setupAndroidCommands()
-  command! -nargs=+ Android call android#compile(<f-args>)
-  command! -nargs=? AndroidBuild call android#compile(<f-args>)
-  command! -nargs=1 AndroidInstall call android#install(<f-args>)
-  command! -nargs=1 AndroidUninstall call android#uninstall(<f-args>)
-  command! AndroidUpdateTags call android#updateAndroidTags()
-  command! AndroidDevices call android#listDevices()
-  command! AndroidEmulator call android#emulator()
+  if android#checkAndroidHome()
+    command! -nargs=+ Android call android#compile(<f-args>)
+    command! -nargs=? AndroidBuild call android#compile(<f-args>)
+    command! -nargs=1 AndroidInstall call android#install(<f-args>)
+    command! -nargs=1 AndroidUninstall call android#uninstall(<f-args>)
+    command! AndroidUpdateTags call android#updateAndroidTags()
+    command! AndroidDevices call android#listDevices()
+    command! AndroidEmulator call android#emulator()
+  else
+    command! -nargs=? Android call android#loge("Could not find android SDK. Ensure the g:android_sdk_path variable or ANDROID_HOME env variable are set and correct.")
+  endif
 endfunction
+
