@@ -484,7 +484,7 @@ function! gradle#classPathSep()
 endfunction
 
 function! gradle#setupGradleCommands()
-  if !executable(gradle#bin())
+  if executable(gradle#bin())
     command! -nargs=+ Gradle call gradle#compile(<f-args>)
     command! GradleSync call gradle#sync()
   else
