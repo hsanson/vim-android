@@ -1,4 +1,4 @@
-if gradle#isGradleProject()
+if gradle#isGradleProject() && !gradle#isGradleDepsCached()
   call gradle#sync()
 endif
 

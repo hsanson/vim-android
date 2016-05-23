@@ -1,6 +1,8 @@
 if gradle#isGradleProject()
 
-  call gradle#sync()
+  if !gradle#isGradleDepsCached()
+    call gradle#sync()
+  endif
 
   if android#isAndroidProject()
     if expand('%:t') == 'AndroidManifest.xml'

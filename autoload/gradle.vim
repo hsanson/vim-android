@@ -380,6 +380,9 @@ function! s:parseVimTaskOutput(gradleFile, result)
   endfor
 endfunction
 
+""
+" Return the gradle dependencies per project from the cache if available or an
+" empty array if not available.
 function! gradle#getGradleDeps()
 
   let l:gradleFile = gradle#findGradleFile()
@@ -390,6 +393,16 @@ function! gradle#getGradleDeps()
     return []
   endif
 
+endfunction
+
+""
+" Returns 1 if the project jar dependencies are changed or 0 otherwise.
+function! gradle#isGradleDepsCached()
+  let l:gradleFile = gradle#findGradleFile()
+  if !exists('g:gradle_jars')
+    let g:gradle_jars = {}
+  endif
+  return has_key(g:gradle_jars, l:gradleFile)
 endfunction
 
 ""
