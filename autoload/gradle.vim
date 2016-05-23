@@ -114,7 +114,7 @@ function! gradle#run(...)
 
   call s:startBuilding()
 
-  if has('nvim') && exists('*jobstart')
+  if has('nvim') && exists('*jobstart') && gradle#isAsyncEnabled()
     let s:errorfile = tempname()
     let s:callbacks = {
           \ 'on_stdout': function('s:runHandler'),
@@ -172,6 +172,29 @@ function! gradle#glyphBuilding()
     let g:gradle_glyph_building = "building..."
   endif
   return g:gradle_glyph_building
+endfunction
+
+function! gradle#asyncEnable()
+  let g:gradle_async = 1
+endfunction
+
+function! gradle#asyncDisable()
+  let g:gradle_async = 0
+endfunction
+
+function! gradle#isAsyncEnabled()
+  if !exists('g:gradle_async')
+    let g:gradle_async = 1
+  endif
+  return g:gradle_async
+endfunction
+
+function! gradle#asyncToggle()
+  if gradle#isAsyncEnabled()
+    call gradle#asyncDisable()
+  else
+    call gradle#asyncEnable()
+  endif
 endfunction
 
 function! gradle#statusLineError()
@@ -281,7 +304,7 @@ function! gradle#sync()
 
   call s:startBuilding()
 
-  if has('nvim') && exists('*jobstart')
+  if has('nvim') && exists('*jobstart') && gradle#isAsyncEnabled()
     let s:callbacks = {
           \ 'on_stdout': function('s:vimTaskHandler'),
           \ 'on_stderr': function('s:vimTaskHandler'),

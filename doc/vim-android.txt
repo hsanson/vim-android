@@ -562,7 +562,19 @@ when there are errors after a gradle build.
 
 Example:
 >
-        let g:gradle_quickfix_show=1
+        let g:gradle_quickfix_show=0
+<
+                                                              *g:gradle_async*
+g:gradle_async~
+Default: 1
+
+If you are running NeoVim then this plugin will execute gradle tasks in the
+background using NeoVim job functions. If for some reason you need to disable
+this functionality you can do so by setting this variable to zero.
+
+Example:
+>
+        let g:gradle_quickfix_show=0
 <
 ==============================================================================
 9. Todo                                                       *vim-android-todo*
