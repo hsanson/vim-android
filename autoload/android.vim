@@ -132,13 +132,6 @@ endfunction
 
 function! android#install(mode)
 
-  call gradle#setCompiler()
-
-  if(!gradle#isCompilerSet())
-    call android#logw("Android compiler not set")
-    return
-  endif
-
   let l:devices = adb#selectDevice()
 
   for l:device in l:devices
@@ -154,13 +147,6 @@ function! android#install(mode)
 endfunction
 
 function! android#uninstall(mode)
-
-  call gradle#setCompiler()
-
-  if(!gradle#isCompilerSet())
-    call android#logw("Android compiler not set")
-    return
-  endif
 
   let l:devices = adb#selectDevice()
 
