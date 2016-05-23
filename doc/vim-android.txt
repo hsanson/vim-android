@@ -212,6 +212,16 @@ debug mode using:
 this way anytime you press the <F5> key it will build and install your
 Android application.
 
+Every time you modify the build.gradle file by adding or removing dependencies
+it is a good idea to run the GradleSync command so the dependencies get loaded
+into vim-android. If you are using NeoVime and have async (g:gradle_async)
+enabled you may prefer to set an autocommand so this happens automatically.
+For this simply add the following to your vim configuration:
+
+>
+  au BufWrite build.gradle call gradle#sync()
+<
+
 ------------------------------------------------------------------------------
 ANDROID OMNI-COMPLETION                              *vim-android-omnicomplete*
 
