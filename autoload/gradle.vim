@@ -197,6 +197,13 @@ function! gradle#asyncToggle()
   endif
 endfunction
 
+function! gradle#isDaemonEnabled()
+  if !exists('g:gradle_daemon')
+    let g:gradle_daemon = 1
+  endif
+  return g:gradle_async
+endfunction
+
 function! gradle#statusLineError()
 
   let l:errCount = gradle#getErrorCount()

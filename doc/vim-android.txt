@@ -515,15 +515,16 @@ Example:
 <
                                                              *g:gradle_daemon*
 g:gradle_daemon~
-Default: 0
+Default: 1
 
-If set to a number larger than zero, then gradle will be invoked in daemon mode.
-This can greatly improve the speed of building projects by loading gradle as a
-daemon and using it for subsequent builds.
+If this variable is 1 then gradle will be executed with the daemon option on.
+This greatly improves the speed of builds and is recommended to let it
+enabled. If for some reason you prefer to not run gradle in daemon mode then
+set this variable to 0.
 
 Example:
 >
-    let g:gradle_daemon=1
+    let g:gradle_daemon=0
 <
 
                                                             *g:android_adb_tool*

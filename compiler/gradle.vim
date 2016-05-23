@@ -16,7 +16,7 @@ let s:makeprg = [
  \  gradle#findGradleFile()
  \ ]
 
-if exists('g:gradle_daemon') && g:gradle_daemon > 0
+if gradle#isDaemonEnabled()
   call add(s:makeprg, "--daemon")
 endif
 
