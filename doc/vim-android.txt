@@ -71,7 +71,7 @@ The following features are supported by vim-android:
 ------------------------------------------------------------------------------
 Known Issues                                                *vim-android-issues*
 
-  - The first time an android java or xml file is openned we create a list of
+  - The first time an android java or xml file is opened we create a list of
     dependencies for the project and a cache with all the packages found in the
     gradle home folder. This process can be extremely slow depending on the
     number of dependencies the project has and the number of packages cached in
@@ -89,7 +89,7 @@ Known Issues                                                *vim-android-issues*
         https://code.google.com/p/android/issues/detail?id=174778
 
   - The javacomplete plugin is nice but in some situations it hangs or spits
-    thousands of incomprensible error messages. For this reason I recommend
+    thousands of incomprehensible error messages. For this reason I recommend
     you use the new javacomplete2 plugin instead:
 
       See: https://github.com/artur-shaik/vim-javacomplete2
@@ -145,7 +145,7 @@ COMMANDS                                                   *vim-android-commands
     Synchronizes the vim-android environment with that of the gradle.build
     file. This is run automatically when opening a buffer with a xml or java
     file inside a gradle or android project. You should execute this command
-    everytime you make changes to your build.gradle file.
+    every time you make changes to your build.gradle file.
 
 :Gradle <options>
     Invokes gradle passing the <options> verbatim. Any gradle options
@@ -187,7 +187,7 @@ COMMANDS                                                   *vim-android-commands
 
     You should invoke this command every time you change library dependencies,
     the android target API, and you project source files. You may create an
-    command to update the tags everytime a file is saved.
+    command to update the tags every time a file is saved.
 
 :AndroidDevices                                               *:AndroidDevices*
     Lists all android devices connected and all running emulators.
@@ -199,7 +199,7 @@ COMMANDS                                                   *vim-android-commands
 KEY MAPPINGS                                                  *vim-android-keys*
 
 By default the vim-android plugin has no mappings and all functionality is
-accessed using the commmands |vim-android-commands| but this does not impede
+accessed using the commands |vim-android-commands| but this does not impede
 you from creating your own mappings.
 
 For example you can map a function key (e.g. F5) to compile your project in
