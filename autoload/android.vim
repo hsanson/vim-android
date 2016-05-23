@@ -121,7 +121,7 @@ function! android#compile(...)
   elseif(a:0 == 1 && a:1 == "debug")
     let l:mode = 'assemble' . android#capitalize(a:1)
     call gradle#compile(l:mode)
-  elseif(a:0 == 0 && a:1 == "release")
+  elseif(a:0 == 1 && a:1 == "release")
     let l:mode = 'assemble' . android#capitalize(a:1)
     call gradle#compile(l:mode)
   else
