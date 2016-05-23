@@ -555,10 +555,11 @@ Example:
 <
                                                         *g:gradle_quickfix_show*
 g:gradle_quickfix_show~
-Default: 0
+Default: 1
 
-Setting this variable to 1 causes the quickfix window to automatically open
-when there are errors after a gradle build.
+By default this plugin opens the quickfix window if there are errors after
+running a build. If you do not like this behaviour it is possible to disable
+it by setting this variable to 0.
 
 Example:
 >

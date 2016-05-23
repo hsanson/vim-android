@@ -539,7 +539,7 @@ endfunction
 function! s:showQuickfix()
 
   if !exists('g:gradle_quickfix_show')
-    let g:gradle_quickfix_show = 0
+    let g:gradle_quickfix_show = 1
   endif
 
   call s:cleanQuickFix()
