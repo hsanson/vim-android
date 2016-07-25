@@ -125,7 +125,7 @@ function! android#compile(...)
     let l:mode = 'assemble' . android#capitalize(a:1)
     call gradle#compile(l:mode)
   else
-    call gradle#compile(a:000)
+    call call('gradle#compile', a:000)
   endif
 
 endfunction
