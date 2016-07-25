@@ -392,7 +392,7 @@ warnings in a format that is easy to parse for vim error format. All that
 needs to be done is to execute the linter within vim to get the quickfix
 window populated with all linter errors and warnings:
 
-    :Android lint
+    :Gradle lint
 
 ------------------------------------------------------------------------------
 STATUS LINE                                             *vim-android-statusline*
