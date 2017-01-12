@@ -281,7 +281,7 @@ endfunction
 function! gradle#syncCmd()
   let l:cmd = [
    \ gradle#bin(),
-   \ "--no-color",
+   \ "--console=plain",
    \ "-b",
    \ gradle#findGradleFile(),
    \ "-I",
