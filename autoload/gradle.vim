@@ -138,7 +138,7 @@ function! gradle#run(...)
 
 endfunction
 
-function! s:runHandler(id, data, event)
+function! s:runHandler(id, data, event) dict
   if a:event == 'exit'
     call s:finishBuilding()
     execute('cgetfile ' . self.errorfile)
@@ -345,7 +345,7 @@ endfunction
 
 " Callback invoked when the gradle#sync() method finishes processing. Used when
 " using nvim async functionality.
-function! s:vimTaskHandler(id, data, event)
+function! s:vimTaskHandler(id, data, event) dict
 
   if a:event == 'stdout' || a:event == 'stderr'
     call s:parseVimTaskOutput(self.gradleFile, a:data)
