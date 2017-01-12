@@ -7,7 +7,7 @@ allprojects { project ->
   task vim {
     task -> doLast {
       System.err.println "vim-project " + project.name
-      if(project.hasProperty('android')) {
+      if(project.hasProperty('android') && project.android.defaultConfig.targetSdkVersion != null) {
         def level = project.android.defaultConfig.targetSdkVersion.getApiLevel()
         System.err.println "vim-target android-" + level
       }
