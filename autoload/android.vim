@@ -191,6 +191,10 @@ function! android#getProjectJar()
   endif
 endfunction
 
+function! android#getAarJars()
+  return findfile('classes.jar', gradle#findRoot() . '/build/intermediates/exploded-aar/**', -1)
+endfunction
+
 function! android#getTargetVersion()
 
   let l:gradleFile = gradle#findGradleFile()
@@ -250,6 +254,11 @@ function! android#setClassPath()
 
   if len(l:projectJar) > 0
     call add(l:jarList, l:projectJar)
+  endif
+
+  let l:aarJars = android#getAarJars()
+  if len(l:aarJars) > 0
+    call extend(l:jarList, l:aarJars)
   endif
 
   let l:targetJar = android#getSdkJar()
