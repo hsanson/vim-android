@@ -81,9 +81,10 @@ function! gradle#install(device, mode)
 endfunction
 
 function! gradle#uninstall(device, mode)
+  let l:old_serial = $ANDROID_SERIAL
   let $ANDROID_SERIAL=a:device
   let l:result = call("gradle#run", ["uninstall" . android#capitalize(a:mode)])
-  unlet $ANDROID_SERIAL
+  let $ANDROID_SERIAL = l:old_serial
 endfunction
 
 " Tries to determine the location of the build.gradle file starting from the
