@@ -9,7 +9,6 @@ endif
 
 let s:makeprg = [
  \  gradle#bin(),
- \  '--no-color',
  \  '-I',
  \  g:gradle_init_file,
  \  '-b',
@@ -18,6 +17,13 @@ let s:makeprg = [
 
 if gradle#isDaemonEnabled()
   call add(s:makeprg, "--daemon")
+endif
+
+if gradle#versionMinor() >= 3
+  call add(s:makeprg, "--console")
+  call add(s:makeprg, "plain")
+elseif gradle#versionMinor() > 0
+  call add(s:makeprg, "--no-color")
 endif
 
 exec 'CompilerSet makeprg=' . join(s:makeprg, '\ ')
