@@ -33,6 +33,24 @@ function! gradle#bin()
 
 endfunction
 
+function! gradle#version()
+  if exists('g:gradle_versions[gradle#findGradleFile()]')
+    return g:gradle_versions[gradle#findGradleFile()][0]
+  endif
+endfunction
+
+function! gradle#versionMajor()
+  if exists('g:gradle_versions[gradle#findGradleFile()]')
+    return g:gradle_versions[gradle#findGradleFile()][1]
+  endif
+endfunction
+
+function! gradle#versionMinor()
+  if exists('g:gradle_versions[gradle#findGradleFile()]')
+    return g:gradle_versions[gradle#findGradleFile()][2]
+  endif
+endfunction
+
 " Verifies if the android sdk is available and if the gradle build and binary
 " are present.
 function! gradle#isGradleProject()
@@ -281,7 +299,6 @@ endfunction
 function! gradle#syncCmd()
   let l:cmd = [
    \ gradle#bin(),
-   \ "--console=plain",
    \ "-b",
    \ gradle#findGradleFile(),
    \ "-I",
@@ -305,6 +322,10 @@ function! gradle#sync()
 
   if !exists('g:gradle_project_names')
     let g:gradle_project_names = {}
+  endif
+
+  if !exists('g:gradle_versions')
+    let g:gradle_versions = {}
   endif
 
   let l:gradleFile = gradle#findGradleFile()
@@ -360,6 +381,12 @@ endfunction
 
 function! s:parseVimTaskOutput(gradleFile, result)
   for line in a:result
+
+    let mlist = matchlist(line, '^gradle-version\s\(\d\+\)\.\(\d\+\).*$')
+    if empty(mlist) == 0
+      let g:gradle_versions[a:gradleFile] = copy(mlist)
+    endif
+
     let mlist = matchlist(line, '^vim-gradle\s\(.*\.jar\)$')
     if empty(mlist) == 0 && len(mlist[1]) > 0
       if !has_key(g:gradle_jars, a:gradleFile)
