@@ -74,9 +74,10 @@ endfunction
 " a:mode can be any of the compile modes supported by the build system (e.g.
 " debug or release).
 function! gradle#install(device, mode)
+  let l:old_serial = $ANDROID_SERIAL
   let $ANDROID_SERIAL=a:device
   let l:result = call("gradle#run", ["install" . android#capitalize(a:mode)])
-  unlet $ANDROID_SERIAL
+  let $ANDROID_SERIAL = l:old_serial
 endfunction
 
 function! gradle#uninstall(device, mode)
