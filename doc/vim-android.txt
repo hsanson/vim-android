@@ -214,7 +214,7 @@ Android application.
 
 Every time you modify the build.gradle file by adding or removing dependencies
 it is a good idea to run the GradleSync command so the dependencies get loaded
-into vim-android. If you are using NeoVime and have async (g:gradle_async)
+into vim-android. If you are using NeoVim and have async (g:gradle_async)
 enabled you may prefer to set an autocommand so this happens automatically.
 For this simply add the following to your vim configuration:
 
@@ -587,6 +587,21 @@ this functionality you can do so by setting this variable to zero.
 Example:
 >
         let g:gradle_quickfix_show=0
+<
+                                                        *g:gradle_set_classpath*
+g:gradle_set_classpath~
+Default: 1
+
+This plugin will automatically set the CLASSPATH and SRCPATH environment
+variables after gradle sync task completes. But there are other plugins (e.g.
+javacomplete2) that also set these environment variables. To avoid conflict
+you can disable this feature by setting this configuration variable to 0. In
+this case this plugin will not touch the CLASSPATH and SRCPATH environment
+variables.
+
+Example:
+>
+        let g:gradle_set_classpath=0
 <
 ==============================================================================
 9. Todo                                                       *vim-android-todo*

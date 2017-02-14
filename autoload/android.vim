@@ -233,10 +233,6 @@ function! android#setClassPath()
     return
   endif
 
-  if exists(":JCstart")
-    return
-  endif
-
   let l:jarList = []
   let l:srcList = []
 

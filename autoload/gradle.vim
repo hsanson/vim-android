@@ -347,7 +347,7 @@ function! gradle#sync()
     call gradle#logi("Gradle sync, please wait...")
     let l:result = system(gradle#syncCmd())
     call s:parseVimTaskOutput(l:gradleFile, split(l:result, "\n"))
-    call s:setup()
+    call gradle#setup()
     call gradle#logi("")
     call s:finishBuilding()
   endif
@@ -355,14 +355,29 @@ function! gradle#sync()
 endfunction
 
 " Helper method to setup all gradle/android environments. This task must be
-" called only after the gradle#sync() method finishes.
-function! s:setup()
+" called only after the gradle#sync() method finishes and the dependencies are
+" already cached.
+function! gradle#setup()
+
+  if !exists('g:gradle_set_classpath')
+    let g:gradle_set_classpath = 1
+  endif
+
+  if g:gradle_set_classpath != 1
+    return
+  endif
+
   call gradle#setClassPath()
 
   if android#isAndroidProject()
     call android#setAndroidSdkTags()
     call android#setClassPath()
   endif
+
+  silent! call javacomplete#SetClassPath($CLASSPATH)
+  silent! call javacomplete#SetSourcePath($SRCPATH)
+
+  let g:syntastic_java_javac_classpath = $CLASSPATH . ":" . $SRCPATH
 
 endfunction
 
@@ -377,7 +392,7 @@ function! s:vimTaskHandler(id, data, event) dict
     if a:data != 0
       call gradle#logi("Gradle sync task failed")
     endif
-    call s:setup()
+    call gradle#setup()
   endif
 endfunction
 
@@ -438,10 +453,6 @@ endfunction
 " Update the CLASSPATH environment variable to include all classes related to
 " the current Android project.
 function! gradle#setClassPath()
-
-  if exists(":JCstart")
-    return
-  endif
 
   let l:jarList = []
   let l:srcList = []
