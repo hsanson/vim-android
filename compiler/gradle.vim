@@ -37,6 +37,7 @@ CompilerSet errorformat=
     \pmd:\ %tarning\ %f:%l:%c\ %m,
     \checkstyle:\ %tarning\ %f:%l:%c\ %m,
     \lint:\ %tarning\ %f:%l:%c\ %m,
+    \%t:\ %f:\ (%l\\,\ %c):\ %m,
     \%A>\ %f:%l:%c:\ %trror:\ %m,
     \%A>\ %f:%l:%c:\ %tarning:\ %m,
     \%A%f:%l:\ %trror:\ %m,
