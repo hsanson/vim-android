@@ -1,0 +1,60 @@
+To honour the JVM settings for this build a new JVM will be forked. Please consider using the daemon: https://docs.gradle.org/2.14.1/userguide/gradle_daemon.html.
+Incremental java compilation is an incubating feature.
+:app:preBuild UP-TO-DATE
+:app:preDebugBuild UP-TO-DATE
+:app:checkDebugManifest
+:app:preReleaseBuild UP-TO-DATE
+:fastedapi:preBuild UP-TO-DATE
+:fastedapi:preReleaseBuild UP-TO-DATE
+:fastedapi:checkReleaseManifest
+:fastedapi:preDebugAndroidTestBuild UP-TO-DATE
+:fastedapi:preDebugBuild UP-TO-DATE
+:fastedapi:preDebugUnitTestBuild UP-TO-DATE
+:fastedapi:preReleaseUnitTestBuild UP-TO-DATE
+:fastedapi:prepareComAndroidSupportAnimatedVectorDrawable2520Library UP-TO-DATE
+:fastedapi:prepareComAndroidSupportAppcompatV72520Library UP-TO-DATE
+:fastedapi:prepareComAndroidSupportSupportCompat2520Library UP-TO-DATE
+:fastedapi:prepareComAndroidSupportSupportCoreUi2520Library UP-TO-DATE
+:fastedapi:prepareComAndroidSupportSupportCoreUtils2520Library UP-TO-DATE
+:fastedapi:prepareComAndroidSupportSupportFragment2520Library UP-TO-DATE
+:fastedapi:prepareComAndroidSupportSupportMediaCompat2520Library UP-TO-DATE
+:fastedapi:prepareComAndroidSupportSupportV42520Library UP-TO-DATE
+:fastedapi:prepareComAndroidSupportSupportVectorDrawable2520Library UP-TO-DATE
+:fastedapi:prepareReleaseDependencies
+:fastedapi:compileReleaseAidl UP-TO-DATE
+:fastedapi:compileReleaseNdk UP-TO-DATE
+:fastedapi:compileLint UP-TO-DATE
+:fastedapi:copyReleaseLint UP-TO-DATE
+:fastedapi:compileReleaseRenderscript UP-TO-DATE
+:fastedapi:generateReleaseBuildConfig UP-TO-DATE
+:fastedapi:generateReleaseResValues UP-TO-DATE
+:fastedapi:generateReleaseResources UP-TO-DATE
+:fastedapi:mergeReleaseResources UP-TO-DATE
+:fastedapi:processReleaseManifest UP-TO-DATE
+:fastedapi:processReleaseResources UP-TO-DATE
+:fastedapi:generateReleaseSources UP-TO-DATE
+:fastedapi:incrementalReleaseJavaCompilationSafeguard UP-TO-DATE
+:fastedapi:compileReleaseKotlin
+Using kotlin incremental compilation
+e: /home/ryujin/Projects/FastED/fasted-android/fastedapi/src/main/java/net/allm/fastedapi/FastEdCallback.kt: (20, 21): Unresolved reference: success
+e: /home/ryujin/Projects/FastED/fasted-android/fastedapi/src/main/java/net/allm/fastedapi/FastEdCallback.kt: (30, 21): Unresolved reference: success
+e: /home/ryujin/Projects/FastED/fasted-android/fastedapi/src/main/java/net/allm/fastedapi/events/FastEdApiEvent.kt: (8, 5): Expecting member declaration
+e: /home/ryujin/Projects/FastED/fasted-android/fastedapi/src/main/java/net/allm/fastedapi/events/FastEdApiEvent.kt: (8, 8): Expecting member declaration
+e: /home/ryujin/Projects/FastED/fasted-android/fastedapi/src/main/java/net/allm/fastedapi/events/FastEdApiEvent.kt: (8, 15): Expecting member declaration
+e: /home/ryujin/Projects/FastED/fasted-android/fastedapi/src/main/java/net/allm/fastedapi/events/FastEdApiEvent.kt: (8, 17): Expecting member declaration
+e: /home/ryujin/Projects/FastED/fasted-android/fastedapi/src/main/java/net/allm/fastedapi/events/FastEdApiEvent.kt: (8, 25): Expecting member declaration
+e: /home/ryujin/Projects/FastED/fasted-android/fastedapi/src/main/java/net/allm/fastedapi/events/FastEdApiEvent.kt: (8, 27): Expecting member declaration
+:fastedapi:compileReleaseKotlin FAILED
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':fastedapi:compileReleaseKotlin'.
+> Compilation error. See log for more details
+
+* Try:
+Run with --stacktrace option to get the stack trace. Run with --info or --debug option to get more log output.
+
+BUILD FAILED
+
+Total time: 6.251 secs

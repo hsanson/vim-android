@@ -624,3 +624,30 @@ endfunction
 function! s:lpad(s)
   return repeat('0', 5 - len(a:s)) . a:s
 endfunction
+
+
+" Simple function to test errorformat strings.
+" 
+" Example:
+"
+"    call gradle#testErf("%t: %f: (%l\\, %c): %m", "kotlin.efm")
+"
+" The first argument is the errorformat string to test and the
+" second argument is a filename of the file that contains the error
+" output to test.
+"
+" The error files should be inside the test folder of the plugin.
+function! gradle#testErf(fmt, testFile)
+  let tmpEfm = &errorformat
+  try
+    let &errorformat=a:fmt
+    execute('cgetfile ' . g:gradle_test_dir . "/" . a:testFile)
+    copen
+  catch
+    echo v:exception
+    echo v:throwpoint
+  finally
+    let &errorformat=tmpEfm
+  endtry
+endfunction
+
