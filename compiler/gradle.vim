@@ -17,6 +17,8 @@ let s:makeprg = [
 
 if gradle#isDaemonEnabled()
   call add(s:makeprg, "--daemon")
+else
+  call add(s:makeprg, "--no-daemon")
 endif
 
 if gradle#versionMinor() >= 3

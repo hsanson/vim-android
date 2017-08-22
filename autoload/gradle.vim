@@ -221,7 +221,7 @@ function! gradle#isDaemonEnabled()
   if !exists('g:gradle_daemon')
     let g:gradle_daemon = 1
   endif
-  return g:gradle_async
+  return g:gradle_daemon
 endfunction
 
 function! gradle#statusLineError()
