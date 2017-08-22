@@ -22,7 +22,7 @@ If you are working in an Android project then set the *g:android_sdk_path*  with
 
 # Usage
 
-Open a java or xml source file and this plugin will automatically kick in and perform some tasks:
+Open a java, kotlin or xml source file and this plugin will automatically kick in and perform some tasks:
 
  - Execute a custom vim gradle task to inspect the project and extract dependencies, project names, and android sdk versions.
  - Set CLASSPATH environment variable with the JAR dependencies of the project and the Android SDK jar.
@@ -50,12 +50,12 @@ Combined with the ligthline plugin my status line looks like the following scree
 
 # Features
 
- - Automatically detect if file belongs to an android project when opening a java or xml file.
+ - Automatically detect if file belongs to an android project when opening a java, kotlin or xml file.
  - Adds custom tasks to gradle build using [Init scripts](https://docs.gradle.org/current/userguide/init_scripts.html).
  * Updates the CLASSPATH environment variable with all jar and class files for the target Android API and gradle dependencies. This can be used by other plugins like [javacomplete2](https://github.com/artur-shaik/vim-javacomplete2) to enable omnicompletion of these libraries.
  - Updates the SRCPATH environment variable to include the current project source path and any other dependency source files available. This allows plugins like [vebugger](https://github.com/idanarye/vim-vebugger) to track source during debugging within vim.
  - Sets custom gradle vim compiler.
- - Sets an extensive errorformat that captures java errors, linter errors, test errors, aapt errors and adds them to the qflist.
+ - Sets an extensive errorformat that captures java errors, kotlin errors, linter errors, test errors, aapt errors and adds them to the qflist.
  - Adds commands to build and install APK files in one or all devices/emulators present.
  - Adds commands to generate tag files for the Android SDK as well as your Android application.
  - Improved XML omnicompletion for android resource and manifest files. Thanks to [Donnie West](https://github.com/DonnieWest).
