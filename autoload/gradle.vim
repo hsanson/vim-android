@@ -576,7 +576,7 @@ function! s:showSigns()
   execute("sign define gradleErrorSign text=" . gradle#glyphError() . " texthl=Error")
   execute("sign define gradleWarningSign text=" . gradle#glyphWarning() . " texthl=Warning")
   for item in getqflist()
-    if item.valid
+    if item.valid && item.bufnr != 0
       let l:signId = s:lpad(item.bufnr) . s:lpad(item.lnum)
       let l:sign = "sign place " . l:signId . " line=" . item.lnum
       if item.type == 'e'
