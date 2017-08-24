@@ -1,0 +1,1135 @@
+The JavaCompile.setDependencyCacheDir() method has been deprecated and is scheduled to be removed in Gradle 4.0.
+The TaskInputs.source(Object) method has been deprecated and is scheduled to be removed in Gradle 4.0. Please use TaskInputs.file(Object).skipWhenEmpty() instead.
+Incremental java compilation is an incubating feature.
+'kapt.generateStubs' is not used by the 'kotlin-kapt' plugin
+'kapt.generateStubs' is not used by the 'kotlin-kapt' plugin
+'kapt.generateStubs' is not used by the 'kotlin-kapt' plugin
+'kapt.generateStubs' is not used by the 'kotlin-kapt' plugin
+:Join:preBuild UP-TO-DATE
+:Join:preDebugBuild UP-TO-DATE
+:Join:checkDebugManifest
+:Join:preAlphaBuild UP-TO-DATE
+:Join:extractProguardFiles
+:Join:preBetaBuild
+:Join:preReleaseBuild
+:XMPP:preBuild UP-TO-DATE
+:XMPP:preReleaseBuild UP-TO-DATE
+:XMPP:checkReleaseManifest
+:XMPP:preDebugAndroidTestBuild UP-TO-DATE
+:XMPP:preDebugBuild UP-TO-DATE
+:XMPP:preDebugUnitTestBuild UP-TO-DATE
+:XMPP:preReleaseUnitTestBuild UP-TO-DATE
+:XmppAnnotations:compileKotlin
+:XmppAnnotations:compileJavawarning: [options] bootstrap class path not set in conjunction with -source 1.7
+1 warning
+:XmppAnnotations:copyMainKotlinClasses
+:XmppAnnotations:processResources UP-TO-DATE
+:XmppAnnotations:classes
+:XmppAnnotations:jar
+:XmppAnnotationProcessor:compileKotlin
+:XmppAnnotationProcessor:compileJavawarning: [options] bootstrap class path not set in conjunction with -source 1.7
+Note: /home/ryujin/Projects/Join/android-client/XmppAnnotationProcessor/src/main/java/jp/co/skillupjapan/xmpp/annotations/processor/BaseAnnotationProcessor.java uses unchecked or unsafe operations.
+Note: Recompile with -Xlint:unchecked for details.
+:XmppAnnotationProcessor:copyMainKotlinClasses
+:XmppAnnotationProcessor:processResources
+:XmppAnnotationProcessor:classes
+:XmppAnnotationProcessor:jar
+:joindatabase:preBuild UP-TO-DATE
+:joindatabase:preReleaseBuild UP-TO-DATE
+:joindatabase:checkReleaseManifest
+:joindatabase:preDebugAndroidTestBuild UP-TO-DATE
+:joindatabase:preDebugBuild UP-TO-DATE
+:joindatabase:preDebugUnitTestBuild UP-TO-DATE
+:joindatabase:preReleaseUnitTestBuild UP-TO-DATE
+:joindatabase:prepareComAndroidSupportMultidex101Library
+:joindatabase:prepareNetZeteticAndroidDatabaseSqlcipher351Library
+Jar found at unexpected path (jni/sqlcipher-javadoc.jar) in /home/ryujin/.gradle/caches/modules-2/files-2.1/net.zetetic/android-database-sqlcipher/3.5.1/ba957523c43bb31f1a6276969489fd64d1aeb3a2/android-database-sqlcipher-3.5.1.aar and will be ignored. Jars should be placed inside 'jars' folder to be merged into dex. Jars that are in assets/ or res/raw/ will be copied as-is.
+Jar found at unexpected path (jni/sqlcipher.jar) in /home/ryujin/.gradle/caches/modules-2/files-2.1/net.zetetic/android-database-sqlcipher/3.5.1/ba957523c43bb31f1a6276969489fd64d1aeb3a2/android-database-sqlcipher-3.5.1.aar and will be ignored. Jars should be placed inside 'jars' folder to be merged into dex. Jars that are in assets/ or res/raw/ will be copied as-is.
+:joindatabase:prepareReleaseDependencies
+:joindatabase:compileReleaseAidl
+:joindatabase:compileReleaseNdk UP-TO-DATE
+:joindatabase:compileLint
+:joindatabase:copyReleaseLint UP-TO-DATE
+:joindatabase:mergeReleaseShaders
+:joindatabase:compileReleaseShaders
+:joindatabase:generateReleaseAssets
+:joindatabase:mergeReleaseAssets
+:joindatabase:mergeReleaseProguardFiles UP-TO-DATE
+:joindatabase:packageReleaseRenderscript UP-TO-DATE
+:joindatabase:compileReleaseRenderscript
+:joindatabase:generateReleaseResValues
+:joindatabase:generateReleaseResources
+:joindatabase:packageReleaseResources
+:joindatabase:processReleaseManifest
+:joindatabase:generateReleaseBuildConfig
+:joindatabase:mergeReleaseResources
+:joindatabase:processReleaseResources
+:joindatabase:generateReleaseSources
+:joindatabase:incrementalReleaseJavaCompilationSafeguard
+:joindatabase:compileReleaseKotlin
+Using kotlin incremental compilation
+w: /home/ryujin/Projects/Join/android-client/joindatabase/src/main/java/jp/co/skillupjapan/joindatabase/database/JoinDatabase.kt: (27, 13): Variable 'dbFile' is never used
+w: /home/ryujin/Projects/Join/android-client/joindatabase/src/main/java/jp/co/skillupjapan/joindatabase/database/data/EmgCases.kt: (59, 13): Variable 'daoSession' is never used
+w: /home/ryujin/Projects/Join/android-client/joindatabase/src/main/java/jp/co/skillupjapan/joindatabase/database/data/EmgCases.kt: (93, 39): Unnecessary non-null assertion (!!) on a non-null receiver of type EmgCase
+w: /home/ryujin/Projects/Join/android-client/joindatabase/src/main/java/jp/co/skillupjapan/joindatabase/database/data/Messages.kt: (387, 36): Parameter 'chatJid' is never used
+:joindatabase:compileReleaseJavaWithJavacNote: /home/ryujin/Projects/Join/android-client/joindatabase/src/main/java/jp/co/skillupjapan/joindatabase/utils/ModelSerializer.java uses unchecked or unsafe operations.
+Note: Recompile with -Xlint:unchecked for details.
+:joindatabase:copyReleaseKotlinClasses
+:joindatabase:processReleaseJavaRes UP-TO-DATE
+:joindatabase:transformResourcesWithMergeJavaResForRelease
+:joindatabase:transformClassesAndResourcesWithSyncLibJarsForRelease
+:joindatabase:mergeReleaseJniLibFolders
+:joindatabase:transformNative_libsWithMergeJniLibsForRelease
+:joindatabase:transformNative_libsWithSyncJniLibsForRelease
+:joindatabase:bundleRelease
+:util:compileKotlin
+:util:compileJavawarning: [options] bootstrap class path not set in conjunction with -source 1.7
+1 warning
+:util:copyMainKotlinClasses
+:util:processResources UP-TO-DATE
+:util:classes
+:util:jar
+:XMPP:prepareAndroidClientJoindatabaseUnspecifiedLibrary
+:XMPP:prepareComAndroidSupportMultidex101Library
+:XMPP:prepareNetZeteticAndroidDatabaseSqlcipher351Library
+Jar found at unexpected path (jni/sqlcipher-javadoc.jar) in /home/ryujin/.gradle/caches/modules-2/files-2.1/net.zetetic/android-database-sqlcipher/3.5.1/ba957523c43bb31f1a6276969489fd64d1aeb3a2/android-database-sqlcipher-3.5.1.aar and will be ignored. Jars should be placed inside 'jars' folder to be merged into dex. Jars that are in assets/ or res/raw/ will be copied as-is.
+Jar found at unexpected path (jni/sqlcipher.jar) in /home/ryujin/.gradle/caches/modules-2/files-2.1/net.zetetic/android-database-sqlcipher/3.5.1/ba957523c43bb31f1a6276969489fd64d1aeb3a2/android-database-sqlcipher-3.5.1.aar and will be ignored. Jars should be placed inside 'jars' folder to be merged into dex. Jars that are in assets/ or res/raw/ will be copied as-is.
+:XMPP:prepareReleaseDependencies
+:XMPP:compileReleaseAidl
+:XMPP:compileReleaseNdk UP-TO-DATE
+:XMPP:compileLint
+:XMPP:copyReleaseLint UP-TO-DATE
+:XMPP:compileReleaseRenderscript
+:XMPP:generateReleaseBuildConfig
+:XMPP:generateReleaseResValues
+:XMPP:generateReleaseResources
+:XMPP:mergeReleaseResources
+:XMPP:processReleaseManifest
+:XMPP:processReleaseResources
+:XMPP:generateReleaseSources
+:XMPP:incrementalReleaseJavaCompilationSafeguard
+:joindatabase:checkDebugManifest
+:joindatabase:prepareDebugDependencies
+:joindatabase:compileDebugAidl
+:joindatabase:compileDebugNdk UP-TO-DATE
+:joindatabase:copyDebugLint UP-TO-DATE
+:joindatabase:mergeDebugShaders
+:joindatabase:compileDebugShaders
+:joindatabase:generateDebugAssets
+:joindatabase:mergeDebugAssets
+:joindatabase:mergeDebugProguardFiles UP-TO-DATE
+:joindatabase:packageDebugRenderscript UP-TO-DATE
+:joindatabase:compileDebugRenderscript
+:joindatabase:generateDebugResValues
+:joindatabase:generateDebugResources
+:joindatabase:packageDebugResources
+:joindatabase:processDebugManifest
+:joindatabase:generateDebugBuildConfig
+:joindatabase:mergeDebugResources
+:joindatabase:processDebugResources
+:joindatabase:generateDebugSources
+:joindatabase:incrementalDebugJavaCompilationSafeguard
+:joindatabase:compileDebugKotlin
+Using kotlin incremental compilation
+w: /home/ryujin/Projects/Join/android-client/joindatabase/src/main/java/jp/co/skillupjapan/joindatabase/database/JoinDatabase.kt: (27, 13): Variable 'dbFile' is never used
+w: /home/ryujin/Projects/Join/android-client/joindatabase/src/main/java/jp/co/skillupjapan/joindatabase/database/data/EmgCases.kt: (59, 13): Variable 'daoSession' is never used
+w: /home/ryujin/Projects/Join/android-client/joindatabase/src/main/java/jp/co/skillupjapan/joindatabase/database/data/EmgCases.kt: (93, 39): Unnecessary non-null assertion (!!) on a non-null receiver of type EmgCase
+w: /home/ryujin/Projects/Join/android-client/joindatabase/src/main/java/jp/co/skillupjapan/joindatabase/database/data/Messages.kt: (387, 36): Parameter 'chatJid' is never used
+:joindatabase:compileDebugJavaWithJavacNote: /home/ryujin/Projects/Join/android-client/joindatabase/src/main/java/jp/co/skillupjapan/joindatabase/utils/ModelSerializer.java uses unchecked or unsafe operations.
+Note: Recompile with -Xlint:unchecked for details.
+:joindatabase:copyDebugKotlinClasses
+:joindatabase:processDebugJavaRes UP-TO-DATE
+:joindatabase:transformResourcesWithMergeJavaResForDebug
+:joindatabase:transformClassesAndResourcesWithSyncLibJarsForDebug
+:joindatabase:mergeDebugJniLibFolders
+:joindatabase:transformNative_libsWithMergeJniLibsForDebug
+:joindatabase:transformNative_libsWithSyncJniLibsForDebug
+:joindatabase:bundleDebug
+:XMPP:compileReleaseJavaWithJavacNote: Found attribute {}
+Note: Found attribute {key=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@2551a31f}
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/I18nExtra_jp_co_skillupjapan_xmpp_asmack_packetextension_Element.java
+Note: Found attribute {}
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/Option_jp_co_skillupjapan_xmpp_asmack_packetextension_webrtc_Element.java
+Note: Found attribute {}
+Note: Found attribute {type=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@12c20a3d}
+Note: Found attribute {type=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@12c20a3d, muted=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@4d0f3278}
+Note: Found attribute {unread=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@9fbe55a, type=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@12c20a3d, muted=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@4d0f3278}
+Note: Found attribute {total=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@44c74781, unread=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@9fbe55a, type=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@12c20a3d, muted=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@4d0f3278}
+Note: Found attribute {total=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@44c74781, jid=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@46d62ec6, unread=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@9fbe55a, type=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@12c20a3d, muted=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@4d0f3278}
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/ServerChat_jp_co_skillupjapan_xmpp_chats_Element.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/DicomInfoIqElementImpl_jp_co_skillupjapan_xmpp_dicom_Element.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/GetPdqSupplierIqElementImpl_jp_co_skillupjapan_xmpp_exam_GetPdqSupplier_Element.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/GetXcaQueryIqElementImpl_jp_co_skillupjapan_xmpp_exam_GetXcaQuery_Element.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/GroupIqElementImpl_jp_co_skillupjapan_xmpp_exam_GetXcaRetrieveOml_Element.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/ObxIqElementImpl_jp_co_skillupjapan_xmpp_exam_GetXcaRetrieveOml_Element.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/RxeIqElementImpl_jp_co_skillupjapan_xmpp_exam_GetXcaRetrieveOmp_Element.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/AvatarElementIQ_jp_co_skillupjapan_xmpp_groupinfo_Element.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/GroupElement_jp_co_skillupjapan_xmpp_groupinfo_Element.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/MembersListElementIQ_jp_co_skillupjapan_xmpp_groupinfo_GroupInfoResponseIQ_Element.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/InviteesListElementIQ_jp_co_skillupjapan_xmpp_groupinfo_GroupInfoResponseIQ_Element.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/SiteUrlListElementIQ_jp_co_skillupjapan_xmpp_groupinfo_GroupInfoResponseIQ_Element.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/InvitationElement_jp_co_skillupjapan_xmpp_groupinfo_Element.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/InviteeElementIQ_jp_co_skillupjapan_xmpp_groupinfo_Element.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/MemberElementIQ_jp_co_skillupjapan_xmpp_groupinfo_Element.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/SiteUrlElementIQ_jp_co_skillupjapan_xmpp_groupinfo_Element.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/ThumbElement_jp_co_skillupjapan_xmpp_groupinfo_Element.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/MferDateInfoIqElementImpl_jp_co_skillupjapan_xmpp_mfer_GetMferDateList_Element.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/MferTimeInfoIqElementImpl_jp_co_skillupjapan_xmpp_mfer_GetMferTimeList_Element.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/MonitorInfoIqElementImpl_jp_co_skillupjapan_xmpp_mfer_GetMonitorList_Element.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/TenantInfoIqElementImpl_jp_co_skillupjapan_xmpp_tenant_Element.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/ERCase_jp_co_skillupjapan_xmpp_tracker_Element.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/ERCaseEvent_jp_co_skillupjapan_xmpp_tracker_Element.java
+Note: Found attribute {}
+Note: Found attribute {id=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@127355b7}
+Note: Found attribute {from=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@3b05d010, id=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@127355b7}
+Note: Found attribute {from=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@3b05d010, id=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@127355b7, to=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@7d56a0bc}
+Note: Found attribute {from=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@3b05d010, id=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@127355b7, to=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@7d56a0bc, offer-time=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@65a63978}
+Note: Found attribute {end-time=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@6df01696, from=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@3b05d010, id=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@127355b7, to=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@7d56a0bc, offer-time=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@65a63978}
+Note: Found attribute {start-time=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@30fbc288, end-time=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@6df01696, from=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@3b05d010, id=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@127355b7, to=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@7d56a0bc, offer-time=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@65a63978}
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/CallHistoryRecord_jp_co_skillupjapan_xmpp_webrtc_Element.java
+Note: Found attribute {}
+Note: Found attribute {jid=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@63db74d7}
+Note: Found attribute {jid=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@63db74d7, type=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@53a861c9}
+Note: Found attribute {jid=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@63db74d7, name=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@3eb7b345, type=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@53a861c9}
+Note: Found attribute {jid=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@63db74d7, name=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@3eb7b345, type=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@53a861c9, muted=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@52b33dae}
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/Contact_jp_co_skillupjapan_xmpp_contacts_Element.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/AccountInfoRequestIQ_jp_co_skillupjapan_xmpp_account_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/AccountInfoRequestIQ_jp_co_skillupjapan_xmpp_account_IqProvider.java
+Note: Found attribute {}
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/ConfirmationRequest_jp_co_skillupjapan_xmpp_account_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/ConfirmationRequest_jp_co_skillupjapan_xmpp_account_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/ConfirmationResponse_jp_co_skillupjapan_xmpp_account_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/ConfirmationResponse_jp_co_skillupjapan_xmpp_account_IqProvider.java
+Note: Found attribute {}
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/PasswordResetRequest_jp_co_skillupjapan_xmpp_account_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/PasswordResetRequest_jp_co_skillupjapan_xmpp_account_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/PasswordResetResponse_jp_co_skillupjapan_xmpp_account_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/PasswordResetResponse_jp_co_skillupjapan_xmpp_account_IqProvider.java
+Note: Found attribute {}
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/AccountInfo_jp_co_skillupjapan_xmpp_account_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/AccountInfo_jp_co_skillupjapan_xmpp_account_IqProvider.java
+Note: Found attribute {}
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/AccountInfoSetRequest_jp_co_skillupjapan_xmpp_account_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/AccountInfoSetRequest_jp_co_skillupjapan_xmpp_account_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/ServerChats_jp_co_skillupjapan_xmpp_chats_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/ServerChats_jp_co_skillupjapan_xmpp_chats_IqProvider.java
+Note: Found attribute {}
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/ServerChatsRequestIQ_jp_co_skillupjapan_xmpp_chats_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/ServerChatsRequestIQ_jp_co_skillupjapan_xmpp_chats_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/DicomSearchRequestIq_jp_co_skillupjapan_xmpp_dicom_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/DicomSearchRequestIq_jp_co_skillupjapan_xmpp_dicom_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/DicomSearchResponseIq_jp_co_skillupjapan_xmpp_dicom_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/DicomSearchResponseIq_jp_co_skillupjapan_xmpp_dicom_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/DicomThumbRequestIq_jp_co_skillupjapan_xmpp_dicomthumb_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/DicomThumbRequestIq_jp_co_skillupjapan_xmpp_dicomthumb_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/DicomThumbResponseIq_jp_co_skillupjapan_xmpp_dicomthumb_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/DicomThumbResponseIq_jp_co_skillupjapan_xmpp_dicomthumb_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/GetPdqSupplierRequestIq_jp_co_skillupjapan_xmpp_exam_GetPdqSupplier_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/GetPdqSupplierRequestIq_jp_co_skillupjapan_xmpp_exam_GetPdqSupplier_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/GetPdqSupplierResponseIq_jp_co_skillupjapan_xmpp_exam_GetPdqSupplier_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/GetPdqSupplierResponseIq_jp_co_skillupjapan_xmpp_exam_GetPdqSupplier_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/GetXcaQueryRequestIq_jp_co_skillupjapan_xmpp_exam_GetXcaQuery_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/GetXcaQueryRequestIq_jp_co_skillupjapan_xmpp_exam_GetXcaQuery_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/GetXcaQueryResponseIq_jp_co_skillupjapan_xmpp_exam_GetXcaQuery_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/GetXcaQueryResponseIq_jp_co_skillupjapan_xmpp_exam_GetXcaQuery_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/GetXcaRetrieveOmlRequestIq_jp_co_skillupjapan_xmpp_exam_GetXcaRetrieveOml_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/GetXcaRetrieveOmlRequestIq_jp_co_skillupjapan_xmpp_exam_GetXcaRetrieveOml_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/GetXcaRetrieveOmlResponseIq_jp_co_skillupjapan_xmpp_exam_GetXcaRetrieveOml_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/GetXcaRetrieveOmlResponseIq_jp_co_skillupjapan_xmpp_exam_GetXcaRetrieveOml_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/GetXcaRetrieveOmpRequestIq_jp_co_skillupjapan_xmpp_exam_GetXcaRetrieveOmp_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/GetXcaRetrieveOmpRequestIq_jp_co_skillupjapan_xmpp_exam_GetXcaRetrieveOmp_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/GetXcaRetrieveOmpResponseIq_jp_co_skillupjapan_xmpp_exam_GetXcaRetrieveOmp_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/GetXcaRetrieveOmpResponseIq_jp_co_skillupjapan_xmpp_exam_GetXcaRetrieveOmp_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/ShareXcaRetrieveRequestIq_jp_co_skillupjapan_xmpp_exam_ShareXcaRetrieve_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/ShareXcaRetrieveRequestIq_jp_co_skillupjapan_xmpp_exam_ShareXcaRetrieve_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/ShareXcaRetrieveResponseIq_jp_co_skillupjapan_xmpp_exam_ShareXcaRetrieve_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/ShareXcaRetrieveResponseIq_jp_co_skillupjapan_xmpp_exam_ShareXcaRetrieve_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/JoinGroupAvatarDownloadRequestIq_jp_co_skillupjapan_xmpp_groupavatar_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/JoinGroupAvatarDownloadRequestIq_jp_co_skillupjapan_xmpp_groupavatar_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/JoinGroupAvatarDownloadResponseIq_jp_co_skillupjapan_xmpp_groupavatar_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/JoinGroupAvatarDownloadResponseIq_jp_co_skillupjapan_xmpp_groupavatar_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/JoinGroupAvatarUpdateRequestIq_jp_co_skillupjapan_xmpp_groupavatar_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/JoinGroupAvatarUpdateRequestIq_jp_co_skillupjapan_xmpp_groupavatar_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/JoinGroupAvatarUpdateResponseIq_jp_co_skillupjapan_xmpp_groupavatar_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/JoinGroupAvatarUpdateResponseIq_jp_co_skillupjapan_xmpp_groupavatar_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/JoinGroupAvatarUploadRequestIq_jp_co_skillupjapan_xmpp_groupavatar_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/JoinGroupAvatarUploadRequestIq_jp_co_skillupjapan_xmpp_groupavatar_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/JoinGroupAvatarUploadResponseIq_jp_co_skillupjapan_xmpp_groupavatar_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/JoinGroupAvatarUploadResponseIq_jp_co_skillupjapan_xmpp_groupavatar_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/GroupInfoRequestIQ_jp_co_skillupjapan_xmpp_groupinfo_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/GroupInfoRequestIQ_jp_co_skillupjapan_xmpp_groupinfo_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/GroupInfoResponseIQ_jp_co_skillupjapan_xmpp_groupinfo_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/GroupInfoResponseIQ_jp_co_skillupjapan_xmpp_groupinfo_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/GroupsListRequestIQ_jp_co_skillupjapan_xmpp_groupinfo_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/GroupsListRequestIQ_jp_co_skillupjapan_xmpp_groupinfo_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/GroupsListResponseIQ_jp_co_skillupjapan_xmpp_groupinfo_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/GroupsListResponseIQ_jp_co_skillupjapan_xmpp_groupinfo_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/InvitationListRequestIQ_jp_co_skillupjapan_xmpp_groupinfo_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/InvitationListRequestIQ_jp_co_skillupjapan_xmpp_groupinfo_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/InvitationListResponseIQ_jp_co_skillupjapan_xmpp_groupinfo_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/InvitationListResponseIQ_jp_co_skillupjapan_xmpp_groupinfo_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/StreamingUrlRequestIQ_jp_co_skillupjapan_xmpp_groupinfo_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/StreamingUrlRequestIQ_jp_co_skillupjapan_xmpp_groupinfo_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/StreamingUrlResponseIQ_jp_co_skillupjapan_xmpp_groupinfo_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/StreamingUrlResponseIQ_jp_co_skillupjapan_xmpp_groupinfo_IqProvider.java
+Note: Found attribute {}
+Note: Found attribute {user=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@7492a9f6}
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/MediaServerCredentials_jp_co_skillupjapan_xmpp_media_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/MediaServerCredentials_jp_co_skillupjapan_xmpp_media_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/MediaServerCredentialsRequest_jp_co_skillupjapan_xmpp_media_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/MediaServerCredentialsRequest_jp_co_skillupjapan_xmpp_media_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/GetMferDateListRequestIq_jp_co_skillupjapan_xmpp_mfer_GetMferDateList_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/GetMferDateListRequestIq_jp_co_skillupjapan_xmpp_mfer_GetMferDateList_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/GetMferDateListResponseIq_jp_co_skillupjapan_xmpp_mfer_GetMferDateList_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/GetMferDateListResponseIq_jp_co_skillupjapan_xmpp_mfer_GetMferDateList_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/GetMferTimeListRequestIq_jp_co_skillupjapan_xmpp_mfer_GetMferTimeList_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/GetMferTimeListRequestIq_jp_co_skillupjapan_xmpp_mfer_GetMferTimeList_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/GetMferTimeListResponseIq_jp_co_skillupjapan_xmpp_mfer_GetMferTimeList_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/GetMferTimeListResponseIq_jp_co_skillupjapan_xmpp_mfer_GetMferTimeList_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/GetMonitorListRequestIq_jp_co_skillupjapan_xmpp_mfer_GetMonitorList_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/GetMonitorListRequestIq_jp_co_skillupjapan_xmpp_mfer_GetMonitorList_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/GetMonitorListResponseIq_jp_co_skillupjapan_xmpp_mfer_GetMonitorList_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/GetMonitorListResponseIq_jp_co_skillupjapan_xmpp_mfer_GetMonitorList_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/GetMonitorUrlRequestIq_jp_co_skillupjapan_xmpp_mfer_GetMonitorUrl_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/GetMonitorUrlRequestIq_jp_co_skillupjapan_xmpp_mfer_GetMonitorUrl_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/GetMonitorUrlResponseIq_jp_co_skillupjapan_xmpp_mfer_GetMonitorUrl_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/GetMonitorUrlResponseIq_jp_co_skillupjapan_xmpp_mfer_GetMonitorUrl_IqProvider.java
+Note: Found attribute {}
+Note: Found attribute {jid=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@11856f9f}
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/NotificationRequest_jp_co_skillupjapan_xmpp_notification_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/NotificationRequest_jp_co_skillupjapan_xmpp_notification_IqProvider.java
+Note: Found attribute {}
+Note: Found attribute {jid=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@7f4a1a59}
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/NotificationResponse_jp_co_skillupjapan_xmpp_notification_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/NotificationResponse_jp_co_skillupjapan_xmpp_notification_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/SecondDeviceRequestIq_jp_co_skillupjapan_xmpp_register_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/SecondDeviceRequestIq_jp_co_skillupjapan_xmpp_register_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/SecondDeviceResponseIq_jp_co_skillupjapan_xmpp_register_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/SecondDeviceResponseIq_jp_co_skillupjapan_xmpp_register_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/CallAccessCodeRequestIq_jp_co_skillupjapan_xmpp_sms_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/CallAccessCodeRequestIq_jp_co_skillupjapan_xmpp_sms_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/CallAccessCodeResponseIq_jp_co_skillupjapan_xmpp_sms_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/CallAccessCodeResponseIq_jp_co_skillupjapan_xmpp_sms_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/JoinTenantRequestIq_jp_co_skillupjapan_xmpp_tenant_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/JoinTenantRequestIq_jp_co_skillupjapan_xmpp_tenant_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/JoinTenantResponseIq_jp_co_skillupjapan_xmpp_tenant_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/JoinTenantResponseIq_jp_co_skillupjapan_xmpp_tenant_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/MultiTenantRequestIq_jp_co_skillupjapan_xmpp_tenant_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/MultiTenantRequestIq_jp_co_skillupjapan_xmpp_tenant_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/MultiTenantResponseIq_jp_co_skillupjapan_xmpp_tenant_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/MultiTenantResponseIq_jp_co_skillupjapan_xmpp_tenant_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/ERCaseEventListRequestIQ_jp_co_skillupjapan_xmpp_tracker_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/ERCaseEventListRequestIQ_jp_co_skillupjapan_xmpp_tracker_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/ERCaseEventListResponseIQ_jp_co_skillupjapan_xmpp_tracker_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/ERCaseEventListResponseIQ_jp_co_skillupjapan_xmpp_tracker_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/ERCaseEventRegisterRequestIQ_jp_co_skillupjapan_xmpp_tracker_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/ERCaseEventRegisterRequestIQ_jp_co_skillupjapan_xmpp_tracker_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/ERCaseEventRegisterResponseIQ_jp_co_skillupjapan_xmpp_tracker_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/ERCaseEventRegisterResponseIQ_jp_co_skillupjapan_xmpp_tracker_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/ERCaseListRequestIQ_jp_co_skillupjapan_xmpp_tracker_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/ERCaseListRequestIQ_jp_co_skillupjapan_xmpp_tracker_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/ERCaseListResponseIQ_jp_co_skillupjapan_xmpp_tracker_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/ERCaseListResponseIQ_jp_co_skillupjapan_xmpp_tracker_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/ERCaseRegisterRequestIQ_jp_co_skillupjapan_xmpp_tracker_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/ERCaseRegisterRequestIQ_jp_co_skillupjapan_xmpp_tracker_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/ERCaseRegisterResponseIQ_jp_co_skillupjapan_xmpp_tracker_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/ERCaseRegisterResponseIQ_jp_co_skillupjapan_xmpp_tracker_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/ERCaseRequestIQ_jp_co_skillupjapan_xmpp_tracker_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/ERCaseRequestIQ_jp_co_skillupjapan_xmpp_tracker_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/ERCaseResponseIQ_jp_co_skillupjapan_xmpp_tracker_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/ERCaseResponseIQ_jp_co_skillupjapan_xmpp_tracker_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/ERCaseUpdateRequestIQ_jp_co_skillupjapan_xmpp_tracker_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/ERCaseUpdateRequestIQ_jp_co_skillupjapan_xmpp_tracker_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/ERCaseUpdateResponseIQ_jp_co_skillupjapan_xmpp_tracker_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/ERCaseUpdateResponseIQ_jp_co_skillupjapan_xmpp_tracker_IqProvider.java
+Note: Found attribute {}
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/EmergencyEventRegisterRequest_jp_co_skillupjapan_xmpp_tracker_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/EmergencyEventRegisterRequest_jp_co_skillupjapan_xmpp_tracker_IqProvider.java
+Note: Found attribute {}
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/EmergencyEventRegisterResponse_jp_co_skillupjapan_xmpp_tracker_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/EmergencyEventRegisterResponse_jp_co_skillupjapan_xmpp_tracker_IqProvider.java
+Note: Found attribute {}
+Note: Found attribute {start-id=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@1d9f852c}
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/CallHistoryRequest_jp_co_skillupjapan_xmpp_webrtc_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/CallHistoryRequest_jp_co_skillupjapan_xmpp_webrtc_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/CallHistoryResponse_jp_co_skillupjapan_xmpp_webrtc_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/CallHistoryResponse_jp_co_skillupjapan_xmpp_webrtc_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/SessionId_jp_co_skillupjapan_xmpp_webrtc_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/SessionId_jp_co_skillupjapan_xmpp_webrtc_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/SessionIdRequest_jp_co_skillupjapan_xmpp_webrtc_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/SessionIdRequest_jp_co_skillupjapan_xmpp_webrtc_IqProvider.java
+Note: Found attribute {}
+Note: Found attribute {session-id=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@5164a99d}
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/WebRtcSDP_jp_co_skillupjapan_xmpp_webrtc_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/WebRtcSDP_jp_co_skillupjapan_xmpp_webrtc_IqProvider.java
+Note: Found attribute {}
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/WebRtcSDPRequest_jp_co_skillupjapan_xmpp_webrtc_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/WebRtcSDPRequest_jp_co_skillupjapan_xmpp_webrtc_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/AccountContacts_jp_co_skillupjapan_xmpp_contacts_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/AccountContacts_jp_co_skillupjapan_xmpp_contacts_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/AccountContactsRequest_jp_co_skillupjapan_xmpp_contacts_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/AccountContactsRequest_jp_co_skillupjapan_xmpp_contacts_IqProvider.java
+Note: Found attribute {}
+Note: Found attribute {action=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@5ff8f747}
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/ContactAction_jp_co_skillupjapan_xmpp_contacts_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/ContactAction_jp_co_skillupjapan_xmpp_contacts_IqProvider.java
+Note: Found attribute {}
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/ContactsSearchRequest_jp_co_skillupjapan_xmpp_contacts_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/ContactsSearchRequest_jp_co_skillupjapan_xmpp_contacts_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/ContactsSearchResult_jp_co_skillupjapan_xmpp_contacts_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/ContactsSearchResult_jp_co_skillupjapan_xmpp_contacts_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/CaseEventExtension_jp_co_skillupjapan_xmpp_asmack_packetextension_PacketExtension.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/CaseEventExtension_jp_co_skillupjapan_xmpp_asmack_packetextension_ExtensionProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/CaseRegisterPacketExtension_jp_co_skillupjapan_xmpp_asmack_packetextension_PacketExtension.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/CaseRegisterPacketExtension_jp_co_skillupjapan_xmpp_asmack_packetextension_ExtensionProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/CaseTransferPacketExtension_jp_co_skillupjapan_xmpp_asmack_packetextension_PacketExtension.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/CaseTransferPacketExtension_jp_co_skillupjapan_xmpp_asmack_packetextension_ExtensionProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/CaseUpdatePacketExtension_jp_co_skillupjapan_xmpp_asmack_packetextension_PacketExtension.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/CaseUpdatePacketExtension_jp_co_skillupjapan_xmpp_asmack_packetextension_ExtensionProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/InvitationPacketExtension_jp_co_skillupjapan_xmpp_asmack_packetextension_PacketExtension.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/InvitationPacketExtension_jp_co_skillupjapan_xmpp_asmack_packetextension_ExtensionProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/ShortLivedPacketExtension_jp_co_skillupjapan_xmpp_asmack_packetextension_PacketExtension.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/ShortLivedPacketExtension_jp_co_skillupjapan_xmpp_asmack_packetextension_ExtensionProvider.java
+Note: Found attribute {}
+Note: Found attribute {media=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@4070dcc9}
+Note: Found attribute {media=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@4070dcc9, type=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@5834dd13}
+Note: Found attribute {exclude=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@74a77a4d, media=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@4070dcc9, type=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@5834dd13}
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/WebRtcPacketExtension_jp_co_skillupjapan_xmpp_asmack_packetextension_webrtc_PacketExtension.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/WebRtcPacketExtension_jp_co_skillupjapan_xmpp_asmack_packetextension_webrtc_ExtensionProvider.java
+Note: Found attribute {}
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/I18nExtension_jp_co_skillupjapan_xmpp_asmack_packetextension_PacketExtension.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/I18nExtension_jp_co_skillupjapan_xmpp_asmack_packetextension_ExtensionProvider.java
+Note: Found attribute {}
+Note: Found attribute {type=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@16f591f2}
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/ServerEventExtension_jp_co_skillupjapan_xmpp_asmack_packetextension_PacketExtension.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/release/jp/co/skillupjapan/xmpp/annotation/generated/ServerEventExtension_jp_co_skillupjapan_xmpp_asmack_packetextension_ExtensionProvider.java
+Note: IQManager init
+Note: IQManager types
+Note: IQManager start processing
+Note: Generated IQManager class
+Note: IQManager start processing
+Note: IQManager start processing
+warning: The following options were not recognized by any processor: '[resourcePackageName]'
+Note: Some input files use or override a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+Note: Some input files use unchecked or unsafe operations.
+Note: Recompile with -Xlint:unchecked for details.
+:XMPP:extractReleaseAnnotations
+:XMPP:mergeReleaseShaders
+:XMPP:compileReleaseShaders
+:XMPP:generateReleaseAssets
+:XMPP:mergeReleaseAssets
+:XMPP:mergeReleaseProguardFiles UP-TO-DATE
+:XMPP:packageReleaseRenderscript UP-TO-DATE
+:XMPP:packageReleaseResources
+:XMPP:processReleaseJavaRes UP-TO-DATE
+:XMPP:transformResourcesWithMergeJavaResForRelease
+:XMPP:transformClassesAndResourcesWithSyncLibJarsForRelease
+:XMPP:mergeReleaseJniLibFolders
+:XMPP:transformNative_libsWithMergeJniLibsForRelease
+:XMPP:transformNative_libsWithSyncJniLibsForRelease
+:XMPP:bundleRelease
+:XmppService:preBuild UP-TO-DATE
+:XmppService:preReleaseBuild UP-TO-DATE
+:XmppService:checkReleaseManifest
+:XmppService:preDebugAndroidTestBuild UP-TO-DATE
+:XmppService:preDebugBuild UP-TO-DATE
+:XmppService:preDebugUnitTestBuild UP-TO-DATE
+:XmppService:preReleaseUnitTestBuild UP-TO-DATE
+:joinmediasdk:preBuild UP-TO-DATE
+:joinmediasdk:preReleaseBuild UP-TO-DATE
+:joinmediasdk:checkReleaseManifest
+:joinmediasdk:preDebugAndroidTestBuild UP-TO-DATE
+:joinmediasdk:preDebugBuild UP-TO-DATE
+:joinmediasdk:preDebugUnitTestBuild UP-TO-DATE
+:joinmediasdk:preReleaseUnitTestBuild UP-TO-DATE
+:joinmediasdk:prepareComAndroidSupportAnimatedVectorDrawable2520Library
+:joinmediasdk:prepareComAndroidSupportAppcompatV72520Library
+:joinmediasdk:prepareComAndroidSupportSupportCompat2520Library
+:joinmediasdk:prepareComAndroidSupportSupportCoreUi2520Library
+:joinmediasdk:prepareComAndroidSupportSupportCoreUtils2520Library
+:joinmediasdk:prepareComAndroidSupportSupportFragment2520Library
+:joinmediasdk:prepareComAndroidSupportSupportMediaCompat2520Library
+:joinmediasdk:prepareComAndroidSupportSupportV42520Library
+:joinmediasdk:prepareComAndroidSupportSupportVectorDrawable2520Library
+:joinmediasdk:prepareReleaseDependencies
+:joinmediasdk:compileReleaseAidl
+:joinmediasdk:compileReleaseNdk UP-TO-DATE
+:joinmediasdk:compileLint
+:joinmediasdk:copyReleaseLint UP-TO-DATE
+:joinmediasdk:compileReleaseRenderscript
+:joinmediasdk:generateReleaseBuildConfig
+:joinmediasdk:generateReleaseResValues
+:joinmediasdk:generateReleaseResources
+:joinmediasdk:mergeReleaseResources
+:joinmediasdk:processReleaseManifest
+:joinmediasdk:processReleaseResources
+:joinmediasdk:generateReleaseSources
+:joinmediasdk:incrementalReleaseJavaCompilationSafeguard
+:joinmediasdk:compileReleaseKotlin
+Using kotlin incremental compilation
+w: /home/ryujin/Projects/Join/android-client/joinmediasdk/src/main/java/net/allm/joinmediasdk/HmacInterceptor.kt: (132, 13): Variable 'authHeader' is never used
+w: /home/ryujin/Projects/Join/android-client/joinmediasdk/src/main/java/net/allm/joinmediasdk/MediaServerApiHelper.kt: (207, 17): Variable 'writenToDisk' is never used
+w: /home/ryujin/Projects/Join/android-client/joinmediasdk/src/main/java/net/allm/joinmediasdk/MediaServerApiHelper.kt: (266, 17): Variable 'writenToDisk' is never used
+w: /home/ryujin/Projects/Join/android-client/joinmediasdk/src/main/java/net/allm/joinmediasdk/utils/FileUtils.kt: (49, 32): Unnecessary non-null assertion (!!) on a non-null receiver of type InputStream
+w: /home/ryujin/Projects/Join/android-client/joinmediasdk/src/main/java/net/allm/joinmediasdk/utils/FileUtils.kt: (53, 33): Unnecessary non-null assertion (!!) on a non-null receiver of type OutputStream
+:joinmediasdk:compileReleaseJavaWithJavac
+:joinmediasdk:compileReleaseJavaWithJavac - is not incremental (e.g. outputs have changed, no previous execution, etc.).
+:joinmediasdk:copyReleaseKotlinClasses
+:joinmediasdk:extractReleaseAnnotations
+:joinmediasdk:mergeReleaseShaders
+:joinmediasdk:compileReleaseShaders
+:joinmediasdk:generateReleaseAssets
+:joinmediasdk:mergeReleaseAssets
+:joinmediasdk:mergeReleaseProguardFiles UP-TO-DATE
+:joinmediasdk:packageReleaseRenderscript UP-TO-DATE
+:joinmediasdk:packageReleaseResources
+:joinmediasdk:processReleaseJavaRes UP-TO-DATE
+:joinmediasdk:transformResourcesWithMergeJavaResForRelease
+:joinmediasdk:transformClassesAndResourcesWithSyncLibJarsForRelease
+:joinmediasdk:mergeReleaseJniLibFolders
+:joinmediasdk:transformNative_libsWithMergeJniLibsForRelease
+:joinmediasdk:transformNative_libsWithSyncJniLibsForRelease
+:joinmediasdk:bundleRelease
+:XmppService:prepareAndroidClientJoindatabaseUnspecifiedLibrary
+:XmppService:prepareAndroidClientJoinmediasdkUnspecifiedLibrary
+:XmppService:prepareAndroidClientXMPPUnspecifiedLibrary
+:XmppService:prepareComAndroidSupportAnimatedVectorDrawable2520Library
+:XmppService:prepareComAndroidSupportAppcompatV72520Library
+:XmppService:prepareComAndroidSupportMultidex101Library
+:XmppService:prepareComAndroidSupportSupportCompat2520Library
+:XmppService:prepareComAndroidSupportSupportCoreUi2520Library
+:XmppService:prepareComAndroidSupportSupportCoreUtils2520Library
+:XmppService:prepareComAndroidSupportSupportFragment2520Library
+:XmppService:prepareComAndroidSupportSupportMediaCompat2520Library
+:XmppService:prepareComAndroidSupportSupportV42520Library
+:XmppService:prepareComAndroidSupportSupportVectorDrawable2520Library
+:XmppService:prepareComGoogleAndroidGmsPlayServicesAnalytics700Library
+:XmppService:prepareComGoogleAndroidGmsPlayServicesBase700Library
+:XmppService:prepareComGoogleAndroidGmsPlayServicesGcm700Library
+:XmppService:prepareComGoogleAndroidGmsPlayServicesLocation700Library
+:XmppService:prepareComGoogleAndroidGmsPlayServicesMaps700Library
+:XmppService:prepareIoPristineLibjingle9694Library
+:XmppService:prepareNetZeteticAndroidDatabaseSqlcipher351Library
+Jar found at unexpected path (jni/sqlcipher-javadoc.jar) in /home/ryujin/.gradle/caches/modules-2/files-2.1/net.zetetic/android-database-sqlcipher/3.5.1/ba957523c43bb31f1a6276969489fd64d1aeb3a2/android-database-sqlcipher-3.5.1.aar and will be ignored. Jars should be placed inside 'jars' folder to be merged into dex. Jars that are in assets/ or res/raw/ will be copied as-is.
+Jar found at unexpected path (jni/sqlcipher.jar) in /home/ryujin/.gradle/caches/modules-2/files-2.1/net.zetetic/android-database-sqlcipher/3.5.1/ba957523c43bb31f1a6276969489fd64d1aeb3a2/android-database-sqlcipher-3.5.1.aar and will be ignored. Jars should be placed inside 'jars' folder to be merged into dex. Jars that are in assets/ or res/raw/ will be copied as-is.
+:XmppService:prepareReleaseDependencies
+:XmppService:compileReleaseAidl
+:XmppService:compileReleaseNdk UP-TO-DATE
+:XmppService:compileLint
+:XmppService:copyReleaseLint UP-TO-DATE
+:XMPP:checkDebugManifest
+:XMPP:prepareDebugDependencies
+:XMPP:compileDebugAidl
+:XMPP:compileDebugNdk UP-TO-DATE
+:XMPP:copyDebugLint UP-TO-DATE
+:XMPP:compileDebugRenderscript
+:XMPP:generateDebugBuildConfig
+:XMPP:generateDebugResValues
+:XMPP:generateDebugResources
+:XMPP:mergeDebugResources
+:XMPP:processDebugManifest
+:XMPP:processDebugResources
+:XMPP:generateDebugSources
+:XMPP:incrementalDebugJavaCompilationSafeguard
+:XMPP:compileDebugJavaWithJavacNote: Found attribute {}
+Note: Found attribute {key=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@5654111c}
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/I18nExtra_jp_co_skillupjapan_xmpp_asmack_packetextension_Element.java
+Note: Found attribute {}
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/Option_jp_co_skillupjapan_xmpp_asmack_packetextension_webrtc_Element.java
+Note: Found attribute {}
+Note: Found attribute {type=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@28a01830}
+Note: Found attribute {type=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@28a01830, muted=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@8a7aad8}
+Note: Found attribute {unread=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@7d1e7b98, type=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@28a01830, muted=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@8a7aad8}
+Note: Found attribute {total=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@23957014, unread=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@7d1e7b98, type=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@28a01830, muted=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@8a7aad8}
+Note: Found attribute {total=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@23957014, jid=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@bdc9dce, unread=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@7d1e7b98, type=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@28a01830, muted=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@8a7aad8}
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/ServerChat_jp_co_skillupjapan_xmpp_chats_Element.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/DicomInfoIqElementImpl_jp_co_skillupjapan_xmpp_dicom_Element.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/GetPdqSupplierIqElementImpl_jp_co_skillupjapan_xmpp_exam_GetPdqSupplier_Element.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/GetXcaQueryIqElementImpl_jp_co_skillupjapan_xmpp_exam_GetXcaQuery_Element.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/GroupIqElementImpl_jp_co_skillupjapan_xmpp_exam_GetXcaRetrieveOml_Element.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/ObxIqElementImpl_jp_co_skillupjapan_xmpp_exam_GetXcaRetrieveOml_Element.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/RxeIqElementImpl_jp_co_skillupjapan_xmpp_exam_GetXcaRetrieveOmp_Element.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/AvatarElementIQ_jp_co_skillupjapan_xmpp_groupinfo_Element.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/GroupElement_jp_co_skillupjapan_xmpp_groupinfo_Element.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/MembersListElementIQ_jp_co_skillupjapan_xmpp_groupinfo_GroupInfoResponseIQ_Element.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/InviteesListElementIQ_jp_co_skillupjapan_xmpp_groupinfo_GroupInfoResponseIQ_Element.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/SiteUrlListElementIQ_jp_co_skillupjapan_xmpp_groupinfo_GroupInfoResponseIQ_Element.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/InvitationElement_jp_co_skillupjapan_xmpp_groupinfo_Element.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/InviteeElementIQ_jp_co_skillupjapan_xmpp_groupinfo_Element.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/MemberElementIQ_jp_co_skillupjapan_xmpp_groupinfo_Element.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/SiteUrlElementIQ_jp_co_skillupjapan_xmpp_groupinfo_Element.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/ThumbElement_jp_co_skillupjapan_xmpp_groupinfo_Element.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/MferDateInfoIqElementImpl_jp_co_skillupjapan_xmpp_mfer_GetMferDateList_Element.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/MferTimeInfoIqElementImpl_jp_co_skillupjapan_xmpp_mfer_GetMferTimeList_Element.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/MonitorInfoIqElementImpl_jp_co_skillupjapan_xmpp_mfer_GetMonitorList_Element.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/TenantInfoIqElementImpl_jp_co_skillupjapan_xmpp_tenant_Element.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/ERCase_jp_co_skillupjapan_xmpp_tracker_Element.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/ERCaseEvent_jp_co_skillupjapan_xmpp_tracker_Element.java
+Note: Found attribute {}
+Note: Found attribute {id=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@17031bd}
+Note: Found attribute {from=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@3913d798, id=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@17031bd}
+Note: Found attribute {from=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@3913d798, id=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@17031bd, to=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@2f607e5f}
+Note: Found attribute {from=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@3913d798, id=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@17031bd, to=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@2f607e5f, offer-time=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@5ef8338a}
+Note: Found attribute {end-time=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@5e051c31, from=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@3913d798, id=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@17031bd, to=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@2f607e5f, offer-time=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@5ef8338a}
+Note: Found attribute {start-time=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@55b3b496, end-time=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@5e051c31, from=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@3913d798, id=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@17031bd, to=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@2f607e5f, offer-time=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@5ef8338a}
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/CallHistoryRecord_jp_co_skillupjapan_xmpp_webrtc_Element.java
+Note: Found attribute {}
+Note: Found attribute {jid=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@67d83acb}
+Note: Found attribute {jid=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@67d83acb, type=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@220b2a8b}
+Note: Found attribute {jid=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@67d83acb, name=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@5940e0a4, type=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@220b2a8b}
+Note: Found attribute {jid=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@67d83acb, name=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@5940e0a4, type=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@220b2a8b, muted=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@7f053752}
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/Contact_jp_co_skillupjapan_xmpp_contacts_Element.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/AccountInfoRequestIQ_jp_co_skillupjapan_xmpp_account_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/AccountInfoRequestIQ_jp_co_skillupjapan_xmpp_account_IqProvider.java
+Note: Found attribute {}
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/ConfirmationRequest_jp_co_skillupjapan_xmpp_account_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/ConfirmationRequest_jp_co_skillupjapan_xmpp_account_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/ConfirmationResponse_jp_co_skillupjapan_xmpp_account_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/ConfirmationResponse_jp_co_skillupjapan_xmpp_account_IqProvider.java
+Note: Found attribute {}
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/PasswordResetRequest_jp_co_skillupjapan_xmpp_account_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/PasswordResetRequest_jp_co_skillupjapan_xmpp_account_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/PasswordResetResponse_jp_co_skillupjapan_xmpp_account_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/PasswordResetResponse_jp_co_skillupjapan_xmpp_account_IqProvider.java
+Note: Found attribute {}
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/AccountInfo_jp_co_skillupjapan_xmpp_account_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/AccountInfo_jp_co_skillupjapan_xmpp_account_IqProvider.java
+Note: Found attribute {}
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/AccountInfoSetRequest_jp_co_skillupjapan_xmpp_account_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/AccountInfoSetRequest_jp_co_skillupjapan_xmpp_account_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/ServerChats_jp_co_skillupjapan_xmpp_chats_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/ServerChats_jp_co_skillupjapan_xmpp_chats_IqProvider.java
+Note: Found attribute {}
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/ServerChatsRequestIQ_jp_co_skillupjapan_xmpp_chats_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/ServerChatsRequestIQ_jp_co_skillupjapan_xmpp_chats_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/DicomSearchRequestIq_jp_co_skillupjapan_xmpp_dicom_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/DicomSearchRequestIq_jp_co_skillupjapan_xmpp_dicom_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/DicomSearchResponseIq_jp_co_skillupjapan_xmpp_dicom_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/DicomSearchResponseIq_jp_co_skillupjapan_xmpp_dicom_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/DicomThumbRequestIq_jp_co_skillupjapan_xmpp_dicomthumb_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/DicomThumbRequestIq_jp_co_skillupjapan_xmpp_dicomthumb_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/DicomThumbResponseIq_jp_co_skillupjapan_xmpp_dicomthumb_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/DicomThumbResponseIq_jp_co_skillupjapan_xmpp_dicomthumb_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/GetPdqSupplierRequestIq_jp_co_skillupjapan_xmpp_exam_GetPdqSupplier_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/GetPdqSupplierRequestIq_jp_co_skillupjapan_xmpp_exam_GetPdqSupplier_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/GetPdqSupplierResponseIq_jp_co_skillupjapan_xmpp_exam_GetPdqSupplier_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/GetPdqSupplierResponseIq_jp_co_skillupjapan_xmpp_exam_GetPdqSupplier_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/GetXcaQueryRequestIq_jp_co_skillupjapan_xmpp_exam_GetXcaQuery_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/GetXcaQueryRequestIq_jp_co_skillupjapan_xmpp_exam_GetXcaQuery_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/GetXcaQueryResponseIq_jp_co_skillupjapan_xmpp_exam_GetXcaQuery_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/GetXcaQueryResponseIq_jp_co_skillupjapan_xmpp_exam_GetXcaQuery_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/GetXcaRetrieveOmlRequestIq_jp_co_skillupjapan_xmpp_exam_GetXcaRetrieveOml_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/GetXcaRetrieveOmlRequestIq_jp_co_skillupjapan_xmpp_exam_GetXcaRetrieveOml_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/GetXcaRetrieveOmlResponseIq_jp_co_skillupjapan_xmpp_exam_GetXcaRetrieveOml_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/GetXcaRetrieveOmlResponseIq_jp_co_skillupjapan_xmpp_exam_GetXcaRetrieveOml_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/GetXcaRetrieveOmpRequestIq_jp_co_skillupjapan_xmpp_exam_GetXcaRetrieveOmp_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/GetXcaRetrieveOmpRequestIq_jp_co_skillupjapan_xmpp_exam_GetXcaRetrieveOmp_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/GetXcaRetrieveOmpResponseIq_jp_co_skillupjapan_xmpp_exam_GetXcaRetrieveOmp_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/GetXcaRetrieveOmpResponseIq_jp_co_skillupjapan_xmpp_exam_GetXcaRetrieveOmp_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/ShareXcaRetrieveRequestIq_jp_co_skillupjapan_xmpp_exam_ShareXcaRetrieve_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/ShareXcaRetrieveRequestIq_jp_co_skillupjapan_xmpp_exam_ShareXcaRetrieve_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/ShareXcaRetrieveResponseIq_jp_co_skillupjapan_xmpp_exam_ShareXcaRetrieve_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/ShareXcaRetrieveResponseIq_jp_co_skillupjapan_xmpp_exam_ShareXcaRetrieve_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/JoinGroupAvatarDownloadRequestIq_jp_co_skillupjapan_xmpp_groupavatar_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/JoinGroupAvatarDownloadRequestIq_jp_co_skillupjapan_xmpp_groupavatar_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/JoinGroupAvatarDownloadResponseIq_jp_co_skillupjapan_xmpp_groupavatar_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/JoinGroupAvatarDownloadResponseIq_jp_co_skillupjapan_xmpp_groupavatar_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/JoinGroupAvatarUpdateRequestIq_jp_co_skillupjapan_xmpp_groupavatar_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/JoinGroupAvatarUpdateRequestIq_jp_co_skillupjapan_xmpp_groupavatar_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/JoinGroupAvatarUpdateResponseIq_jp_co_skillupjapan_xmpp_groupavatar_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/JoinGroupAvatarUpdateResponseIq_jp_co_skillupjapan_xmpp_groupavatar_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/JoinGroupAvatarUploadRequestIq_jp_co_skillupjapan_xmpp_groupavatar_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/JoinGroupAvatarUploadRequestIq_jp_co_skillupjapan_xmpp_groupavatar_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/JoinGroupAvatarUploadResponseIq_jp_co_skillupjapan_xmpp_groupavatar_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/JoinGroupAvatarUploadResponseIq_jp_co_skillupjapan_xmpp_groupavatar_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/GroupInfoRequestIQ_jp_co_skillupjapan_xmpp_groupinfo_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/GroupInfoRequestIQ_jp_co_skillupjapan_xmpp_groupinfo_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/GroupInfoResponseIQ_jp_co_skillupjapan_xmpp_groupinfo_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/GroupInfoResponseIQ_jp_co_skillupjapan_xmpp_groupinfo_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/GroupsListRequestIQ_jp_co_skillupjapan_xmpp_groupinfo_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/GroupsListRequestIQ_jp_co_skillupjapan_xmpp_groupinfo_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/GroupsListResponseIQ_jp_co_skillupjapan_xmpp_groupinfo_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/GroupsListResponseIQ_jp_co_skillupjapan_xmpp_groupinfo_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/InvitationListRequestIQ_jp_co_skillupjapan_xmpp_groupinfo_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/InvitationListRequestIQ_jp_co_skillupjapan_xmpp_groupinfo_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/InvitationListResponseIQ_jp_co_skillupjapan_xmpp_groupinfo_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/InvitationListResponseIQ_jp_co_skillupjapan_xmpp_groupinfo_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/StreamingUrlRequestIQ_jp_co_skillupjapan_xmpp_groupinfo_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/StreamingUrlRequestIQ_jp_co_skillupjapan_xmpp_groupinfo_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/StreamingUrlResponseIQ_jp_co_skillupjapan_xmpp_groupinfo_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/StreamingUrlResponseIQ_jp_co_skillupjapan_xmpp_groupinfo_IqProvider.java
+Note: Found attribute {}
+Note: Found attribute {user=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@7eb8a129}
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/MediaServerCredentials_jp_co_skillupjapan_xmpp_media_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/MediaServerCredentials_jp_co_skillupjapan_xmpp_media_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/MediaServerCredentialsRequest_jp_co_skillupjapan_xmpp_media_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/MediaServerCredentialsRequest_jp_co_skillupjapan_xmpp_media_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/GetMferDateListRequestIq_jp_co_skillupjapan_xmpp_mfer_GetMferDateList_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/GetMferDateListRequestIq_jp_co_skillupjapan_xmpp_mfer_GetMferDateList_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/GetMferDateListResponseIq_jp_co_skillupjapan_xmpp_mfer_GetMferDateList_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/GetMferDateListResponseIq_jp_co_skillupjapan_xmpp_mfer_GetMferDateList_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/GetMferTimeListRequestIq_jp_co_skillupjapan_xmpp_mfer_GetMferTimeList_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/GetMferTimeListRequestIq_jp_co_skillupjapan_xmpp_mfer_GetMferTimeList_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/GetMferTimeListResponseIq_jp_co_skillupjapan_xmpp_mfer_GetMferTimeList_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/GetMferTimeListResponseIq_jp_co_skillupjapan_xmpp_mfer_GetMferTimeList_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/GetMonitorListRequestIq_jp_co_skillupjapan_xmpp_mfer_GetMonitorList_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/GetMonitorListRequestIq_jp_co_skillupjapan_xmpp_mfer_GetMonitorList_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/GetMonitorListResponseIq_jp_co_skillupjapan_xmpp_mfer_GetMonitorList_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/GetMonitorListResponseIq_jp_co_skillupjapan_xmpp_mfer_GetMonitorList_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/GetMonitorUrlRequestIq_jp_co_skillupjapan_xmpp_mfer_GetMonitorUrl_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/GetMonitorUrlRequestIq_jp_co_skillupjapan_xmpp_mfer_GetMonitorUrl_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/GetMonitorUrlResponseIq_jp_co_skillupjapan_xmpp_mfer_GetMonitorUrl_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/GetMonitorUrlResponseIq_jp_co_skillupjapan_xmpp_mfer_GetMonitorUrl_IqProvider.java
+Note: Found attribute {}
+Note: Found attribute {jid=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@7dd2e2e9}
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/NotificationRequest_jp_co_skillupjapan_xmpp_notification_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/NotificationRequest_jp_co_skillupjapan_xmpp_notification_IqProvider.java
+Note: Found attribute {}
+Note: Found attribute {jid=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@1d8a89aa}
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/NotificationResponse_jp_co_skillupjapan_xmpp_notification_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/NotificationResponse_jp_co_skillupjapan_xmpp_notification_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/SecondDeviceRequestIq_jp_co_skillupjapan_xmpp_register_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/SecondDeviceRequestIq_jp_co_skillupjapan_xmpp_register_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/SecondDeviceResponseIq_jp_co_skillupjapan_xmpp_register_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/SecondDeviceResponseIq_jp_co_skillupjapan_xmpp_register_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/CallAccessCodeRequestIq_jp_co_skillupjapan_xmpp_sms_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/CallAccessCodeRequestIq_jp_co_skillupjapan_xmpp_sms_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/CallAccessCodeResponseIq_jp_co_skillupjapan_xmpp_sms_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/CallAccessCodeResponseIq_jp_co_skillupjapan_xmpp_sms_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/JoinTenantRequestIq_jp_co_skillupjapan_xmpp_tenant_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/JoinTenantRequestIq_jp_co_skillupjapan_xmpp_tenant_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/JoinTenantResponseIq_jp_co_skillupjapan_xmpp_tenant_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/JoinTenantResponseIq_jp_co_skillupjapan_xmpp_tenant_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/MultiTenantRequestIq_jp_co_skillupjapan_xmpp_tenant_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/MultiTenantRequestIq_jp_co_skillupjapan_xmpp_tenant_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/MultiTenantResponseIq_jp_co_skillupjapan_xmpp_tenant_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/MultiTenantResponseIq_jp_co_skillupjapan_xmpp_tenant_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/ERCaseEventListRequestIQ_jp_co_skillupjapan_xmpp_tracker_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/ERCaseEventListRequestIQ_jp_co_skillupjapan_xmpp_tracker_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/ERCaseEventListResponseIQ_jp_co_skillupjapan_xmpp_tracker_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/ERCaseEventListResponseIQ_jp_co_skillupjapan_xmpp_tracker_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/ERCaseEventRegisterRequestIQ_jp_co_skillupjapan_xmpp_tracker_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/ERCaseEventRegisterRequestIQ_jp_co_skillupjapan_xmpp_tracker_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/ERCaseEventRegisterResponseIQ_jp_co_skillupjapan_xmpp_tracker_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/ERCaseEventRegisterResponseIQ_jp_co_skillupjapan_xmpp_tracker_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/ERCaseListRequestIQ_jp_co_skillupjapan_xmpp_tracker_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/ERCaseListRequestIQ_jp_co_skillupjapan_xmpp_tracker_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/ERCaseListResponseIQ_jp_co_skillupjapan_xmpp_tracker_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/ERCaseListResponseIQ_jp_co_skillupjapan_xmpp_tracker_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/ERCaseRegisterRequestIQ_jp_co_skillupjapan_xmpp_tracker_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/ERCaseRegisterRequestIQ_jp_co_skillupjapan_xmpp_tracker_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/ERCaseRegisterResponseIQ_jp_co_skillupjapan_xmpp_tracker_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/ERCaseRegisterResponseIQ_jp_co_skillupjapan_xmpp_tracker_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/ERCaseRequestIQ_jp_co_skillupjapan_xmpp_tracker_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/ERCaseRequestIQ_jp_co_skillupjapan_xmpp_tracker_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/ERCaseResponseIQ_jp_co_skillupjapan_xmpp_tracker_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/ERCaseResponseIQ_jp_co_skillupjapan_xmpp_tracker_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/ERCaseUpdateRequestIQ_jp_co_skillupjapan_xmpp_tracker_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/ERCaseUpdateRequestIQ_jp_co_skillupjapan_xmpp_tracker_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/ERCaseUpdateResponseIQ_jp_co_skillupjapan_xmpp_tracker_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/ERCaseUpdateResponseIQ_jp_co_skillupjapan_xmpp_tracker_IqProvider.java
+Note: Found attribute {}
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/EmergencyEventRegisterRequest_jp_co_skillupjapan_xmpp_tracker_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/EmergencyEventRegisterRequest_jp_co_skillupjapan_xmpp_tracker_IqProvider.java
+Note: Found attribute {}
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/EmergencyEventRegisterResponse_jp_co_skillupjapan_xmpp_tracker_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/EmergencyEventRegisterResponse_jp_co_skillupjapan_xmpp_tracker_IqProvider.java
+Note: Found attribute {}
+Note: Found attribute {start-id=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@1a3bf21d}
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/CallHistoryRequest_jp_co_skillupjapan_xmpp_webrtc_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/CallHistoryRequest_jp_co_skillupjapan_xmpp_webrtc_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/CallHistoryResponse_jp_co_skillupjapan_xmpp_webrtc_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/CallHistoryResponse_jp_co_skillupjapan_xmpp_webrtc_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/SessionId_jp_co_skillupjapan_xmpp_webrtc_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/SessionId_jp_co_skillupjapan_xmpp_webrtc_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/SessionIdRequest_jp_co_skillupjapan_xmpp_webrtc_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/SessionIdRequest_jp_co_skillupjapan_xmpp_webrtc_IqProvider.java
+Note: Found attribute {}
+Note: Found attribute {session-id=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@5e59d415}
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/WebRtcSDP_jp_co_skillupjapan_xmpp_webrtc_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/WebRtcSDP_jp_co_skillupjapan_xmpp_webrtc_IqProvider.java
+Note: Found attribute {}
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/WebRtcSDPRequest_jp_co_skillupjapan_xmpp_webrtc_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/WebRtcSDPRequest_jp_co_skillupjapan_xmpp_webrtc_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/AccountContacts_jp_co_skillupjapan_xmpp_contacts_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/AccountContacts_jp_co_skillupjapan_xmpp_contacts_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/AccountContactsRequest_jp_co_skillupjapan_xmpp_contacts_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/AccountContactsRequest_jp_co_skillupjapan_xmpp_contacts_IqProvider.java
+Note: Found attribute {}
+Note: Found attribute {action=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@2e013e60}
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/ContactAction_jp_co_skillupjapan_xmpp_contacts_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/ContactAction_jp_co_skillupjapan_xmpp_contacts_IqProvider.java
+Note: Found attribute {}
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/ContactsSearchRequest_jp_co_skillupjapan_xmpp_contacts_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/ContactsSearchRequest_jp_co_skillupjapan_xmpp_contacts_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/ContactsSearchResult_jp_co_skillupjapan_xmpp_contacts_IQ.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/ContactsSearchResult_jp_co_skillupjapan_xmpp_contacts_IqProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/CaseEventExtension_jp_co_skillupjapan_xmpp_asmack_packetextension_PacketExtension.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/CaseEventExtension_jp_co_skillupjapan_xmpp_asmack_packetextension_ExtensionProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/CaseRegisterPacketExtension_jp_co_skillupjapan_xmpp_asmack_packetextension_PacketExtension.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/CaseRegisterPacketExtension_jp_co_skillupjapan_xmpp_asmack_packetextension_ExtensionProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/CaseTransferPacketExtension_jp_co_skillupjapan_xmpp_asmack_packetextension_PacketExtension.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/CaseTransferPacketExtension_jp_co_skillupjapan_xmpp_asmack_packetextension_ExtensionProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/CaseUpdatePacketExtension_jp_co_skillupjapan_xmpp_asmack_packetextension_PacketExtension.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/CaseUpdatePacketExtension_jp_co_skillupjapan_xmpp_asmack_packetextension_ExtensionProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/InvitationPacketExtension_jp_co_skillupjapan_xmpp_asmack_packetextension_PacketExtension.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/InvitationPacketExtension_jp_co_skillupjapan_xmpp_asmack_packetextension_ExtensionProvider.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/ShortLivedPacketExtension_jp_co_skillupjapan_xmpp_asmack_packetextension_PacketExtension.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/ShortLivedPacketExtension_jp_co_skillupjapan_xmpp_asmack_packetextension_ExtensionProvider.java
+Note: Found attribute {}
+Note: Found attribute {media=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@3b465512}
+Note: Found attribute {media=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@3b465512, type=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@65883f3a}
+Note: Found attribute {exclude=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@3b73adc7, media=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@3b465512, type=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@65883f3a}
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/WebRtcPacketExtension_jp_co_skillupjapan_xmpp_asmack_packetextension_webrtc_PacketExtension.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/WebRtcPacketExtension_jp_co_skillupjapan_xmpp_asmack_packetextension_webrtc_ExtensionProvider.java
+Note: Found attribute {}
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/I18nExtension_jp_co_skillupjapan_xmpp_asmack_packetextension_PacketExtension.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/I18nExtension_jp_co_skillupjapan_xmpp_asmack_packetextension_ExtensionProvider.java
+Note: Found attribute {}
+Note: Found attribute {type=jp.co.skillupjapan.xmpp.annotations.processor.AbstractStanzaProcessor$FieldElement@6e73c546}
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/ServerEventExtension_jp_co_skillupjapan_xmpp_asmack_packetextension_PacketExtension.java
+Note: creating file: file:/home/ryujin/Projects/Join/android-client/XMPP/build/generated/source/apt/debug/jp/co/skillupjapan/xmpp/annotation/generated/ServerEventExtension_jp_co_skillupjapan_xmpp_asmack_packetextension_ExtensionProvider.java
+Note: IQManager init
+Note: IQManager types
+Note: IQManager start processing
+Note: Generated IQManager class
+Note: IQManager start processing
+Note: IQManager start processing
+warning: The following options were not recognized by any processor: '[resourcePackageName]'
+Note: Some input files use or override a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+Note: Some input files use unchecked or unsafe operations.
+Note: Recompile with -Xlint:unchecked for details.
+:XMPP:extractDebugAnnotations
+:XMPP:mergeDebugShaders
+:XMPP:compileDebugShaders
+:XMPP:generateDebugAssets
+:XMPP:mergeDebugAssets
+:XMPP:mergeDebugProguardFiles UP-TO-DATE
+:XMPP:packageDebugRenderscript UP-TO-DATE
+:XMPP:packageDebugResources
+:XMPP:processDebugJavaRes UP-TO-DATE
+:XMPP:transformResourcesWithMergeJavaResForDebug
+:XMPP:transformClassesAndResourcesWithSyncLibJarsForDebug
+:XMPP:mergeDebugJniLibFolders
+:XMPP:transformNative_libsWithMergeJniLibsForDebug
+:XMPP:transformNative_libsWithSyncJniLibsForDebug
+:XMPP:bundleDebug
+:XmppService:compileReleaseRenderscript
+:XmppService:generateReleaseBuildConfig
+:XmppService:generateReleaseResValues
+:XmppService:generateReleaseResources
+:XmppService:mergeReleaseResources
+:XmppService:processReleaseManifest
+:XmppService:processReleaseResources
+:XmppService:generateReleaseSources
+:XmppService:incrementalReleaseJavaCompilationSafeguard
+:joinmediasdk:checkDebugManifest
+:joinmediasdk:prepareDebugDependencies
+:joinmediasdk:compileDebugAidl
+:joinmediasdk:compileDebugNdk UP-TO-DATE
+:joinmediasdk:copyDebugLint UP-TO-DATE
+:joinmediasdk:compileDebugRenderscript
+:joinmediasdk:generateDebugBuildConfig
+:joinmediasdk:generateDebugResValues
+:joinmediasdk:generateDebugResources
+:joinmediasdk:mergeDebugResources
+:joinmediasdk:processDebugManifest
+:joinmediasdk:processDebugResources
+:joinmediasdk:generateDebugSources
+:joinmediasdk:incrementalDebugJavaCompilationSafeguard
+:joinmediasdk:compileDebugKotlin
+Using kotlin incremental compilation
+w: /home/ryujin/Projects/Join/android-client/joinmediasdk/src/main/java/net/allm/joinmediasdk/HmacInterceptor.kt: (132, 13): Variable 'authHeader' is never used
+w: /home/ryujin/Projects/Join/android-client/joinmediasdk/src/main/java/net/allm/joinmediasdk/MediaServerApiHelper.kt: (207, 17): Variable 'writenToDisk' is never used
+w: /home/ryujin/Projects/Join/android-client/joinmediasdk/src/main/java/net/allm/joinmediasdk/MediaServerApiHelper.kt: (266, 17): Variable 'writenToDisk' is never used
+w: /home/ryujin/Projects/Join/android-client/joinmediasdk/src/main/java/net/allm/joinmediasdk/utils/FileUtils.kt: (49, 32): Unnecessary non-null assertion (!!) on a non-null receiver of type InputStream
+w: /home/ryujin/Projects/Join/android-client/joinmediasdk/src/main/java/net/allm/joinmediasdk/utils/FileUtils.kt: (53, 33): Unnecessary non-null assertion (!!) on a non-null receiver of type OutputStream
+:joinmediasdk:compileDebugJavaWithJavac
+:joinmediasdk:compileDebugJavaWithJavac - is not incremental (e.g. outputs have changed, no previous execution, etc.).
+:joinmediasdk:copyDebugKotlinClasses
+:joinmediasdk:extractDebugAnnotations
+:joinmediasdk:mergeDebugShaders
+:joinmediasdk:compileDebugShaders
+:joinmediasdk:generateDebugAssets
+:joinmediasdk:mergeDebugAssets
+:joinmediasdk:mergeDebugProguardFiles UP-TO-DATE
+:joinmediasdk:packageDebugRenderscript UP-TO-DATE
+:joinmediasdk:packageDebugResources
+:joinmediasdk:processDebugJavaRes UP-TO-DATE
+:joinmediasdk:transformResourcesWithMergeJavaResForDebug
+:joinmediasdk:transformClassesAndResourcesWithSyncLibJarsForDebug
+:joinmediasdk:mergeDebugJniLibFolders
+:joinmediasdk:transformNative_libsWithMergeJniLibsForDebug
+:joinmediasdk:transformNative_libsWithSyncJniLibsForDebug
+:joinmediasdk:bundleDebug
+:XmppService:compileReleaseJavaWithJavacNote: Resolve log file to /home/ryujin/Projects/Join/android-client/XmppService/build/generated/source/apt/androidannotations.log
+Note: Initialize AndroidAnnotations 3.0.1 with options {androidManifestFile=/home/ryujin/Projects/Join/android-client/XmppService/build/intermediates/manifests/aapt/release/AndroidManifest.xml}
+warning: Supported source version 'RELEASE_6' from annotation processor 'org.androidannotations.AndroidAnnotationProcessor' less than -source '1.7'
+Note: Start processing for 5 annotations on 55 elements
+Note: AndroidManifest.xml file found with specified path: /home/ryujin/Projects/Join/android-client/XmppService/build/intermediates/manifests/aapt/release/AndroidManifest.xml
+Note: AndroidManifest.xml found: AndroidManifest [applicationPackage=jp.co.skillupjapan.xmppservice, componentQualifiedNames=[jp.co.skillupjapan.xmppservice.service.XmppService_, jp.co.skillupjapan.xmppservice.receivers.NotificationsBroadcastReceiver], permissionQualifiedNames=[android.permission.AUTHENTICATE_ACCOUNTS, android.permission.GET_ACCOUNTS, android.permission.MANAGE_ACCOUNTS, com.google.android.c2dm.permission.RECEIVE, android.permission.INTERNET, android.permission.ACCESS_NETWORK_STATE, android.permission.WAKE_LOCK, android.permission.SYSTEM_ALERT_WINDOW, jp.co.skillupjapan.xmppservice.permission.C2D_MESSAGE], applicationClassName=null, libraryProject=false, debugabble=false, minSdkVersion=15, maxSdkVersion=-1, targetSdkVersion=25]
+Note: Found project R class: jp.co.skillupjapan.xmppservice.R
+Note: Found Android class: android.R
+Note: Validating elements
+Note: Validating with EServiceHandler: [jp.co.skillupjapan.xmppservice.service.XmppService]
+Note: Validating with SharedPrefHandler: [jp.co.skillupjapan.xmppservice.preferences.XmppPreferences]
+Note: Validating with PrefHandler: [mPreferences]
+Note: Validating with SystemServiceHandler: [mPowerManager, mConnectionManager]
+Note: Validating with BackgroundHandler: [initIqs(), freeWaitThread(), login(), updateTenantList(), updateAvatar(jp.co.skillupjapan.xmpp.IXmppConnection,jp.co.skillupjapan.xmpp.IJid), logout(), registerGcm()]
+Note: Processing root elements
+Note: Processing root elements EServiceHandler: [jp.co.skillupjapan.xmppservice.service.XmppService]
+Note: Processing root elements SharedPrefHandler: [jp.co.skillupjapan.xmppservice.preferences.XmppPreferences]
+Note: Processing enclosed elements
+Note: Number of files generated by AndroidAnnotations: 2
+Note: Writting following API classes in project: []
+Note: Generating class: jp.co.skillupjapan.xmppservice.preferences.XmppPreferences_
+Note: Generating class: jp.co.skillupjapan.xmppservice.service.XmppService_
+Note: Time measurements: [Whole Processing = 267 ms], [Extract Manifest = 125 ms], [Generate Sources = 83 ms], [Process Annotations = 29 ms], [Find R Classes = 11 ms], [Extract Annotations = 6 ms], [Validate Annotations = 5 ms], 
+Note: Finish processing
+Note: Start processing for 0 annotations on 2 elements
+Note: Time measurements: [Whole Processing = 1 ms], 
+Note: Finish processing
+Note: Start processing for 0 annotations on 0 elements
+Note: Time measurements: [Whole Processing = 0 ms], 
+Note: Finish processing
+warning: Unclosed files for the types '[dummy1503538924903]'; these types will not undergo annotation processing
+Note: Some input files use or override a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+2 warnings
+:XmppService:extractReleaseAnnotations
+:XmppService:mergeReleaseShaders
+:XmppService:compileReleaseShaders
+:XmppService:generateReleaseAssets
+:XmppService:mergeReleaseAssets
+:XmppService:mergeReleaseProguardFiles UP-TO-DATE
+:XmppService:packageReleaseRenderscript UP-TO-DATE
+:XmppService:packageReleaseResources
+:XmppService:processReleaseJavaRes UP-TO-DATE
+:XmppService:transformResourcesWithMergeJavaResForRelease
+:XmppService:transformClassesAndResourcesWithSyncLibJarsForRelease
+:XmppService:mergeReleaseJniLibFolders
+:XmppService:transformNative_libsWithMergeJniLibsForRelease
+:XmppService:transformNative_libsWithSyncJniLibsForRelease
+:XmppService:bundleRelease
+:library:preBuild UP-TO-DATE
+:library:preReleaseBuild UP-TO-DATE
+:library:checkReleaseManifest
+:library:prepareReleaseDependencies
+:library:compileReleaseAidl
+:library:compileReleaseNdk UP-TO-DATE
+:library:compileLint
+:library:copyReleaseLint UP-TO-DATE
+:library:mergeReleaseShaders
+:library:compileReleaseShaders
+:library:generateReleaseAssets
+:library:mergeReleaseAssets
+:library:mergeReleaseProguardFiles UP-TO-DATE
+:library:packageReleaseRenderscript UP-TO-DATE
+:library:compileReleaseRenderscript
+:library:generateReleaseResValues
+:library:generateReleaseResources
+:library:packageReleaseResources
+:library:processReleaseManifest
+:library:generateReleaseBuildConfig
+:library:processReleaseResources
+:library:generateReleaseSources
+:library:incrementalReleaseJavaCompilationSafeguard
+:library:compileReleaseKotlin
+:library:compileReleaseJavaWithJavac
+:library:compileReleaseJavaWithJavac - is not incremental (e.g. outputs have changed, no previous execution, etc.).
+Note: Some input files use or override a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+:library:copyReleaseKotlinClasses
+:library:processReleaseJavaRes UP-TO-DATE
+:library:transformResourcesWithMergeJavaResForRelease
+:library:transformClassesAndResourcesWithSyncLibJarsForRelease
+:library:mergeReleaseJniLibFolders
+:library:transformNative_libsWithMergeJniLibsForRelease
+:library:transformNative_libsWithSyncJniLibsForRelease
+:library:bundleRelease
+:Join:prepareAndroidArchCoreCore100Alpha3Library
+:Join:prepareAndroidArchLifecycleExtensions100Alpha3Library
+:Join:prepareAndroidArchLifecycleRuntime100Alpha3Library
+:Join:prepareAndroidClientEffectsReleaseUnspecifiedLibrary
+:Join:prepareAndroidClientJoindatabaseUnspecifiedLibrary
+:Join:prepareAndroidClientJoinmediasdkUnspecifiedLibrary
+:Join:prepareAndroidClientLibraryUnspecifiedLibrary
+:Join:prepareAndroidClientM4mAndroidUnspecifiedLibrary
+:Join:prepareAndroidClientXMPPUnspecifiedLibrary
+:Join:prepareAndroidClientXmppServiceUnspecifiedLibrary
+:Join:prepareComAndroidDatabindingAdapters121Library
+:Join:prepareComAndroidDatabindingLibrary121Library
+:Join:prepareComAndroidSupportAnimatedVectorDrawable2520Library
+:Join:prepareComAndroidSupportAppcompatV72520Library
+:Join:prepareComAndroidSupportDesign2520Library
+:Join:prepareComAndroidSupportGridlayoutV72520Library
+:Join:preDebugAndroidTestBuild UP-TO-DATE
+:Join:prepareComAndroidSupportMultidex101Library
+:Join:prepareComAndroidSupportRecyclerviewV72520Library
+:Join:prepareComAndroidSupportSupportCompat2531Library
+:Join:prepareComAndroidSupportSupportCoreUi2531Library
+:Join:prepareComAndroidSupportSupportCoreUtils2531Library
+:Join:prepareComAndroidSupportSupportFragment2531Library
+:Join:prepareComAndroidSupportSupportMediaCompat2531Library
+:Join:prepareComAndroidSupportSupportV42520Library
+:Join:prepareComAndroidSupportSupportVectorDrawable2520Library
+:Join:prepareComAndroidSupportTransition2520Library
+:Join:prepareComCrashlyticsSdkAndroidAnswers1310Library
+:Join:prepareComCrashlyticsSdkAndroidBeta122Library
+:Join:prepareComCrashlyticsSdkAndroidCrashlytics265Library
+:Join:prepareComCrashlyticsSdkAndroidCrashlyticsCore2314Library
+:Join:prepareComGetbaseFloatingactionbutton1100Library
+:Join:prepareComGithubAfollestadMaterialDialogsCore0857Library
+:Join:prepareComGithubBumptechGlideOkhttp3Integration140Library
+:Join:prepareComGithubChrisbanesPhotoView131Library
+:Join:prepareComGithubRahatarmanahmedCircularprogressview232Library
+:Join:prepareComGoogleAndroidGmsPlayServicesAnalytics700Library
+:Join:prepareComGoogleAndroidGmsPlayServicesBase700Library
+:Join:prepareComGoogleAndroidGmsPlayServicesGcm700Library
+:Join:prepareComGoogleAndroidGmsPlayServicesLocation700Library
+:Join:prepareComGoogleAndroidGmsPlayServicesMaps700Library
+:Join:prepareComMelnykovFloatingactionbutton120Library
+:Join:prepareComSoundcloudAndroidAndroidCrop100Library
+:Join:prepareIoFabricSdkAndroidFabric1314Library
+:Join:prepareIoPristineLibjingle9694Library
+:Join:prepareIoReactivexRxjava2Rxandroid200Library
+:Join:prepareMeZhanghaiAndroidMaterialprogressbarLibrary115Library
+:Join:prepareNetZeteticAndroidDatabaseSqlcipher351Library
+Jar found at unexpected path (jni/sqlcipher-javadoc.jar) in /home/ryujin/.gradle/caches/modules-2/files-2.1/net.zetetic/android-database-sqlcipher/3.5.1/ba957523c43bb31f1a6276969489fd64d1aeb3a2/android-database-sqlcipher-3.5.1.aar and will be ignored. Jars should be placed inside 'jars' folder to be merged into dex. Jars that are in assets/ or res/raw/ will be copied as-is.
+Jar found at unexpected path (jni/sqlcipher.jar) in /home/ryujin/.gradle/caches/modules-2/files-2.1/net.zetetic/android-database-sqlcipher/3.5.1/ba957523c43bb31f1a6276969489fd64d1aeb3a2/android-database-sqlcipher-3.5.1.aar and will be ignored. Jars should be placed inside 'jars' folder to be merged into dex. Jars that are in assets/ or res/raw/ will be copied as-is.
+:Join:prepareOrgJdeferredJdeferredAndroidAar123Library
+:Join:prepareOrgXwalkXwalk_core_library174644810Library
+:Join:prepareSeEmilsjolanderStickylistheaders270Library
+:Join:prepareDebugDependencies
+:Join:compileDebugRenderscript
+:Join:mergeDebugShaders
+:Join:compileDebugShaders
+:Join:generateDebugAssets
+:Join:mergeDebugAssets
+:Join:processDebugManifest[android.arch.lifecycle:extensions:1.0.0-alpha3] /home/ryujin/Projects/Join/android-client/Join/build/intermediates/exploded-aar/android.arch.lifecycle/extensions/1.0.0-alpha3/AndroidManifest.xml:29:13-68 Error:
+	Attribute provider#android.arch.lifecycle.LifecycleRuntimeTrojanProvider@authorities at [android.arch.lifecycle:extensions:1.0.0-alpha3] AndroidManifest.xml:29:13-68 requires a placeholder substitution but no value for <applicationId> is provided.
+See http://g.co/androidstudio/manifest-merger for more information about the manifest merger.
+/home/ryujin/Projects/Join/android-client/Join/src/main/AndroidManifest.xml:41:5-79 Warning: Element uses-permission#android.permission.MODIFY_AUDIO_SETTINGS at AndroidManifest.xml:41:5-79 duplicated with element declared at AndroidManifest.xml:18:5-79
+/home/ryujin/Projects/Join/android-client/Join/src/main/AndroidManifest.xml:42:5-70 Warning: Element uses-permission#android.permission.RECORD_AUDIO at AndroidManifest.xml:42:5-70 duplicated with element declared at AndroidManifest.xml:21:5-70
+/home/ryujin/Projects/Join/android-client/Join/src/main/AndroidManifest.xml:46:5-395:19 Warning: application@tools:theme was tagged at AndroidManifest.xml:46 to replace other declarations but no other declaration present
+/home/ryujin/Projects/Join/android-client/Join/src/main/AndroidManifest.xml:46:5-395:19 Warning: application@tools:fullBackupContent was tagged at AndroidManifest.xml:46 to replace other declarations but no other declaration present
+/home/ryujin/Projects/Join/android-client/Join/src/main/AndroidManifest.xml:41:5-79 Error: Element uses-permission#android.permission.MODIFY_AUDIO_SETTINGS at AndroidManifest.xml:41:5-79 duplicated with element declared at AndroidManifest.xml:18:5-79
+:Join:fabricGenerateResourcesDebug
+:Join:generateDebugResValues
+:Join:generateDebugResources
+:Join:mergeDebugResources
+:Join:dataBindingProcessLayoutsDebug
+:Join:compileDebugAidl
+:Join:generateDebugBuildConfig
+:Join:processDebugResources
+:Join:generateDebugSources
+:Join:dataBindingExportBuildInfoDebug
+:Join:incrementalDebugJavaCompilationSafeguard
+:Join:kaptDebugKotlin
+w: Some JAR files in the classpath have the Kotlin Runtime library bundled into them. This may cause difficult to debug problems if there's a different version of the Kotlin Runtime library in the classpath. Consider removing these libraries from the classpath or use '-Xskip-runtime-version-check' to suppress this warning
+e: /home/ryujin/Projects/Join/android-client/Join/src/main/java/jp/co/skillupjapan/join/application/JoinApplication.java:4: error: class, interface, or enum expected
+e: 
+e: mport android.support.multidex.MultiDex;
+e: ^
+w: /home/ryujin/.gradle/caches/modules-2/files-2.1/com.android.databinding/compiler/2.2.3/ad2f73c8ad3e820ea8a58ab61bdd20feb1ce1a8e/compiler-2.2.3.jar: Library has Kotlin runtime bundled into it
+e: /home/ryujin/Projects/Join/android-client/Join/src/main/java/jp/co/skillupjapan/join/application/JoinApplication.java:23: error: <identifier> expected
+e: 
+e:     privte static Context sContext;
+e:           ^
+e: /home/ryujin/Projects/Join/android-client/Join/src/main/java/jp/co/skillupjapan/join/activities/BindingBaseActivity.java:39: error: cannot find symbol
+e: 
+e:     protected Settings_ mSettings;
+e:               ^
+e:   symbol:   class Settings_
+e:   location: class BindingBaseActivity
+e: /home/ryujin/Projects/Join/android-client/Join/src/main/java/jp/co/skillupjapan/join/fragments/tracker/CaseDetailFragment.java:140: error: cannot find symbol
+e: 
+e:     protected Settings_ mSettings;
+e:               ^
+e:   symbol:   class Settings_
+e:   location: class CaseDetailFragment
+e: /home/ryujin/Projects/Join/android-client/Join/src/main/java/jp/co/skillupjapan/join/activities/base/JoinBasePickImageActivity.java:70: error: cannot find symbol
+e: 
+e:     protected Settings_ mSettings;
+e:               ^
+e:   symbol:   class Settings_
+e:   location: class JoinBasePickImageActivity
+e: /home/ryujin/Projects/Join/android-client/Join/src/main/java/jp/co/skillupjapan/join/activities/LauncherActivity.java:104: error: cannot find symbol
+e: 
+e:     @Pref protected PasscodePreferences_ mPasscodePref;
+e:                     ^
+e:   symbol:   class PasscodePreferences_
+e:   location: class LauncherActivity
+e: /home/ryujin/Projects/Join/android-client/Join/src/main/java/jp/co/skillupjapan/join/activities/image/ChooseImageSizeFragment.java:44: error: cannot find symbol
+e: 
+e:     protected Settings_ mSettings;
+e:               ^
+e:   symbol:   class Settings_
+e:   location: class ChooseImageSizeFragment
+e: /home/ryujin/Projects/Join/android-client/Join/src/main/java/jp/co/skillupjapan/join/activities/settings/SettingsNotificationFragment.java:26: error: cannot find symbol
+e: 
+e:     protected Settings_ mSettings;
+e:               ^
+e:   symbol:   class Settings_
+e:   location: class SettingsNotificationFragment
+e: /home/ryujin/Projects/Join/android-client/Join/src/main/java/jp/co/skillupjapan/join/activities/settings/SettingsTrackingFragment.java:30: error: cannot find symbol
+e: 
+e:     protected Settings_ mSettings;
+e:               ^
+e:   symbol:   class Settings_
+e:   location: class SettingsTrackingFragment
+e: /home/ryujin/Projects/Join/android-client/Join/src/main/java/jp/co/skillupjapan/join/activities/ProfileActivity.java:119: error: cannot find symbol
+e: 
+e:     protected Settings_ mSettings;
+e:               ^
+e:   symbol:   class Settings_
+e:   location: class ProfileActivity
+e: /home/ryujin/Projects/Join/android-client/Join/src/main/java/jp/co/skillupjapan/join/activities/VideoViewerActivity.java:88: error: cannot find symbol
+e: 
+e:     protected Settings_ mSettings;
+e:               ^
+e:   symbol:   class Settings_
+e:   location: class VideoViewerActivity
+e: /home/ryujin/Projects/Join/android-client/Join/src/main/java/jp/co/skillupjapan/join/application/JoinApplication.java:23: error: cannot find symbol
+e: 
+e:     privte static Context sContext;
+e:     ^
+e:   symbol:   class privte
+e:   location: class JoinApplication
+e: /home/ryujin/Projects/Join/android-client/Join/src/main/java/jp/co/skillupjapan/join/activities/login/StartActivity.kt: (1, 1): Some error(s) occurred while processing annotations. Please see the error messages above.
+e: /home/ryujin/Projects/Join/android-client/Join/src/main/java/jp/co/skillupjapan/join/activities/login/StartActivity.kt: (106, 59): Unresolved reference: JoinMainActivity_
+e: /home/ryujin/Projects/Join/android-client/Join/src/main/java/jp/co/skillupjapan/join/activities/login/StartActivity.kt: (159, 58): Unresolved reference: TermActivity_
+e: /home/ryujin/Projects/Join/android-client/Join/src/main/java/jp/co/skillupjapan/join/adapters/SearchUsersBinderAdapter.kt: (9, 32): Unresolved reference: databinding
+e: /home/ryujin/Projects/Join/android-client/Join/src/main/java/jp/co/skillupjapan/join/adapters/SearchUsersBinderAdapter.kt: (17, 56): Unresolved reference: ViewItemAddContactBinding
+e: /home/ryujin/Projects/Join/android-client/Join/src/main/java/jp/co/skillupjapan/join/adapters/SearchUsersBinderAdapter.kt: (32, 13): Unresolved reference: ViewItemAddContactBinding
+e: /home/ryujin/Projects/Join/android-client/Join/src/main/java/jp/co/skillupjapan/join/adapters/UserBinderAdapter.kt: (14, 32): Unresolved reference: databinding
+e: /home/ryujin/Projects/Join/android-client/Join/src/main/java/jp/co/skillupjapan/join/adapters/UserBinderAdapter.kt: (23, 49): Unresolved reference: ViewItemContactBinding
+e: /home/ryujin/Projects/Join/android-client/Join/src/main/java/jp/co/skillupjapan/join/adapters/UserBinderAdapter.kt: (29, 77): Unresolved reference: ViewItemContactBinding
+e: /home/ryujin/Projects/Join/android-client/Join/src/main/java/jp/co/skillupjapan/join/fragments/start/AccessCodeFragment.kt: (10, 32): Unresolved reference: databinding
+e: /home/ryujin/Projects/Join/android-client/Join/src/main/java/jp/co/skillupjapan/join/fragments/start/AccessCodeFragment.kt: (27, 26): Unresolved reference: FragmentAccessCodeBinding
+e: /home/ryujin/Projects/Join/android-client/Join/src/main/java/jp/co/skillupjapan/join/fragments/start/LoginFragment.kt: (12, 32): Unresolved reference: databinding
+e: /home/ryujin/Projects/Join/android-client/Join/src/main/java/jp/co/skillupjapan/join/fragments/start/LoginFragment.kt: (26, 26): Unresolved reference: FragmentLoginBinding
+e: /home/ryujin/Projects/Join/android-client/Join/src/main/java/jp/co/skillupjapan/join/fragments/start/PasscodeFragment.kt: (12, 32): Unresolved reference: databinding
+e: /home/ryujin/Projects/Join/android-client/Join/src/main/java/jp/co/skillupjapan/join/fragments/start/PasscodeFragment.kt: (32, 26): Unresolved reference: FragmentPasscodeBinding
+e: /home/ryujin/Projects/Join/android-client/Join/src/main/java/jp/co/skillupjapan/join/fragments/start/PasswordResetFragment.kt: (13, 32): Unresolved reference: databinding
+e: /home/ryujin/Projects/Join/android-client/Join/src/main/java/jp/co/skillupjapan/join/fragments/start/PasswordResetFragment.kt: (32, 26): Unresolved reference: FragmentPasswordResetBinding
+e: /home/ryujin/Projects/Join/android-client/Join/src/main/java/jp/co/skillupjapan/join/fragments/start/PhoneFragment.kt: (38, 32): Unresolved reference: databinding
+e: /home/ryujin/Projects/Join/android-client/Join/src/main/java/jp/co/skillupjapan/join/fragments/start/PhoneFragment.kt: (64, 26): Unresolved reference: FragmentPhoneBinding
+e: /home/ryujin/Projects/Join/android-client/Join/src/main/java/jp/co/skillupjapan/join/fragments/start/TenantFragment.kt: (11, 32): Unresolved reference: databinding
+e: /home/ryujin/Projects/Join/android-client/Join/src/main/java/jp/co/skillupjapan/join/fragments/start/TenantFragment.kt: (28, 26): Unresolved reference: FragmentTenantBinding
+/home/ryujin/Projects/Join/android-client/Join/src/main/java/jp/co/skillupjapan/join/activities/base/JoinBasePickImageActivity.java:70: error: cannot find symbol
+
+    protected Settings_ mSettings;
+              ^
+  symbol:   class Settings_
+  location: class JoinBasePickImageActivity
+:Join:kaptDebugKotlin FAILED
+FAILURE: Build failed with an exception.
+* What went wrong:
+  Execution failed for task ':Join:kaptDebugKotlin'.
+* Try:
+  Run with --stacktrace option to get the stack trace. Run with --info or --debug option to get more log output.
+BUILD FAILED
+Total time: 48.034 secs

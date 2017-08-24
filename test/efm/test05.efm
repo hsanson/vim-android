@@ -1,0 +1,157 @@
+:preBuild UP-TO-DATE
+:preDebugBuild UP-TO-DATE
+:checkDebugManifest
+:preDebugAndroidTestBuild UP-TO-DATE
+:preDebugUnitTestBuild UP-TO-DATE
+:preReleaseBuild UP-TO-DATE
+:preReleaseUnitTestBuild UP-TO-DATE
+:prepareComCouchbaseLiteCouchbaseLiteAndroid140Library UP-TO-DATE
+:prepareComCouchbaseLiteCouchbaseLiteAndroidSqliteCustom140Library UP-TO-DATE
+:prepareDebugDependencies
+:compileDebugAidl UP-TO-DATE
+:compileDebugRenderscript UP-TO-DATE
+:generateDebugBuildConfig UP-TO-DATE
+:generateDebugAssets UP-TO-DATE
+:mergeDebugAssets UP-TO-DATE
+:generateDebugResValues UP-TO-DATE
+:generateDebugResources UP-TO-DATE
+:mergeDebugResources UP-TO-DATE
+:processDebugManifest UP-TO-DATE
+:processDebugResources UP-TO-DATE
+:generateDebugSources UP-TO-DATE
+:processDebugJavaRes UP-TO-DATE
+:compileDebugJavaWithJavac UP-TO-DATE
+:compileLint
+:checkReleaseManifest
+:prepareReleaseDependencies
+:compileReleaseAidl
+:compileReleaseRenderscript
+:generateReleaseBuildConfig
+:generateReleaseAssets UP-TO-DATE
+:mergeReleaseAssets
+:generateReleaseResValues UP-TO-DATE
+:generateReleaseResources
+:mergeReleaseResources
+:processReleaseManifest
+:processReleaseResources
+:generateReleaseSources
+:processReleaseJavaRes UP-TO-DATE
+:compileReleaseJavaWithJavac
+:lint
+Ran lint on variant debug: 18 issues found
+Ran lint on variant release: 18 issues found
+Wrote HTML report to file:/home/ryujin/Projects/Manabook/manabook-sdk/build/outputs/lint-results.html
+Wrote XML report to /home/ryujin/Projects/Manabook/manabook-sdk/build/outputs/lint-results.xml
+:lint FAILED
+FAILURE: Build failed with an exception.
+* What went wrong:
+  Execution failed for task ':lint'.
+  Fix the issues identified by lint, or add the following to your build script to proceed with errors:
+  ...
+  android {
+      lintOptions {
+          abortOnError false
+      }
+  }
+  ...
+* Try:
+  Run with --stacktrace option to get the stack trace. Run with --info or --debug option to get more log output.
+BUILD FAILED
+Total time: 8.842 secs
+lint: Warning /home/ryujin/Projects/Manabook/manabook-sdk/build.gradle:46:5 Not targeting the latest versions of Android; compatibility modes apply. Consider testing and updating this version. Consult the android.os.Build.VERSION_CODES javadoc for details.
+      When your application runs on a version of Android that is more recent
+       than your `targetSdkVersion` specifies that it has been tested with, 
+      various compatibility modes kick in. This ensures that your applicatio
+      n continues to work, but it may look out of place. For example, if the
+       `targetSdkVersion` is less than 14, your app may get an option button
+       in the UI.  To fix this issue, set the `targetSdkVersion` to the high
+      est available value. Then test your app to make sure everything works 
+      correctly. You may want to consult the compatibility notes to see what
+       changes apply to each version you are adding support for: http://deve
+      loper.android.com/reference/android/os/Build.VERSION_CODES.html
+lint: Warning /home/ryujin/Projects/Manabook/manabook-sdk/src/androidTest/java/jp/co/skillupjapan/manabook/api/test/BookModelTest.java:27:19 To get local formatting use `getDateInstance()`, `getDateTimeInstance()`, or `getTimeInstance()`, or use `new SimpleDateFormat(String template, Locale locale)` with for example `Locale.US` for ASCII dates.
+      Almost all callers should use `getDateInstance()`, `getDateTimeInstanc
+      e()`, or `getTimeInstance()` to get a ready-made instance of SimpleDat
+      eFormat suitable for the user's locale. The main reason you'd create a
+      n instance this class directly is because you need to format/parse a s
+      pecific machine-readable format, in which case you almost certainly wa
+      nt to explicitly ask for US to ensure that you get ASCII digits (rathe
+      r than, say, Arabic digits).  Therefore, you should either use the for
+      m of the SimpleDateFormat constructor where you pass in an explicit lo
+      cale, such as Locale.US, or use one of the get instance methods, or su
+      ppress this error if really know what you are doing.
+lint: Warning /home/ryujin/Projects/Manabook/manabook-sdk/src/main/java/jp/co/skillupjapan/manabook/api/models/ManabookDate.java:16:14 To get local formatting use `getDateInstance()`, `getDateTimeInstance()`, or `getTimeInstance()`, or use `new SimpleDateFormat(String template, Locale locale)` with for example `Locale.US` for ASCII dates.
+      Almost all callers should use `getDateInstance()`, `getDateTimeInstanc
+      e()`, or `getTimeInstance()` to get a ready-made instance of SimpleDat
+      eFormat suitable for the user's locale. The main reason you'd create a
+      n instance this class directly is because you need to format/parse a s
+      pecific machine-readable format, in which case you almost certainly wa
+      nt to explicitly ask for US to ensure that you get ASCII digits (rathe
+      r than, say, Arabic digits).  Therefore, you should either use the for
+      m of the SimpleDateFormat constructor where you pass in an explicit lo
+      cale, such as Locale.US, or use one of the get instance methods, or su
+      ppress this error if really know what you are doing.
+lint: Warning /home/ryujin/Projects/Manabook/manabook-sdk/src/androidTest/java/jp/co/skillupjapan/manabook/api/test/PaymentApiTest.java:67:25 To get local formatting use `getDateInstance()`, `getDateTimeInstance()`, or `getTimeInstance()`, or use `new SimpleDateFormat(String template, Locale locale)` with for example `Locale.US` for ASCII dates.
+      Almost all callers should use `getDateInstance()`, `getDateTimeInstanc
+      e()`, or `getTimeInstance()` to get a ready-made instance of SimpleDat
+      eFormat suitable for the user's locale. The main reason you'd create a
+      n instance this class directly is because you need to format/parse a s
+      pecific machine-readable format, in which case you almost certainly wa
+      nt to explicitly ask for US to ensure that you get ASCII digits (rathe
+      r than, say, Arabic digits).  Therefore, you should either use the for
+      m of the SimpleDateFormat constructor where you pass in an explicit lo
+      cale, such as Locale.US, or use one of the get instance methods, or su
+      ppress this error if really know what you are doing.
+lint: Warning /home/ryujin/Projects/Manabook/manabook-sdk/src/androidTest/java/jp/co/skillupjapan/manabook/api/test/PaymentApiTest.java:78:25 To get local formatting use `getDateInstance()`, `getDateTimeInstance()`, or `getTimeInstance()`, or use `new SimpleDateFormat(String template, Locale locale)` with for example `Locale.US` for ASCII dates.
+      Almost all callers should use `getDateInstance()`, `getDateTimeInstanc
+      e()`, or `getTimeInstance()` to get a ready-made instance of SimpleDat
+      eFormat suitable for the user's locale. The main reason you'd create a
+      n instance this class directly is because you need to format/parse a s
+      pecific machine-readable format, in which case you almost certainly wa
+      nt to explicitly ask for US to ensure that you get ASCII digits (rathe
+      r than, say, Arabic digits).  Therefore, you should either use the for
+      m of the SimpleDateFormat constructor where you pass in an explicit lo
+      cale, such as Locale.US, or use one of the get instance methods, or su
+      ppress this error if really know what you are doing.
+lint: Warning /home/ryujin/Projects/Manabook/manabook-sdk/build.gradle:110:3 A newer version of com.android.support:support-annotations than 25.3.1 is available: 26.0.0-alpha1
+      This detector looks for usages of libraries where the version you are 
+      using is not the current stable release. Using older versions is fine,
+       and there are cases where you deliberately want to stick with an olde
+      r version. However, you may simply not be aware that a more recent ver
+      sion is available, and that is what this lint check helps find.
+lint: Error /home/ryujin/Projects/Manabook/manabook-sdk/src/androidTest/java/jp/co/skillupjapan/manabook/api/test/ResourceModelTest.java:55:25 Must be one of: 0, 3, 2, 1
+      Ensures that when parameter in a method only allows a specific set of 
+      constants, calls obey those rules.
+lint: Error /home/ryujin/Projects/Manabook/manabook-sdk/src/androidTest/java/jp/co/skillupjapan/manabook/api/test/ResourceModelTest.java:58:25 Must be one of: 0, 3, 2, 1
+      Ensures that when parameter in a method only allows a specific set of 
+      constants, calls obey those rules.
+lint: Error /home/ryujin/Projects/Manabook/manabook-sdk/src/androidTest/java/jp/co/skillupjapan/manabook/api/test/ResourceModelTest.java:61:25 Must be one of: 0, 3, 2, 1
+      Ensures that when parameter in a method only allows a specific set of 
+      constants, calls obey those rules.
+lint: Error /home/ryujin/Projects/Manabook/manabook-sdk/src/androidTest/java/jp/co/skillupjapan/manabook/api/test/ResourceModelTest.java:64:25 Must be one of: 0, 3, 2, 1
+      Ensures that when parameter in a method only allows a specific set of 
+      constants, calls obey those rules.
+lint: Error /home/ryujin/Projects/Manabook/manabook-sdk/src/androidTest/java/jp/co/skillupjapan/manabook/api/test/ResourceModelTest.java:95:25 Must be one of: 0, 3, 2, 1
+      Ensures that when parameter in a method only allows a specific set of 
+      constants, calls obey those rules.
+lint: Error /home/ryujin/Projects/Manabook/manabook-sdk/src/androidTest/java/jp/co/skillupjapan/manabook/api/test/ResourceModelTest.java:130:25 Must be one of: 0, 3, 2, 1
+      Ensures that when parameter in a method only allows a specific set of 
+      constants, calls obey those rules.
+lint: Error /home/ryujin/Projects/Manabook/manabook-sdk/src/androidTest/java/jp/co/skillupjapan/manabook/api/test/ResourceModelTest.java:165:25 Must be one of: 0, 3, 2, 1
+      Ensures that when parameter in a method only allows a specific set of 
+      constants, calls obey those rules.
+lint: Error /home/ryujin/Projects/Manabook/manabook-sdk/src/androidTest/java/jp/co/skillupjapan/manabook/api/test/ResourceModelTest.java:196:25 Must be one of: 0, 3, 2, 1
+      Ensures that when parameter in a method only allows a specific set of 
+      constants, calls obey those rules.
+lint: Error /home/ryujin/Projects/Manabook/manabook-sdk/src/androidTest/java/jp/co/skillupjapan/manabook/api/test/ResourceModelTest.java:199:25 Must be one of: 0, 3, 2, 1
+      Ensures that when parameter in a method only allows a specific set of 
+      constants, calls obey those rules.
+lint: Error /home/ryujin/Projects/Manabook/manabook-sdk/src/androidTest/java/jp/co/skillupjapan/manabook/api/test/ResourceModelTest.java:202:25 Must be one of: 0, 3, 2, 1
+      Ensures that when parameter in a method only allows a specific set of 
+      constants, calls obey those rules.
+lint: Error /home/ryujin/Projects/Manabook/manabook-sdk/src/androidTest/java/jp/co/skillupjapan/manabook/api/test/ResourceModelTest.java:205:25 Must be one of: 0, 3, 2, 1
+      Ensures that when parameter in a method only allows a specific set of 
+      constants, calls obey those rules.
+lint: Error /home/ryujin/Projects/Manabook/manabook-sdk/src/androidTest/java/jp/co/skillupjapan/manabook/api/test/SNSApiTest.java:19:18 Must be one of: 
+      Ensures that when parameter in a method only allows a specific set of 
+      constants, calls obey those rules.

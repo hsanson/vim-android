@@ -1,0 +1,416 @@
+The JavaCompile.setDependencyCacheDir() method has been deprecated and is scheduled to be removed in Gradle 4.0.
+The TaskInputs.source(Object) method has been deprecated and is scheduled to be removed in Gradle 4.0. Please use TaskInputs.file(Object).skipWhenEmpty() instead.
+Incremental java compilation is an incubating feature.
+'kapt.generateStubs' is not used by the 'kotlin-kapt' plugin
+'kapt.generateStubs' is not used by the 'kotlin-kapt' plugin
+'kapt.generateStubs' is not used by the 'kotlin-kapt' plugin
+'kapt.generateStubs' is not used by the 'kotlin-kapt' plugin
+:Join:preBuild UP-TO-DATE
+:Join:preAlphaBuild UP-TO-DATE
+:Join:checkAlphaManifest
+:Join:extractProguardFiles
+:Join:preBetaBuild
+:Join:preDebugBuild UP-TO-DATE
+:Join:preReleaseBuild
+:XMPP:preBuild UP-TO-DATE
+:XMPP:preReleaseBuild UP-TO-DATE
+:XMPP:checkReleaseManifest
+:XMPP:preDebugAndroidTestBuild UP-TO-DATE
+:XMPP:preDebugBuild UP-TO-DATE
+:XMPP:preDebugUnitTestBuild UP-TO-DATE
+:XMPP:preReleaseUnitTestBuild UP-TO-DATE
+:XmppAnnotations:compileKotlin
+:XmppAnnotations:compileJava UP-TO-DATE
+:XmppAnnotations:copyMainKotlinClasses UP-TO-DATE
+:XmppAnnotations:processResources UP-TO-DATE
+:XmppAnnotations:classes UP-TO-DATE
+:XmppAnnotations:jar UP-TO-DATE
+:XmppAnnotationProcessor:compileKotlin
+:XmppAnnotationProcessor:compileJava UP-TO-DATE
+:XmppAnnotationProcessor:copyMainKotlinClasses UP-TO-DATE
+:XmppAnnotationProcessor:processResources UP-TO-DATE
+:XmppAnnotationProcessor:classes UP-TO-DATE
+:XmppAnnotationProcessor:jar UP-TO-DATE
+:joindatabase:preBuild UP-TO-DATE
+:joindatabase:preReleaseBuild UP-TO-DATE
+:joindatabase:checkReleaseManifest
+:joindatabase:preDebugAndroidTestBuild UP-TO-DATE
+:joindatabase:preDebugBuild UP-TO-DATE
+:joindatabase:preDebugUnitTestBuild UP-TO-DATE
+:joindatabase:preReleaseUnitTestBuild UP-TO-DATE
+:joindatabase:prepareComAndroidSupportMultidex101Library UP-TO-DATE
+:joindatabase:prepareNetZeteticAndroidDatabaseSqlcipher351Library UP-TO-DATE
+:joindatabase:prepareReleaseDependencies
+:joindatabase:compileReleaseAidl UP-TO-DATE
+:joindatabase:compileReleaseNdk UP-TO-DATE
+:joindatabase:compileLint UP-TO-DATE
+:joindatabase:copyReleaseLint UP-TO-DATE
+:joindatabase:mergeReleaseShaders UP-TO-DATE
+:joindatabase:compileReleaseShaders UP-TO-DATE
+:joindatabase:generateReleaseAssets UP-TO-DATE
+:joindatabase:mergeReleaseAssets UP-TO-DATE
+:joindatabase:mergeReleaseProguardFiles UP-TO-DATE
+:joindatabase:packageReleaseRenderscript UP-TO-DATE
+:joindatabase:compileReleaseRenderscript UP-TO-DATE
+:joindatabase:generateReleaseResValues UP-TO-DATE
+:joindatabase:generateReleaseResources UP-TO-DATE
+:joindatabase:packageReleaseResources UP-TO-DATE
+:joindatabase:processReleaseManifest UP-TO-DATE
+:joindatabase:generateReleaseBuildConfig UP-TO-DATE
+:joindatabase:mergeReleaseResources UP-TO-DATE
+:joindatabase:processReleaseResources UP-TO-DATE
+:joindatabase:generateReleaseSources UP-TO-DATE
+:joindatabase:incrementalReleaseJavaCompilationSafeguard UP-TO-DATE
+:joindatabase:compileReleaseKotlin UP-TO-DATE
+:joindatabase:compileReleaseJavaWithJavac UP-TO-DATE
+:joindatabase:copyReleaseKotlinClasses UP-TO-DATE
+:joindatabase:processReleaseJavaRes UP-TO-DATE
+:joindatabase:transformResourcesWithMergeJavaResForRelease UP-TO-DATE
+:joindatabase:transformClassesAndResourcesWithSyncLibJarsForRelease UP-TO-DATE
+:joindatabase:mergeReleaseJniLibFolders UP-TO-DATE
+:joindatabase:transformNative_libsWithMergeJniLibsForRelease UP-TO-DATE
+:joindatabase:transformNative_libsWithSyncJniLibsForRelease UP-TO-DATE
+:joindatabase:bundleRelease UP-TO-DATE
+:util:compileKotlin
+:util:compileJava UP-TO-DATE
+:util:copyMainKotlinClasses UP-TO-DATE
+:util:processResources UP-TO-DATE
+:util:classes UP-TO-DATE
+:util:jar UP-TO-DATE
+:XMPP:prepareAndroidClientJoindatabaseUnspecifiedLibrary UP-TO-DATE
+:XMPP:prepareComAndroidSupportMultidex101Library UP-TO-DATE
+:XMPP:prepareNetZeteticAndroidDatabaseSqlcipher351Library UP-TO-DATE
+:XMPP:prepareReleaseDependencies
+:XMPP:compileReleaseAidl UP-TO-DATE
+:XMPP:compileReleaseNdk UP-TO-DATE
+:XMPP:compileLint UP-TO-DATE
+:XMPP:copyReleaseLint UP-TO-DATE
+:XMPP:compileReleaseRenderscript UP-TO-DATE
+:XMPP:generateReleaseBuildConfig UP-TO-DATE
+:XMPP:generateReleaseResValues UP-TO-DATE
+:XMPP:generateReleaseResources UP-TO-DATE
+:XMPP:mergeReleaseResources UP-TO-DATE
+:XMPP:processReleaseManifest UP-TO-DATE
+:XMPP:processReleaseResources UP-TO-DATE
+:XMPP:generateReleaseSources UP-TO-DATE
+:XMPP:incrementalReleaseJavaCompilationSafeguard UP-TO-DATE
+:joindatabase:checkDebugManifest
+:joindatabase:prepareDebugDependencies
+:joindatabase:compileDebugAidl UP-TO-DATE
+:joindatabase:compileDebugNdk UP-TO-DATE
+:joindatabase:copyDebugLint UP-TO-DATE
+:joindatabase:mergeDebugShaders UP-TO-DATE
+:joindatabase:compileDebugShaders UP-TO-DATE
+:joindatabase:generateDebugAssets UP-TO-DATE
+:joindatabase:mergeDebugAssets UP-TO-DATE
+:joindatabase:mergeDebugProguardFiles UP-TO-DATE
+:joindatabase:packageDebugRenderscript UP-TO-DATE
+:joindatabase:compileDebugRenderscript UP-TO-DATE
+:joindatabase:generateDebugResValues UP-TO-DATE
+:joindatabase:generateDebugResources UP-TO-DATE
+:joindatabase:packageDebugResources UP-TO-DATE
+:joindatabase:processDebugManifest UP-TO-DATE
+:joindatabase:generateDebugBuildConfig UP-TO-DATE
+:joindatabase:mergeDebugResources UP-TO-DATE
+:joindatabase:processDebugResources UP-TO-DATE
+:joindatabase:generateDebugSources UP-TO-DATE
+:joindatabase:incrementalDebugJavaCompilationSafeguard UP-TO-DATE
+:joindatabase:compileDebugKotlin UP-TO-DATE
+:joindatabase:compileDebugJavaWithJavac UP-TO-DATE
+:joindatabase:copyDebugKotlinClasses UP-TO-DATE
+:joindatabase:processDebugJavaRes UP-TO-DATE
+:joindatabase:transformResourcesWithMergeJavaResForDebug UP-TO-DATE
+:joindatabase:transformClassesAndResourcesWithSyncLibJarsForDebug UP-TO-DATE
+:joindatabase:mergeDebugJniLibFolders UP-TO-DATE
+:joindatabase:transformNative_libsWithMergeJniLibsForDebug UP-TO-DATE
+:joindatabase:transformNative_libsWithSyncJniLibsForDebug UP-TO-DATE
+:joindatabase:bundleDebug UP-TO-DATE
+:XMPP:compileReleaseJavaWithJavac UP-TO-DATE
+:XMPP:extractReleaseAnnotations UP-TO-DATE
+:XMPP:mergeReleaseShaders UP-TO-DATE
+:XMPP:compileReleaseShaders UP-TO-DATE
+:XMPP:generateReleaseAssets UP-TO-DATE
+:XMPP:mergeReleaseAssets UP-TO-DATE
+:XMPP:mergeReleaseProguardFiles UP-TO-DATE
+:XMPP:packageReleaseRenderscript UP-TO-DATE
+:XMPP:packageReleaseResources UP-TO-DATE
+:XMPP:processReleaseJavaRes UP-TO-DATE
+:XMPP:transformResourcesWithMergeJavaResForRelease UP-TO-DATE
+:XMPP:transformClassesAndResourcesWithSyncLibJarsForRelease UP-TO-DATE
+:XMPP:mergeReleaseJniLibFolders UP-TO-DATE
+:XMPP:transformNative_libsWithMergeJniLibsForRelease UP-TO-DATE
+:XMPP:transformNative_libsWithSyncJniLibsForRelease UP-TO-DATE
+:XMPP:bundleRelease UP-TO-DATE
+:XmppService:preBuild UP-TO-DATE
+:XmppService:preReleaseBuild UP-TO-DATE
+:XmppService:checkReleaseManifest
+:XmppService:preDebugAndroidTestBuild UP-TO-DATE
+:XmppService:preDebugBuild UP-TO-DATE
+:XmppService:preDebugUnitTestBuild UP-TO-DATE
+:XmppService:preReleaseUnitTestBuild UP-TO-DATE
+:joinmediasdk:preBuild UP-TO-DATE
+:joinmediasdk:preReleaseBuild UP-TO-DATE
+:joinmediasdk:checkReleaseManifest
+:joinmediasdk:preDebugAndroidTestBuild UP-TO-DATE
+:joinmediasdk:preDebugBuild UP-TO-DATE
+:joinmediasdk:preDebugUnitTestBuild UP-TO-DATE
+:joinmediasdk:preReleaseUnitTestBuild UP-TO-DATE
+:joinmediasdk:prepareComAndroidSupportAnimatedVectorDrawable2520Library UP-TO-DATE
+:joinmediasdk:prepareComAndroidSupportAppcompatV72520Library UP-TO-DATE
+:joinmediasdk:prepareComAndroidSupportSupportCompat2520Library UP-TO-DATE
+:joinmediasdk:prepareComAndroidSupportSupportCoreUi2520Library UP-TO-DATE
+:joinmediasdk:prepareComAndroidSupportSupportCoreUtils2520Library UP-TO-DATE
+:joinmediasdk:prepareComAndroidSupportSupportFragment2520Library UP-TO-DATE
+:joinmediasdk:prepareComAndroidSupportSupportMediaCompat2520Library UP-TO-DATE
+:joinmediasdk:prepareComAndroidSupportSupportV42520Library UP-TO-DATE
+:joinmediasdk:prepareComAndroidSupportSupportVectorDrawable2520Library UP-TO-DATE
+:joinmediasdk:prepareReleaseDependencies
+:joinmediasdk:compileReleaseAidl UP-TO-DATE
+:joinmediasdk:compileReleaseNdk UP-TO-DATE
+:joinmediasdk:compileLint UP-TO-DATE
+:joinmediasdk:copyReleaseLint UP-TO-DATE
+:joinmediasdk:compileReleaseRenderscript UP-TO-DATE
+:joinmediasdk:generateReleaseBuildConfig UP-TO-DATE
+:joinmediasdk:generateReleaseResValues UP-TO-DATE
+:joinmediasdk:generateReleaseResources UP-TO-DATE
+:joinmediasdk:mergeReleaseResources UP-TO-DATE
+:joinmediasdk:processReleaseManifest UP-TO-DATE
+:joinmediasdk:processReleaseResources UP-TO-DATE
+:joinmediasdk:generateReleaseSources UP-TO-DATE
+:joinmediasdk:incrementalReleaseJavaCompilationSafeguard UP-TO-DATE
+:joinmediasdk:compileReleaseKotlin UP-TO-DATE
+:joinmediasdk:compileReleaseJavaWithJavac UP-TO-DATE
+:joinmediasdk:copyReleaseKotlinClasses UP-TO-DATE
+:joinmediasdk:extractReleaseAnnotations UP-TO-DATE
+:joinmediasdk:mergeReleaseShaders UP-TO-DATE
+:joinmediasdk:compileReleaseShaders UP-TO-DATE
+:joinmediasdk:generateReleaseAssets UP-TO-DATE
+:joinmediasdk:mergeReleaseAssets UP-TO-DATE
+:joinmediasdk:mergeReleaseProguardFiles UP-TO-DATE
+:joinmediasdk:packageReleaseRenderscript UP-TO-DATE
+:joinmediasdk:packageReleaseResources UP-TO-DATE
+:joinmediasdk:processReleaseJavaRes UP-TO-DATE
+:joinmediasdk:transformResourcesWithMergeJavaResForRelease UP-TO-DATE
+:joinmediasdk:transformClassesAndResourcesWithSyncLibJarsForRelease UP-TO-DATE
+:joinmediasdk:mergeReleaseJniLibFolders UP-TO-DATE
+:joinmediasdk:transformNative_libsWithMergeJniLibsForRelease UP-TO-DATE
+:joinmediasdk:transformNative_libsWithSyncJniLibsForRelease UP-TO-DATE
+:joinmediasdk:bundleRelease UP-TO-DATE
+:XmppService:prepareAndroidClientJoindatabaseUnspecifiedLibrary UP-TO-DATE
+:XmppService:prepareAndroidClientJoinmediasdkUnspecifiedLibrary UP-TO-DATE
+:XmppService:prepareAndroidClientXMPPUnspecifiedLibrary UP-TO-DATE
+:XmppService:prepareComAndroidSupportAnimatedVectorDrawable2520Library UP-TO-DATE
+:XmppService:prepareComAndroidSupportAppcompatV72520Library UP-TO-DATE
+:XmppService:prepareComAndroidSupportMultidex101Library UP-TO-DATE
+:XmppService:prepareComAndroidSupportSupportCompat2520Library UP-TO-DATE
+:XmppService:prepareComAndroidSupportSupportCoreUi2520Library UP-TO-DATE
+:XmppService:prepareComAndroidSupportSupportCoreUtils2520Library UP-TO-DATE
+:XmppService:prepareComAndroidSupportSupportFragment2520Library UP-TO-DATE
+:XmppService:prepareComAndroidSupportSupportMediaCompat2520Library UP-TO-DATE
+:XmppService:prepareComAndroidSupportSupportV42520Library UP-TO-DATE
+:XmppService:prepareComAndroidSupportSupportVectorDrawable2520Library UP-TO-DATE
+:XmppService:prepareComGoogleAndroidGmsPlayServicesAnalytics700Library UP-TO-DATE
+:XmppService:prepareComGoogleAndroidGmsPlayServicesBase700Library UP-TO-DATE
+:XmppService:prepareComGoogleAndroidGmsPlayServicesGcm700Library UP-TO-DATE
+:XmppService:prepareComGoogleAndroidGmsPlayServicesLocation700Library UP-TO-DATE
+:XmppService:prepareComGoogleAndroidGmsPlayServicesMaps700Library UP-TO-DATE
+:XmppService:prepareIoPristineLibjingle9694Library UP-TO-DATE
+:XmppService:prepareNetZeteticAndroidDatabaseSqlcipher351Library UP-TO-DATE
+:XmppService:prepareReleaseDependencies
+:XmppService:compileReleaseAidl UP-TO-DATE
+:XmppService:compileReleaseNdk UP-TO-DATE
+:XmppService:compileLint UP-TO-DATE
+:XmppService:copyReleaseLint UP-TO-DATE
+:XMPP:checkDebugManifest
+:XMPP:prepareDebugDependencies
+:XMPP:compileDebugAidl UP-TO-DATE
+:XMPP:compileDebugNdk UP-TO-DATE
+:XMPP:copyDebugLint UP-TO-DATE
+:XMPP:compileDebugRenderscript UP-TO-DATE
+:XMPP:generateDebugBuildConfig UP-TO-DATE
+:XMPP:generateDebugResValues UP-TO-DATE
+:XMPP:generateDebugResources UP-TO-DATE
+:XMPP:mergeDebugResources UP-TO-DATE
+:XMPP:processDebugManifest UP-TO-DATE
+:XMPP:processDebugResources UP-TO-DATE
+:XMPP:generateDebugSources UP-TO-DATE
+:XMPP:incrementalDebugJavaCompilationSafeguard UP-TO-DATE
+:XMPP:compileDebugJavaWithJavac UP-TO-DATE
+:XMPP:extractDebugAnnotations UP-TO-DATE
+:XMPP:mergeDebugShaders UP-TO-DATE
+:XMPP:compileDebugShaders UP-TO-DATE
+:XMPP:generateDebugAssets UP-TO-DATE
+:XMPP:mergeDebugAssets UP-TO-DATE
+:XMPP:mergeDebugProguardFiles UP-TO-DATE
+:XMPP:packageDebugRenderscript UP-TO-DATE
+:XMPP:packageDebugResources UP-TO-DATE
+:XMPP:processDebugJavaRes UP-TO-DATE
+:XMPP:transformResourcesWithMergeJavaResForDebug UP-TO-DATE
+:XMPP:transformClassesAndResourcesWithSyncLibJarsForDebug UP-TO-DATE
+:XMPP:mergeDebugJniLibFolders UP-TO-DATE
+:XMPP:transformNative_libsWithMergeJniLibsForDebug UP-TO-DATE
+:XMPP:transformNative_libsWithSyncJniLibsForDebug UP-TO-DATE
+:XMPP:bundleDebug UP-TO-DATE
+:XmppService:compileReleaseRenderscript UP-TO-DATE
+:XmppService:generateReleaseBuildConfig UP-TO-DATE
+:XmppService:generateReleaseResValues UP-TO-DATE
+:XmppService:generateReleaseResources UP-TO-DATE
+:XmppService:mergeReleaseResources UP-TO-DATE
+:XmppService:processReleaseManifest UP-TO-DATE
+:XmppService:processReleaseResources UP-TO-DATE
+:XmppService:generateReleaseSources UP-TO-DATE
+:XmppService:incrementalReleaseJavaCompilationSafeguard UP-TO-DATE
+:joinmediasdk:checkDebugManifest
+:joinmediasdk:prepareDebugDependencies
+:joinmediasdk:compileDebugAidl UP-TO-DATE
+:joinmediasdk:compileDebugNdk UP-TO-DATE
+:joinmediasdk:copyDebugLint UP-TO-DATE
+:joinmediasdk:compileDebugRenderscript UP-TO-DATE
+:joinmediasdk:generateDebugBuildConfig UP-TO-DATE
+:joinmediasdk:generateDebugResValues UP-TO-DATE
+:joinmediasdk:generateDebugResources UP-TO-DATE
+:joinmediasdk:mergeDebugResources UP-TO-DATE
+:joinmediasdk:processDebugManifest UP-TO-DATE
+:joinmediasdk:processDebugResources UP-TO-DATE
+:joinmediasdk:generateDebugSources UP-TO-DATE
+:joinmediasdk:incrementalDebugJavaCompilationSafeguard UP-TO-DATE
+:joinmediasdk:compileDebugKotlin UP-TO-DATE
+:joinmediasdk:compileDebugJavaWithJavac UP-TO-DATE
+:joinmediasdk:copyDebugKotlinClasses UP-TO-DATE
+:joinmediasdk:extractDebugAnnotations UP-TO-DATE
+:joinmediasdk:mergeDebugShaders UP-TO-DATE
+:joinmediasdk:compileDebugShaders UP-TO-DATE
+:joinmediasdk:generateDebugAssets UP-TO-DATE
+:joinmediasdk:mergeDebugAssets UP-TO-DATE
+:joinmediasdk:mergeDebugProguardFiles UP-TO-DATE
+:joinmediasdk:packageDebugRenderscript UP-TO-DATE
+:joinmediasdk:packageDebugResources UP-TO-DATE
+:joinmediasdk:processDebugJavaRes UP-TO-DATE
+:joinmediasdk:transformResourcesWithMergeJavaResForDebug UP-TO-DATE
+:joinmediasdk:transformClassesAndResourcesWithSyncLibJarsForDebug UP-TO-DATE
+:joinmediasdk:mergeDebugJniLibFolders UP-TO-DATE
+:joinmediasdk:transformNative_libsWithMergeJniLibsForDebug UP-TO-DATE
+:joinmediasdk:transformNative_libsWithSyncJniLibsForDebug UP-TO-DATE
+:joinmediasdk:bundleDebug UP-TO-DATE
+:XmppService:compileReleaseJavaWithJavac UP-TO-DATE
+:XmppService:extractReleaseAnnotations UP-TO-DATE
+:XmppService:mergeReleaseShaders UP-TO-DATE
+:XmppService:compileReleaseShaders UP-TO-DATE
+:XmppService:generateReleaseAssets UP-TO-DATE
+:XmppService:mergeReleaseAssets UP-TO-DATE
+:XmppService:mergeReleaseProguardFiles UP-TO-DATE
+:XmppService:packageReleaseRenderscript UP-TO-DATE
+:XmppService:packageReleaseResources UP-TO-DATE
+:XmppService:processReleaseJavaRes UP-TO-DATE
+:XmppService:transformResourcesWithMergeJavaResForRelease UP-TO-DATE
+:XmppService:transformClassesAndResourcesWithSyncLibJarsForRelease UP-TO-DATE
+:XmppService:mergeReleaseJniLibFolders UP-TO-DATE
+:XmppService:transformNative_libsWithMergeJniLibsForRelease UP-TO-DATE
+:XmppService:transformNative_libsWithSyncJniLibsForRelease UP-TO-DATE
+:XmppService:bundleRelease UP-TO-DATE
+:library:preBuild UP-TO-DATE
+:library:preReleaseBuild UP-TO-DATE
+:library:checkReleaseManifest
+:library:prepareReleaseDependencies
+:library:compileReleaseAidl UP-TO-DATE
+:library:compileReleaseNdk UP-TO-DATE
+:library:compileLint UP-TO-DATE
+:library:copyReleaseLint UP-TO-DATE
+:library:mergeReleaseShaders UP-TO-DATE
+:library:compileReleaseShaders UP-TO-DATE
+:library:generateReleaseAssets UP-TO-DATE
+:library:mergeReleaseAssets UP-TO-DATE
+:library:mergeReleaseProguardFiles UP-TO-DATE
+:library:packageReleaseRenderscript UP-TO-DATE
+:library:compileReleaseRenderscript UP-TO-DATE
+:library:generateReleaseResValues UP-TO-DATE
+:library:generateReleaseResources UP-TO-DATE
+:library:packageReleaseResources UP-TO-DATE
+:library:processReleaseManifest UP-TO-DATE
+:library:generateReleaseBuildConfig UP-TO-DATE
+:library:processReleaseResources UP-TO-DATE
+:library:generateReleaseSources UP-TO-DATE
+:library:incrementalReleaseJavaCompilationSafeguard UP-TO-DATE
+:library:compileReleaseKotlin
+:library:compileReleaseJavaWithJavac UP-TO-DATE
+:library:copyReleaseKotlinClasses UP-TO-DATE
+:library:processReleaseJavaRes UP-TO-DATE
+:library:transformResourcesWithMergeJavaResForRelease UP-TO-DATE
+:library:transformClassesAndResourcesWithSyncLibJarsForRelease UP-TO-DATE
+:library:mergeReleaseJniLibFolders UP-TO-DATE
+:library:transformNative_libsWithMergeJniLibsForRelease UP-TO-DATE
+:library:transformNative_libsWithSyncJniLibsForRelease UP-TO-DATE
+:library:bundleRelease UP-TO-DATE
+:Join:prepareAndroidArchCoreCore100Alpha3Library UP-TO-DATE
+:Join:prepareAndroidArchLifecycleExtensions100Alpha3Library UP-TO-DATE
+:Join:prepareAndroidArchLifecycleRuntime100Alpha3Library UP-TO-DATE
+:Join:prepareAndroidClientEffectsReleaseUnspecifiedLibrary UP-TO-DATE
+:Join:prepareAndroidClientJoindatabaseUnspecifiedLibrary UP-TO-DATE
+:Join:prepareAndroidClientJoinmediasdkUnspecifiedLibrary UP-TO-DATE
+:Join:prepareAndroidClientLibraryUnspecifiedLibrary UP-TO-DATE
+:Join:prepareAndroidClientM4mAndroidUnspecifiedLibrary UP-TO-DATE
+:Join:prepareAndroidClientXMPPUnspecifiedLibrary UP-TO-DATE
+:Join:prepareAndroidClientXmppServiceUnspecifiedLibrary UP-TO-DATE
+:Join:prepareComAndroidDatabindingAdapters121Library UP-TO-DATE
+:Join:prepareComAndroidDatabindingLibrary121Library UP-TO-DATE
+:Join:prepareComAndroidSupportAnimatedVectorDrawable2520Library UP-TO-DATE
+:Join:prepareComAndroidSupportAppcompatV72520Library UP-TO-DATE
+:Join:prepareComAndroidSupportDesign2520Library UP-TO-DATE
+:Join:prepareComAndroidSupportGridlayoutV72520Library UP-TO-DATE
+:Join:preDebugAndroidTestBuild UP-TO-DATE
+:Join:prepareComAndroidSupportMultidex101Library UP-TO-DATE
+:Join:prepareComAndroidSupportRecyclerviewV72520Library UP-TO-DATE
+:Join:prepareComAndroidSupportSupportCompat2531Library UP-TO-DATE
+:Join:prepareComAndroidSupportSupportCoreUi2531Library UP-TO-DATE
+:Join:prepareComAndroidSupportSupportCoreUtils2531Library UP-TO-DATE
+:Join:prepareComAndroidSupportSupportFragment2531Library UP-TO-DATE
+:Join:prepareComAndroidSupportSupportMediaCompat2531Library UP-TO-DATE
+:Join:prepareComAndroidSupportSupportV42520Library UP-TO-DATE
+:Join:prepareComAndroidSupportSupportVectorDrawable2520Library UP-TO-DATE
+:Join:prepareComAndroidSupportTransition2520Library UP-TO-DATE
+:Join:prepareComCrashlyticsSdkAndroidAnswers1310Library UP-TO-DATE
+:Join:prepareComCrashlyticsSdkAndroidBeta122Library UP-TO-DATE
+:Join:prepareComCrashlyticsSdkAndroidCrashlytics265Library UP-TO-DATE
+:Join:prepareComCrashlyticsSdkAndroidCrashlyticsCore2314Library UP-TO-DATE
+:Join:prepareComGetbaseFloatingactionbutton1100Library UP-TO-DATE
+:Join:prepareComGithubAfollestadMaterialDialogsCore0857Library UP-TO-DATE
+:Join:prepareComGithubBumptechGlideOkhttp3Integration140Library UP-TO-DATE
+:Join:prepareComGithubChrisbanesPhotoView131Library UP-TO-DATE
+:Join:prepareComGithubRahatarmanahmedCircularprogressview232Library UP-TO-DATE
+:Join:prepareComGoogleAndroidGmsPlayServicesAnalytics700Library UP-TO-DATE
+:Join:prepareComGoogleAndroidGmsPlayServicesBase700Library UP-TO-DATE
+:Join:prepareComGoogleAndroidGmsPlayServicesGcm700Library UP-TO-DATE
+:Join:prepareComGoogleAndroidGmsPlayServicesLocation700Library UP-TO-DATE
+:Join:prepareComGoogleAndroidGmsPlayServicesMaps700Library UP-TO-DATE
+:Join:prepareComMelnykovFloatingactionbutton120Library UP-TO-DATE
+:Join:prepareComSoundcloudAndroidAndroidCrop100Library UP-TO-DATE
+:Join:prepareIoFabricSdkAndroidFabric1314Library UP-TO-DATE
+:Join:prepareIoPristineLibjingle9694Library UP-TO-DATE
+:Join:prepareIoReactivexRxjava2Rxandroid200Library UP-TO-DATE
+:Join:prepareMeZhanghaiAndroidMaterialprogressbarLibrary115Library UP-TO-DATE
+:Join:prepareNetZeteticAndroidDatabaseSqlcipher351Library UP-TO-DATE
+:Join:prepareOrgJdeferredJdeferredAndroidAar123Library UP-TO-DATE
+:Join:prepareOrgXwalkXwalk_core_library174644810Library UP-TO-DATE
+:Join:prepareSeEmilsjolanderStickylistheaders270Library UP-TO-DATE
+:Join:prepareAlphaDependencies
+:Join:compileAlphaRenderscript UP-TO-DATE
+:Join:mergeAlphaShaders UP-TO-DATE
+:Join:compileAlphaShaders UP-TO-DATE
+:Join:generateAlphaAssets UP-TO-DATE
+:Join:mergeAlphaAssets UP-TO-DATE
+:Join:processAlphaManifest UP-TO-DATE
+:Join:fabricGenerateResourcesAlpha
+:Join:generateAlphaResValues UP-TO-DATE
+:Join:generateAlphaResources
+:Join:mergeAlphaResources
+:Join:dataBindingProcessLayoutsAlpha
+:Join:compileAlphaAidl UP-TO-DATE
+:Join:generateAlphaBuildConfig UP-TO-DATE
+ FAILED
+FAILURE: Build failed with an exception.
+* What went wrong:
+  Execution failed for task ':Join:processAlphaResources'.
+* Try:
+  Run with --stacktrace option to get the stack trace. Run with --info or --debug option to get more log output.
+BUILD FAILED
+Total time: 8.529 secs

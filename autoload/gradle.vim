@@ -130,7 +130,7 @@ endfunction
 function! gradle#run(...)
 
   let shellpipe = &shellpipe
-  let &shellpipe = '2>&1 1>/dev/null |tee'
+  let &shellpipe = efm#buildShellpipe()
 
   call s:startBuilding()
 
@@ -276,12 +276,6 @@ function! s:finishBuilding()
     let s:isBuilding = 0
   endif
   let s:isBuilding = s:isBuilding - 1
-endfunction
-
-" Helper method to cleanup the qflist.
-function! s:cleanQuickFix()
-  let l:list = deepcopy(getqflist())
-  call setqflist(filter(l:list, "v:val['text'] != 'Element SubscribeHandler unvalidated by '"))
 endfunction
 
 " This method returns the number of valid errors in the quickfix window. This
@@ -602,7 +596,6 @@ function! s:showQuickfix()
     let g:gradle_quickfix_show = 1
   endif
 
-  call s:cleanQuickFix()
   call s:showSigns()
 
   if g:gradle_quickfix_show
@@ -625,29 +618,4 @@ function! s:lpad(s)
   return repeat('0', 5 - len(a:s)) . a:s
 endfunction
 
-
-" Simple function to test errorformat strings.
-" 
-" Example:
-"
-"    call gradle#testErf("%t: %f: (%l\\, %c): %m", "kotlin.efm")
-"
-" The first argument is the errorformat string to test and the
-" second argument is a filename of the file that contains the error
-" output to test.
-"
-" The error files should be inside the test folder of the plugin.
-function! gradle#testErf(fmt, testFile)
-  let tmpEfm = &errorformat
-  try
-    let &errorformat=a:fmt
-    execute('cgetfile ' . g:gradle_test_dir . "/" . a:testFile)
-    copen
-  catch
-    echo v:exception
-    echo v:throwpoint
-  finally
-    let &errorformat=tmpEfm
-  endtry
-endfunction
 

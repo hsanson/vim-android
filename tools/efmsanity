@@ -1,0 +1,87 @@
+#!/bin/sed -f
+##
+## Vim error format is both powerful and limited at the same time. It can be
+## used to match almost any message format from any compiler, linter, checker.
+## Problems arise when that tool or tools output error messages that are similar
+## or too generic to create useful matches. This script tries to aleviate some
+## of the pain points found in the output of gradle.
+
+## Taken from the errorformat example for javac. Changes tags to single spaces.
+/\^$/s/\t/\ /g;
+
+## Delete empty lines
+/^\s*$/d;
+
+## Delete lines that start with "> ". Errors in xml resources print the same
+## twice, once without the > and again with the >. We remove the ones that
+## start with > as these appreas within the FAILURE: multi-line error causing
+## issues.
+/^> /d;
+
+## Move all the strings that start with ">" outside the block that starts wirh
+## FAILURE: string.
+##
+## This is needed for AAPT errors that insist to appear after the FAILURE:
+## causing issues with our multi-line errorformat.
+##
+##/^FAILURE:/,/^>/{/^>/{G;b};/^FAILURE:/{h;d};H;d};
+
+## Make all AndroidManifest.xml errors one liners to simplify the errorformat
+## string.
+:x /AndroidManifest.xml:.*[Warning|Error]:$/ { N; s/\n//g ; bx };
+
+## Findbugs outputs a list of missing classes in the form:
+##
+##    The following classes needed for analysis were missing:
+##      android.content.BroadcastReceiver
+##      android.support.v4.app.FragmentManager$OnBackStackChangedListener
+##      org.jdeferred.FailCallback
+##      org.jdeferred.DoneCallback
+##      ....
+##
+##    :Project:findbugs
+##
+## Since we use two spaces to identify informational text within multiline error
+## messages this causes the whole list to be shown in the quickfix window. To
+## avoid this we remove the empty spaces at the beginning of all rows after
+## the missing classes message up to the next line that does not start with
+## blank space.
+/The following classes needed for analysis were missing:/,/^[[:alpha:]].*/ s/^\s\+//;
+
+## Magic code to add two spaces to convert this text:
+##
+##    FAILURE: Build failed with an exception.
+##
+##    * What went wrong:
+##    Execution failed for task ':Join:kaptDebugKotlin'.
+##    > Compilation error. See log for more details
+##
+##    * Try:
+##    Run with --stacktrace option to get the stack trace.
+##
+##    BUILD FAILED
+##
+## To this text:
+##
+##    FAILURE: Build failed with an exception.
+##
+##    * What went wrong:
+##      Execution failed for task ':Join:kaptDebugKotlin'.
+##    > Compilation error. See log for more details
+##
+##    * Try:
+##      Run with --stacktrace option to get the stack trace.
+##
+##    BUILD FAILED
+##
+## Note the added spaces to the strings after the lines with "*" at the
+## beginning.
+##
+## We do this as we consider all lines that starts with two spaces as
+## info messages in the multi-line errorformat.
+##
+## For deatails on how this sed command works check:
+##
+##    https://stackoverflow.com/questions/18620153/find-matching-text-and-replace-next-line
+##
+/*/!b;n;s/^/  /;

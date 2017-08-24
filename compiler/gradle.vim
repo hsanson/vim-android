@@ -4,49 +4,5 @@ if exists(":CompilerSet") != 2 " for older vims
   command -nargs=* CompilerSet setlocal <args>
 endif
 
-" Links to understand error formats
-"   http://flukus.github.io/2015/07/03/2015_07_03-Vim-errorformat-Demystified/
-
-let s:makeprg = [
- \  gradle#bin(),
- \  '-I',
- \  g:gradle_init_file,
- \  '-b',
- \  gradle#findGradleFile()
- \ ]
-
-if gradle#isDaemonEnabled()
-  call add(s:makeprg, "--daemon")
-else
-  call add(s:makeprg, "--no-daemon")
-endif
-
-if gradle#versionMinor() >= 3
-  call add(s:makeprg, "--console")
-  call add(s:makeprg, "plain")
-elseif gradle#versionMinor() > 0
-  call add(s:makeprg, "--no-color")
-endif
-
-exec 'CompilerSet makeprg=' . join(s:makeprg, '\ ')
-
-CompilerSet errorformat=
-    \%+ATask\ %.%#\ not\ found\ %.%#.,
-    \%EExecution\ failed\ for\ task\ %m,
-    \findbugs:\ %tarning\ %f:%l:%c\ %m,
-    \pmd:\ %tarning\ %f:%l:%c\ %m,
-    \checkstyle:\ %tarning\ %f:%l:%c\ %m,
-    \lint:\ %tarning\ %f:%l:%c\ %m,
-    \%t:\ %f:\ (%l\\,\ %c):\ %m,
-    \%A>\ %f:%l:%c:\ %trror:\ %m,
-    \%A>\ %f:%l:%c:\ %tarning:\ %m,
-    \%A%f:%l:\ %trror:\ %m,
-    \%A%f:%l:\ %tarning:\ %m,
-    \%A%f:%l:\ %trror\ -\ %m,
-    \%A%f:%l:\ %tarning\ -\ %m,
-    \%E%f:%l\ :\ %m,
-    \%C>\ %m,
-    \%-G%p^,
-    \%+G\ \ %.%#,
-    \%-G%.%#
-
+exec 'CompilerSet makeprg=' . efm#buildMakeprg()
+exec 'CompilerSet errorformat=' . efm#escapeEfm(efm#buildEfm())
