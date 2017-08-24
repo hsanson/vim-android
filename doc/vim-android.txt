@@ -24,6 +24,7 @@ Contents                                   *vim-android* *vim-android-contents*
               Status Line.................... |vim-android-statusline|
                 Airline Status Line.......... |vim-android-airline|
                 LightLine Status Line........ |vim-android-lightline|
+              Troubleshooting ............... |vim-android-troubleshooting|
          5. Configuration ................... |vim-android-configuration|
          6. Todo ............................ |vim-android-todo|
          7. Credits ......................... |vim-android-credits|
@@ -492,6 +493,19 @@ let g:lightline = {
 make sure you read the Lightline documentation for details on how this
 configuration works and adapt to your own usage.
 
+------------------------------------------------------------------------------
+TROUBLESHOOTING                                    *vim-android-troubleshooting*
+
+Using neovim *health* feature you can check your environment setup running the
+CheckHealth command:
+>
+        :CheckHealth gradle
+<
+If you are not running neovim you can run the check function manually inside
+vim to verify your setup:
+>
+        :call health#gradle#check()
+<
 ==============================================================================
 5. Configuration                                     *vim-android-configuration*
 
