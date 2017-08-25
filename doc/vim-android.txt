@@ -519,24 +519,38 @@ Example:
 >
         let g:android_sdk_path = '/opt/adroid-sdk'
 <
-                                                               *g:gradle_path*
-g:gradle_path~
+                                                               *g:gradle_bin*
+g:gradle_bin~
 Default: Gradle Wrapper
 
 By default this plugin tries to use gradle wrapper script (e.g. gradlew) to
-build the project. If the gradle wrapper is not found then it tries to use the
-$GRADLE_HOME environment variable to find a gradle binary, and if that fails
-then it uses the vim executable() method to try to find a gradle executable in
-the system $PATH.
-
-To force the plugin to use a specific gradle binary you can add the
-g:gradle_path variable in your vimrc or init.vim configuration. This variable
-must be set to the absolute path where gradle is installed.
+build the project unless this variable is set. If set then the plugin uses this
+gradle binary to build all project. If this variable is not set and the
+project does not have a gradle wrapper script, then the binary is searched
+inside the GRADLE_HOME and PATH environment variables. See *g:gradle_path* for
+a way to customize this behaviour.
 
 Example:
 >
-    let g:gradle_path=/path/to/gradle/home
+    let g:gradle_bin=/opt/gradle/bin/gradle
 <
+                                                               *g:gradle_path*
+g:gradle_path~
+Default: GRADLE_HOME
+
+When the project has no gradle wrapper script and *g:gradle_bin* is not
+defined, then this project tries to search for the gradle binary inside
+GRADLE_HOME and PATH environment variables. If your gradle installation
+is in a non-standard location you can change the search path by setting
+this g:gradle_path variable:
+
+Example:
+>
+    let g:gradle_path=/opt/gradle
+<
+The above will cause the plugin to search for the gradle binary in the
+/bin directory within /opt/gradle folder.
+
                                                              *g:gradle_daemon*
 g:gradle_daemon~
 Default: 1

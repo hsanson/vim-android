@@ -1,12 +1,37 @@
-function! health#gradle#check() abort
-  call health#report_start('vim-android checks')
 
+function! health#gradle#check() abort
   if has('nvim')
-    call health#report_ok('has("nvim") was successful')
+    call health#gradle#checkNvim()
   else
-    call health#report_warning('has("nvim") was not successful',
-          \ 'vim-android works best with neovim!')
+    call health#gradle#checkVim()
   endif
+endfunction
+
+function! health#gradle#checkVim() abort
+
+  echom 'This plugin is developed on NeoVim!, prefer it over vim for a better experience'
+
+  if(!executable(gradle#bin()))
+    echom '  Gradle binary not found. Ensure gradle is in your path or set the g:gradle_bin variable.'
+  endif
+
+  if(!android#checkAndroidHome())
+    echom '  Android home is not set correctly. Ensure g:android_sdk_path variable or ANDROID_HOME environment are set.'
+  end
+
+  if(!executable(android#bin()))
+    echom '  Android binary not found. Ensure g:android_sdk_path variable or the ANDROID_HOME environment are set.'
+  endif
+
+  if(!executable(adb#bin()))
+    echom '  ADB binary not found. Ensure g:android_sdk_path variable or the ANDROID_HOME environment are set.'
+  endif
+
+
+endfunction
+
+function! health#gradle#checkNvim() abort
+  call health#report_start('vim-android checks')
 
   call health#report_start('Gradle checks')
 
@@ -51,8 +76,9 @@ function! health#gradle#check() abort
   if(android#checkAndroidHome())
     call health#report_ok("Android home set to " . g:android_sdk_path)
   else
-    call health#report_error("Adnroid home not set.", [
-          \ 'Ensure to set g:android_sdk_path variable correctly.'
+    call health#report_error("Android home not set.", [
+          \ 'Ensure to set g:android_sdk_path variable correctly,',
+          \ 'Or that the ANDROID_HOME environment variable is set.',
           \ ])
   end
 
@@ -91,7 +117,4 @@ function! health#gradle#check() abort
     call health#report_error("ADB binary not found")
   endif
 
-  "health#report_info
-  "health#report_error
-  "health#report_warn
 endfunction

@@ -3,32 +3,62 @@ function! gradle#logi(msg)
   echomsg a:msg
 endfunction
 
-" Function that tries to determine the location of the gradle binary. It will
-" try first to find the executable inside g:gradle_path and if not found it will
-" try to search for the Gradle wrapper then try using the GRADLE_HOME 
-" environment variable. Finally it will search if using the vim
-" executable() method.
-function! gradle#bin()
+
+" Returns the path to the gradle installation.
+" TODO: The default works only in Linux OS.
+function! gradle#gradleHome()
+
+  if exists("$GRADLE_HOME")
+    let g:gradle_path = $GRADLE_HOME
+    return g:gradle_path
+  endif
 
   if exists('g:gradle_path')
-    let g:gradle_bin = g:gradle_path . "/bin/gradle"
-  elseif gradle#getOS() == 'Windows' 
-    if executable("\.gradlew.bat")
-      let g:gradle_bin = "\.gradlew.bat"
-    endif
+    return g:gradle_path
+  endif
+
+  let g:gradle_path = "/usr"
+  return g:gradle_path
+
+endfunction
+
+function! gradle#wrapper()
+  if gradle#getOS() == 'Windows' && executable("\.gradlew.bat")
+      return "\.gradlew.bat"
   elseif executable("./gradlew")
-    let g:gradle_bin = "./gradlew"
-  elseif !exists('g:gradle_path')
-    let g:gradle_path = $GRADLE_HOME
-    let g:gradle_bin = g:gradle_path . "/bin/gradle"
+    return "./gradlew"
+  endif
+endfunction
+
+" Function that tries to determine the location of the gradle binary. If
+" g:gradle_bin is defined then it is used as the gradle binary. If it is not
+" defined and the project has a gradle wrapper script, then the wrapper script
+" is used. If no wrapper script is found then the binary is searched in the
+" gradle home directory if defined. Finally if none of the above works it tries
+" to find gradle in the PATH and if that fails too then it is set to a non
+" operation.
+function! gradle#bin()
+
+  if exists('g:gradle_bin')
+    return g:gradle_bin
   endif
 
-  if(!executable(g:gradle_bin))
-    if executable("gradle")
-      let g:gradle_bin = "gradle"
-    endif
+  if executable(gradle#wrapper())
+    let g:gradle_bin = gradle#wrapper()
+    return g:gradle_bin
   endif
 
+  if finddir(gradle#gradleHome()) != "" && executable(gradle#gradleHome() . "/bin/gradle")
+    let g:gradle_bin = gradle#gradleHome() . "/bin/gradle"
+    return g:gradle_bin
+  endif
+
+  if executable("gradle")
+    let g:gradle_bin = "gradle"
+    return g:gradle_bin
+  endif
+
+  let g:gradle_bin = "/bin/false"
   return g:gradle_bin
 
 endfunction

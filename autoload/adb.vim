@@ -12,7 +12,7 @@ function! adb#bin()
     if executable("adb")
       let g:android_adb_tool = "adb"
     else
-      throw "Unable to find adb tool binary. Ensure you set g:android_sdk_path correctly."
+      let g:android_adb_tool = "/bin/false"
     endif
   endif
 

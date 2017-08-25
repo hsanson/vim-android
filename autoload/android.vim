@@ -57,12 +57,23 @@ function! android#findManifestFile()
   return s:manifest_cache[l:gradlefile]
 endfunction
 
-function! android#checkAndroidHome()
-  if exists("g:android_sdk_path") && finddir(g:android_sdk_path) != ""
-    let $ANDROID_HOME=g:android_sdk_path
-  elseif exists("$ANDROID_HOME") && finddir($ANDROID_HOME) != ""
+function! android#homePath()
+
+  if exists('$ANDROID_HOME')
     let g:android_sdk_path = $ANDROID_HOME
-  else
+  endif
+
+  if exists('g:android_sdk_path')
+    return g:android_sdk_path
+  endif
+
+  let g:android_sdk_path = "$HOME/android-sdk"
+
+  return g:android_sdk_path
+endfunction
+
+function! android#checkAndroidHome()
+  if finddir(android#homePath()) == ""
     return 0
   endif
   return 1
@@ -175,7 +186,7 @@ endfunction
 
 " Find the adroid sdk srouce files for the target sdk version.
 function! android#getTargetSrcPath()
-  let l:targetSrc = g:android_sdk_path . '/sources/' . android#getTargetVersion() . '/'
+  let l:targetSrc = android#homePath() . '/sources/' . android#getTargetVersion() . '/'
   if isdirectory(l:targetSrc)
     return targetSrc
   endif
@@ -206,7 +217,7 @@ endfunction
 function! android#getGradleTargetJar()
 
 
-  let l:targetJar = g:android_sdk_path . '/platforms/' . android#getTargetVersion() . "/android.jar"
+  let l:targetJar = android#homePath() . '/platforms/' . android#getTargetVersion() . "/android.jar"
 
   return l:targetJar
 endfunction
@@ -290,13 +301,13 @@ function! android#bin()
     return g:android_tool
   endif
 
-  let g:android_tool = g:android_sdk_path . "/tools/android"
+  let g:android_tool = android#homePath() . "/tools/android"
 
   if(!executable(g:android_tool))
     if executable("android")
       let g:android_tool = "android"
     else
-      throw "Unable to find android tool binary. Ensure you set g:android_sdk_path correctly."
+      let g:android_tool = "/bin/false"
     endif
   endif
 
@@ -312,7 +323,7 @@ function! android#emulatorbin()
     return g:android_emulator
   endif
 
-  let g:android_emulator = g:android_sdk_path . "/tools/emulator"
+  let g:android_emulator = android#homePath() . "/tools/emulator"
 
   if(!executable(g:android_emulator))
     if executable("emulator")

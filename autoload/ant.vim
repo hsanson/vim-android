@@ -15,6 +15,7 @@ function! ant#bin()
       let g:ant_bin = "ant"
     else
       echoerr "ant tool could not be found"
+      let g:ant_bin = "/bin/false"
     endif
   endif
 
