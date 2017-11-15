@@ -14,10 +14,13 @@ allprojects { project ->
         System.err.println "vim-target android-" + level
       }
 
+
       // Print the list of all dependencies jar files. This allows vim to parse
       // the list and fill the CLASSPATH with the list of dependencies.
-      project.configurations.each {
-        conf -> conf.collect {
+      project.configurations.findAll {
+        it.metaClass.respondsTo(it, "isCanBeResolved") ? it.isCanBeResolved() : true
+      }.each {
+        it.resolve().each {
           if(it.inspect().endsWith("jar")) {
             System.err.println "vim-gradle " + it
           } else if(it.inspect().endsWith("aar")) {
