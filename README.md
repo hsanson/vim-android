@@ -65,29 +65,3 @@ Combined with the ligthline plugin my status line looks like the following scree
 # Details
 
 Refer to the [doc/vim-android.txt](doc/vim-android.txt) file for details on usage and configuration of this plugin.
-
-
-# Known Issues
-
-## Gradle 3.0 compatibility
-
-Before project dependencies in gradle were declared as:
-
-    project(":myprojectpath")
-
-Due to the new variant aware dependencies this breaks the plugin sync. If you are using latest
-gradle with Androi Studio 3.0 ensure you replace this definitions with:
-
-    implementation(path: ":myprojectpath", configuration: 'default')
-
-If we do not set a configuration then gradle will fail to find the correct dependencies and we
-won't be able to sync the dependencies with vim. We will get an error like:
-
-    >  Could not resolve all files for configuration :xxxx
-      > More than one variant of project :xxxx matches the consumer attributes:
-
-Resources:
-
-  - https://stackoverflow.com/questions/44114044/flavordimensions-gradle-error-android-studio-3-0-canary-1
-  - https://developer.android.com/studio/build/gradle-plugin-3-0-0-migration.html#variant_aware
-
