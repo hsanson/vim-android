@@ -58,9 +58,6 @@ function! gradle#bin()
     return g:gradle_bin
   endif
 
-  let g:gradle_bin = "/bin/false"
-  return g:gradle_bin
-
 endfunction
 
 function! gradle#version()
