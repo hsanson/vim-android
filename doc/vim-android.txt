@@ -527,7 +527,7 @@ By default this plugin tries to use gradle wrapper script (e.g. gradlew) to
 build the project unless this variable is set. If set then the plugin uses this
 gradle binary to build all project. If this variable is not set and the
 project does not have a gradle wrapper script, then the binary is searched
-inside the GRADLE_HOME and PATH environment variables. See *g:gradle_path* for
+inside the GRADLE_HOME and PATH environment variables. See |g:gradle_path| for
 a way to customize this behaviour.
 
 Example:
@@ -538,7 +538,7 @@ Example:
 g:gradle_path~
 Default: GRADLE_HOME
 
-When the project has no gradle wrapper script and *g:gradle_bin* is not
+When the project has no gradle wrapper script and |g:gradle_bin| is not
 defined, then this project tries to search for the gradle binary inside
 GRADLE_HOME and PATH environment variables. If your gradle installation
 is in a non-standard location you can change the search path by setting
