@@ -631,6 +631,20 @@ Example:
 >
         let g:gradle_set_classpath=0
 <
+                                                        *g:gradle_show_signs*
+g:gradle_show_signs~
+Default: 1
+
+This variable determines if the plugin should display vim signs marking
+errors and warnings. This may conflict with other plugins (e.g. vim-ale) that
+do a better job at displaying signs indication the lines with issues. If you
+use other plugins like vim-ale or syntastic it is better to disable signs
+support on this plugin.
+
+Example:
+>
+        let g:gradle_show_signs=0
+<
 ==============================================================================
 9. Todo                                                       *vim-android-todo*
 

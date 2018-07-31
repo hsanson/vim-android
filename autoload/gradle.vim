@@ -229,6 +229,13 @@ function! gradle#asyncDisable()
   let g:gradle_async = 0
 endfunction
 
+function! gradle#showSigns()
+  if !exists('g:gradle_show_signs')
+    let g:gradle_show_signs = 1
+  endif
+  return g:gradle_show_signs
+endfunction
+
 function! gradle#isAsyncEnabled()
   if !exists('g:gradle_async')
     let g:gradle_async = 1
@@ -598,6 +605,10 @@ function! gradle#setupGradleCommands()
 endfunction
 
 function! s:showSigns()
+
+  if ! gradle#showSigns()
+    return
+  endif
 
   execute("sign unplace *")
   execute("sign define gradleErrorSign text=" . gradle#glyphError() . " texthl=Error")
