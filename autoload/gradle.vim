@@ -333,7 +333,8 @@ function! gradle#syncCmd()
    \ gradle#findGradleFile(),
    \ "-I",
    \ g:gradle_init_file,
-   \ "vim"
+   \ "vim",
+   \ "2>&1"
    \ ]
 
   return join(l:cmd, ' ')
@@ -415,16 +416,20 @@ function! s:vimTaskHandler(id, data, event) dict
 
   if a:event == 'stdout' || a:event == 'stderr'
     call s:parseVimTaskOutput(self.gradleFile, a:data)
+    call setqflist([], 'a', { 'efm': efm#escapeEfm(efm#buildEfm()), 'lines': a:data, 'title': 'Gradle Sync' })
   elseif a:event == 'exit'
     call s:finishBuilding()
     if a:data != 0
+      call s:showQuickfix()
       call gradle#logi("Gradle sync task failed")
     endif
     call gradle#setup()
   endif
+
 endfunction
 
 function! s:parseVimTaskOutput(gradleFile, result)
+
   for line in a:result
 
     let mlist = matchlist(line, '^gradle-version\s\(\d\+\)\.\(\d\+\).*$')
@@ -449,7 +454,9 @@ function! s:parseVimTaskOutput(gradleFile, result)
     if empty(mlist) == 0 && len(mlist[1]) > 0
       let g:gradle_target_versions[a:gradleFile] = mlist[1]
     endif
+
   endfor
+
 endfunction
 
 ""
