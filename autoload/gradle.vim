@@ -462,7 +462,7 @@ endfunction
 ""
 " Return the gradle dependencies per project from the cache if available or an
 " empty array if not available.
-function! gradle#getGradleDeps()
+function! gradle#classPaths()
 
   let l:gradleFile = gradle#findGradleFile()
 
@@ -498,14 +498,14 @@ function! gradle#setClassPath()
   call extend(l:jarList, l:oldJars)
   call extend(l:srcList, l:oldSrcs)
 
-  let l:depJars = gradle#getGradleDeps()
+  let l:depJars = gradle#classPaths()
   if !empty(l:depJars)
     call extend(l:jarList, l:depJars)
   endif
 
-  let l:gradleSrcPaths = s:getGradleSrcPaths()
-  if !empty(l:gradleSrcPaths)
-    call extend(l:srcList, l:gradleSrcPaths)
+  let l:sourcePaths = gradle#sourcePaths()
+  if !empty(l:sourcePaths)
+    call extend(l:srcList, l:sourcePaths)
   endif
 
   let l:jarList = gradle#uniq(sort(l:jarList))
@@ -518,7 +518,7 @@ function! gradle#setClassPath()
 
 endfunction
 
-function! s:getGradleSrcPaths()
+function! gradle#sourcePaths()
   " By default gradle projects have well defined source structure. Make sure
   " we add it the the path
   let l:srcs = []

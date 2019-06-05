@@ -238,43 +238,61 @@ function! android#getSdkJar()
   return get(g:android_versions, l:gradleFile)
 endfunction
 
+" Return array of android dependency classpath.
+function! android#classPaths()
+
+  let l:paths = []
+
+  if ! android#isAndroidProject()
+    return l:paths 
+  endif
+
+  let l:projectJar = android#getProjectJar()
+
+  if len(l:projectJar) > 0
+    call add(l:paths, l:projectJar)
+  endif
+
+  let l:targetJar = android#getSdkJar()
+  if len(l:targetJar) > 0
+    call add(l:paths, l:targetJar)
+  endif
+
+  return l:paths
+endfunction
+
+" Return array of android source paths.
+function! android#sourcePaths()
+
+  let l:paths = []
+
+  if ! android#isAndroidProject()
+    return l:paths 
+  endif
+
+  let l:targetSrc = android#getTargetSrcPath()
+
+  if len(l:targetSrc) > 0
+    call add(l:paths, l:targetSrc)
+  endif
+
+  return l:paths
+endfunction
+
 function! android#setClassPath()
 
   if ! android#isAndroidProject()
     return
   endif
 
-  let l:jarList = []
-  let l:srcList = []
-
   let l:oldJars = split($CLASSPATH, gradle#classPathSep())
-  let l:oldSrcs = split($SRCPATH, ",")
+  let l:oldSrcs = split($SRCPATH, gradle#classPathSep())
 
-  call extend(l:jarList, l:oldJars)
-  call extend(l:srcList, l:oldSrcs)
-
-  let l:projectJar = android#getProjectJar()
-
-  if len(l:projectJar) > 0
-    call add(l:jarList, l:projectJar)
-  endif
-
-  let l:targetJar = android#getSdkJar()
-  if len(l:targetJar) > 0
-    call add(l:jarList, l:targetJar)
-  endif
-
-  let l:targetSrc = android#getTargetSrcPath()
-  if len(l:targetSrc) > 0
-    call add(l:srcList, l:targetSrc)
-  endif
-
-  let l:jarList = gradle#uniq(sort(l:jarList))
-  let l:srcList = gradle#uniq(sort(l:srcList))
+  let l:jarList = gradle#uniq(sort(extend(l:oldJars, android#classPaths())))
+  let l:srcList = gradle#uniq(sort(extend(l:oldSrcs, android#sourcePaths())))
 
   let $CLASSPATH = join(l:jarList, gradle#classPathSep())
   let $SRCPATH = join(l:srcList, gradle#classPathSep())
-
   exec "set path=" . join(l:srcList, ',')
 
 endfunction
