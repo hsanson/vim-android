@@ -27,34 +27,20 @@ endfunction
 " If there is a target sdk version defined it means the project is an android
 " project.
 function! android#isAndroidProject()
-  return filereadable(android#findManifestFile()) && android#checkAndroidHome()
+  return filereadable(android#manifestFile()) && android#checkAndroidHome()
 endfunction
 
 " Tries to determine the location of the AndroidManifest.xml file relative to
 " the location of the build.gradle file. Since the findfile() call can take a
 " long time to finish and we call this method several times it caches the
 " results in a script variable.
-function! android#findManifestFile()
+function! s:findManifestFile()
+  let l:file = findfile("AndroidManifest.xml", gradle#findRoot() . "/**3")
+  return copy(fnamemodify(l:file, ":p"))
+endfunction
 
-  if !exists('s:manifest_cache')
-    let s:manifest_cache = {}
-  endif
-
-  let l:gradlefile = gradle#findGradleFile()
-
-  if len(l:gradlefile) == 0
-    return ""
-  endif
-
-  if has_key(s:manifest_cache, l:gradlefile)
-    return s:manifest_cache[l:gradlefile]
-  endif
-
-  let l:gradleroot = fnamemodify(l:gradlefile, ":p:h")
-  let l:file = findfile("AndroidManifest.xml", l:gradleroot . "/**3")
-  let s:manifest_cache[l:gradlefile] = copy(fnamemodify(l:file, ":p"))
-
-  return s:manifest_cache[l:gradlefile]
+function! android#manifestFile() abort
+  return cache#get(gradle#key(), 'manifest', s:findManifestFile())
 endfunction
 
 function! android#homePath()
@@ -185,8 +171,8 @@ function! android#setAndroidSdkTags()
 endfunction
 
 " Find the adroid sdk srouce files for the target sdk version.
-function! android#getTargetSrcPath()
-  let l:targetSrc = android#homePath() . '/sources/' . android#getTargetVersion() . '/'
+function! android#targetSrcPath()
+  let l:targetSrc = android#homePath() . '/sources/' . android#targetVersion() . '/'
   if isdirectory(l:targetSrc)
     return targetSrc
   endif
@@ -202,40 +188,20 @@ function! android#getProjectJar()
   endif
 endfunction
 
-function! android#getTargetVersion()
-
-  let l:gradleFile = gradle#findGradleFile()
-
-  if has_key(g:gradle_target_versions, l:gradleFile)
-    return g:gradle_target_versions[l:gradleFile]
-  else
-    return ''
-  endif
-
+function! android#targetVersion()
+  return gradle#targetVersion()
 endfunction
 
 function! android#getGradleTargetJar()
 
 
-  let l:targetJar = android#homePath() . '/platforms/' . android#getTargetVersion() . "/android.jar"
+  let l:targetJar = android#homePath() . '/platforms/' . android#targetVersion() . "/android.jar"
 
   return l:targetJar
 endfunction
 
 function! android#getSdkJar()
-
-  let l:gradleFile = gradle#findGradleFile()
-
-  if !exists('g:android_versions')
-    let g:android_versions = {}
-  endif
-
-  if !has_key(g:android_versions, l:gradleFile)
-    let l:targetJar = android#getGradleTargetJar()
-    let g:android_versions[l:gradleFile] = l:targetJar
-  endif
-
-  return get(g:android_versions, l:gradleFile)
+  return cache#get(gradle#key(), 'targetJar', android#getGradleTargetJar())
 endfunction
 
 " Return array of android dependency classpath.
@@ -270,7 +236,7 @@ function! android#sourcePaths()
     return l:paths 
   endif
 
-  let l:targetSrc = android#getTargetSrcPath()
+  let l:targetSrc = android#targetSrcPath()
 
   if len(l:targetSrc) > 0
     call add(l:paths, l:targetSrc)

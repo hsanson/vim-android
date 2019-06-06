@@ -1,0 +1,8 @@
+Execute (Test cache store):
+  Assert empty(cache#get('store', 'key'))
+  call cache#set('store', 'key', ['hello'])
+  Assert !empty(cache#get('store', 'key'))
+  AssertEqual ['hello'], cache#get('store', 'key')
+
+Execute(Test cache default):
+  AssertEqual ['hello'], cache#get('store1', 'key1', ['hello'])

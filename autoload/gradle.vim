@@ -61,21 +61,15 @@ function! gradle#bin()
 endfunction
 
 function! gradle#version()
-  if exists('g:gradle_versions[gradle#findGradleFile()]')
-    return g:gradle_versions[gradle#findGradleFile()][0]
-  endif
+  return cache#get(gradle#key(), 'version', ['', '', ''])[0]
 endfunction
 
 function! gradle#versionMajor()
-  if exists('g:gradle_versions[gradle#findGradleFile()]')
-    return g:gradle_versions[gradle#findGradleFile()][1]
-  endif
+  return cache#get(gradle#key(), 'version', ['', '', ''])[1]
 endfunction
 
 function! gradle#versionMinor()
-  if exists('g:gradle_versions[gradle#findGradleFile()]')
-    return g:gradle_versions[gradle#findGradleFile()][2]
-  endif
+  return cache#get(gradle#key(), 'version', ['', '', ''])[2]
 endfunction
 
 " Verifies if the android sdk is available and if the gradle build and binary
@@ -112,6 +106,13 @@ function! gradle#uninstall(device, mode)
   let $ANDROID_SERIAL=a:device
   let l:result = call("gradle#run", ["uninstall" . android#capitalize(a:mode)])
   let $ANDROID_SERIAL = l:old_serial
+endfunction
+
+" Return a unique key identifier for the gradle project. This key is generated
+" based on the gradle file of the project, therefore it changes if the gradle
+" file contents is changed.
+function! gradle#key() abort
+  return cache#key(gradle#findGradleFile())
 endfunction
 
 " Tries to determine the location of the build.gradle file starting from the
@@ -341,23 +342,7 @@ function! gradle#syncCmd()
 endfunction
 
 " Sync vim-android environment with build.gradle file.
-function! gradle#sync()
-
-  if !exists('g:gradle_jars')
-    let g:gradle_jars = {}
-  endif
-
-  if !exists('g:gradle_target_versions')
-    let g:gradle_target_versions = {}
-  endif
-
-  if !exists('g:gradle_project_names')
-    let g:gradle_project_names = {}
-  endif
-
-  if !exists('g:gradle_versions')
-    let g:gradle_versions = {}
-  endif
+function! gradle#sync() abort
 
   let l:gradleFile = gradle#findGradleFile()
 
@@ -434,54 +419,47 @@ function! s:parseVimTaskOutput(gradleFile, result)
 
     let mlist = matchlist(line, '^gradle-version\s\(\d\+\)\.\(\d\+\).*$')
     if empty(mlist) == 0
-      let g:gradle_versions[a:gradleFile] = copy(mlist)
+      call cache#set(gradle#key(), 'version', copy(mlist))
     endif
 
     let mlist = matchlist(line, '^vim-gradle\s\(.*\.jar\)$')
     if empty(mlist) == 0 && len(mlist[1]) > 0
-      if !has_key(g:gradle_jars, a:gradleFile)
-        let g:gradle_jars[a:gradleFile] = []
-      endif
-      call add(g:gradle_jars[a:gradleFile], mlist[1])
+      call add(cache#get(gradle#key(), 'jars', []), mlist[1])
     endif
 
     let mlist = matchlist(line, '^vim-project\s\(.*\)$')
     if empty(mlist) == 0 && len(mlist[1]) > 0
-      let g:gradle_project_names[a:gradleFile] = mlist[1]
+      call cache#set(gradle#key(), 'name', mlist[1])
     endif
 
     let mlist = matchlist(line, '^vim-target\s\(.*\)$')
     if empty(mlist) == 0 && len(mlist[1]) > 0
-      let g:gradle_target_versions[a:gradleFile] = mlist[1]
+      call cache#set(gradle#key(), 'target', mlist[1])
     endif
 
   endfor
 
 endfunction
 
+function! gradle#projectName() abort
+  return cache#get(gradle#key(), 'name', '')
+endfunction
+
+function! gradle#targetVersion() abort
+  return cache#get(gradle#key(), 'target', 'android-28')
+endfunction
+
 ""
 " Return the gradle dependencies per project from the cache if available or an
 " empty array if not available.
 function! gradle#classPaths()
-
-  let l:gradleFile = gradle#findGradleFile()
-
-  if has_key(g:gradle_jars, l:gradleFile)
-    return g:gradle_jars[l:gradleFile]
-  else
-    return []
-  endif
-
+  return cache#get(gradle#key(), 'jars', [])
 endfunction
 
 ""
 " Returns 1 if the project jar dependencies are changed or 0 otherwise.
 function! gradle#isGradleDepsCached()
-  let l:gradleFile = gradle#findGradleFile()
-  if !exists('g:gradle_jars')
-    let g:gradle_jars = {}
-  endif
-  return has_key(g:gradle_jars, l:gradleFile)
+  return !empty(gradle#classPaths())
 endfunction
 
 ""
