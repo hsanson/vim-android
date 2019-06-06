@@ -6,13 +6,13 @@ function! adb#bin()
     return g:android_adb_tool
   endif
 
-  let g:android_adb_tool = g:android_sdk_path . "/platform-tools/adb"
+  let g:android_adb_tool = g:android_sdk_path . '/platform-tools/adb'
 
   if(!executable(g:android_adb_tool))
-    if executable("adb")
-      let g:android_adb_tool = "adb"
+    if executable('adb')
+      let g:android_adb_tool = 'adb'
     else
-      let g:android_adb_tool = "/bin/false"
+      let g:android_adb_tool = '/bin/false'
     endif
   endif
 
@@ -24,7 +24,7 @@ endfunction
 " Get list of connected android devices and emulators
 function! adb#devices()
 
-  let l:adb_output = split(system(adb#bin() . " devices"), '\n')
+  let l:adb_output = split(system(adb#bin() . ' devices'), '\n')
   let l:adb_devices = []
 
   for line in l:adb_output
@@ -36,9 +36,7 @@ function! adb#devices()
     endif
   endfor
 
-  "return sort(deepcopy(l:adb_devices), "s:sortFunc")
   return l:adb_devices
-
 endfunction
 
 ""
@@ -49,7 +47,7 @@ function! adb#selectDevice()
   let l:devices = adb#devices()
 
   if len(l:devices) == 0
-    call android#logw("No devices or emulators present")
+    call android#logw('No devices or emulators present')
     return []
   endif
 
@@ -59,13 +57,13 @@ function! adb#selectDevice()
 
   let l:choice = -1
 
-  let l:list = ["0. All Devices"] + map(deepcopy(l:devices), '(v:key + 1) . ". " . s:pretty(v:val)')
+  let l:list = ['0. All Devices'] + map(deepcopy(l:devices), '(v:key + 1) . '. ' . s:pretty(v:val)')
 
   while(l:choice < 0 || l:choice > len(l:devices))
     call inputsave()
     let l:choice = inputlist(l:list)
     call inputrestore()
-    echo "\n"
+    echo '\n'
   endwhile
 
   if l:choice == 0
@@ -135,9 +133,9 @@ endfunction
 ""
 " Uninstall android package from device
 function! adb#uninstall(device)
-  call android#logi("Uninstalling " . android#packageName() . " from " . a:device)
+  call android#logi('Uninstalling ' . android#packageName() . ' from ' . a:device)
   let l:cmd = adb#bin() . ' -s ' . a:device . ' uninstall ' . android#packageName()
-  execute "silent !" . l:cmd
+  execute 'silent !' . l:cmd
   redraw!
 endfunction
 
@@ -163,7 +161,7 @@ endfunction
 ""
 " Helper method to pretty print device info
 function! s:pretty(info)
-  return "[" . a:info[0] . "] "
-      \ . a:info[5] . " " . a:info[3] . " " . a:info[4]
-      \ . " SDK " . a:info[2] . " (API " . a:info[1] . ")"
+  return '[' . a:info[0] . '] '
+      \ . a:info[5] . ' ' . a:info[3] . ' ' . a:info[4]
+      \ . ' SDK ' . a:info[2] . ' (API ' . a:info[1] . ')'
 endfunction
