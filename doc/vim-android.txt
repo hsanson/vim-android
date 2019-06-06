@@ -51,7 +51,7 @@ The following features are supported by vim-android:
   - Custom gradle vim task that invokes gradle directly with any
     arguments passed to the command.
   - Custom errorformat that captures java errors, linter errors, test errors,
-    aapt errors, checkstyle, pmd, findbugs and displays them in the quickfix
+    aapt errors, checkstyle, pmd, findbugs and displays them in the loclist 
     window. This requires that gradle be invoked with the vim init file
     loaded.
   - Updates the CLASSPATH environment variable to include paths for your
@@ -80,7 +80,7 @@ Known Issues                                                *vim-android-issues*
     not block the interface but all Gradle and Android commands won't be
     available until the tasks complete in the background.
 
-  - To get full support of AAPT errors in the quickfix window of vim it is
+  - To get full support of AAPT errors in the loclist window of vim it is
     recommended that you use the android gradle plugin version 1.3.0 or newer.
     Previous versions of the android gradle plugin fail to show correctly the
     absolute path of the XML files that have errors making it difficult to jump
@@ -238,7 +238,7 @@ enable omnicompletion (https://github.com/artur-shaik/vim-javacomplete2).
 PMD PLUGIN SUPPORT                                          *vim-android-pmd*
 
 This plugin automatically detects if the pmd gradle plugin is loaded,
-parses the xml reports it generates and populates the quickfix window with the
+parses the xml reports it generates and populates the loclist window with the
 errors and warnings reported by it.
 
 The pmd gradle plugin does not work by default with the android gradle plugin.
@@ -276,7 +276,7 @@ refer to the gradle pmd plugin documetnation for more options:
 FindBugs PLUGIN SUPPORT                                  *vim-android-findbugs*
 
 This plugin automatically detects if the findbugs gradle plugin is loaded,
-parses the xml reports it generates and populates the quickfix window with the
+parses the xml reports it generates and populates the loclist window with the
 errors and warnings reported by it.
 
 For projects that use the android gradle plugin, the findbugs plugin does not
@@ -357,7 +357,7 @@ See the :h gx for more details on this functionality.
 CHECKSTYLE PLUGIN SUPPORT                              *vim-android-checkstyle*
 
 This plugin automatically detects if the checkstyle gradle plugin is loaded,
-parses the xml reports it generates and populates the quickfix window with the
+parses the xml reports it generates and populates the loclist window with the
 errors and warnings reported by it.
 
 The checkstyle gradle plugin does not work by default with the android gradle plugin.
@@ -390,7 +390,7 @@ ANDROID LINTER SUPPORT                                      *vim-android-linter*
 When gradle finishes building the project this plugin will try to find the
 lint-report.xml file, parse it and print to stderr the list of lint errors and
 warnings in a format that is easy to parse for vim error format. All that
-needs to be done is to execute the linter within vim to get the quickfix
+needs to be done is to execute the linter within vim to get the loclist
 window populated with all linter errors and warnings:
 
     :Gradle lint
@@ -406,7 +406,7 @@ indiciating the plugin status. The default status line looks like below:
 The first glyph can be either A or G to indicate if the file belongs to an
 Android project or a Gradle project respectively.
 
-In the quickfix window if there are compilation errors then the number of
+In the loclist window if there are compilation errors then the number of
 errors is shown followed by E and if there are warning then the number of
 warnings is shown followed by W.
 
@@ -592,17 +592,17 @@ Example:
 >
         let g:android_sdk_tags=/path/to/tags/project.tags
 <
-                                                        *g:gradle_quickfix_show*
-g:gradle_quickfix_show~
+                                                        *g:gradle_loclist_show*
+g:gradle_loclist_show~
 Default: 1
 
-By default this plugin opens the quickfix window if there are errors after
+By default this plugin opens the loclist window if there are errors after
 running a build. If you do not like this behaviour it is possible to disable
 it by setting this variable to 0.
 
 Example:
 >
-        let g:gradle_quickfix_show=0
+        let g:gradle_loclist_show=0
 <
                                                               *g:gradle_async*
 g:gradle_async~
@@ -614,7 +614,7 @@ this functionality you can do so by setting this variable to zero.
 
 Example:
 >
-        let g:gradle_quickfix_show=0
+        let g:gradle_async=0
 <
                                                         *g:gradle_set_classpath*
 g:gradle_set_classpath~

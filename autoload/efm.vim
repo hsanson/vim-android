@@ -1,6 +1,6 @@
 function! efm#buildMakeprg()
   let s:makeprg = [
-   \  'LANG=en',
+   \  'LC_ALL=en_US.UTF8',
    \  gradle#bin(),
    \  '-I',
    \  g:gradle_init_file,
@@ -24,7 +24,7 @@ function! efm#buildMakeprg()
     call add(s:makeprg, '--no-color')
   endif
 
-  return join(s:makeprg, '\ ')
+  return join(s:makeprg, ' ')
 endfunction
 
 " Builds and returns the shellpipe used when runing the gradle compiler.
@@ -74,7 +74,7 @@ function! efm#buildEfm()
   let efm.='%+Ie:  %.%#,'
   let efm.='%+Iw:  %.%#,'
   let efm.='%+I  %.%#,'
-  let efm.='%t: %f: (%l\\, %c): %m,'           " single Kotlin
+  let efm.='%t: %f: (%l\, %c): %m,'           " single Kotlin
   let efm.='%t: %f: %m,'                       " single Kotlin
   let efm.='%-G%.%#'                           " Remove not matching messages
   return efm

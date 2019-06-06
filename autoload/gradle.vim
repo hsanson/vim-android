@@ -1,3 +1,5 @@
+let s:chunks = {}
+
 function! gradle#logi(msg)
   redraw
   echomsg a:msg
@@ -155,43 +157,46 @@ function! gradle#compile(...)
   let l:result = call('gradle#run', a:000)
 endfunction
 
+function! s:BufWinId() abort
+    return exists('*bufwinid') ? bufwinid(str2nr(bufnr('%'))) : 0
+endfunction
+
+function! gradle#cmd(...) abort
+  return join([
+        \ efm#buildMakeprg(),
+        \ join(a:000, ' '),
+        \ efm#buildShellpipe(),
+        \ tempname()
+        \], ' ')
+endfunction
+
 function! gradle#run(...)
 
-  let shellpipe = &shellpipe
-  let &shellpipe = efm#buildShellpipe()
+  let l:gradleFile = gradle#findGradleFile()
+
+  let l:cmd = call('gradle#cmd', a:000)
 
   call s:startBuilding()
 
   if gradle#isAsyncEnabled()
-    let s:errorfile = tempname()
     let s:callbacks = {
-          \ 'on_stdout': function('s:runHandler'),
-          \ 'on_stderr': function('s:runHandler'),
-          \ 'on_exit':   function('s:runHandler'),
-          \ 'errorfile': s:errorfile
+          \ 'on_stdout': function('s:vimTaskHandler'),
+          \ 'on_stderr': function('s:vimTaskHandler'),
+          \ 'on_exit':   function('s:vimTaskHandler'),
+          \ 'gradleFile': l:gradleFile
           \ }
-    execute('compiler gradle')
-    let l:cmd = &makeprg . ' ' . join(a:000, ' ') . ' ' . &shellpipe . ' ' . s:errorfile
-    let vimTaskJob = jobstart(l:cmd, s:callbacks)
+    let s:chunks[jobstart(l:cmd, s:callbacks)] = ['']
   else
-    execute('compiler gradle | silent! make ' . join(a:000, ' '))
+    let l:result = split(system(l:cmd), '\n')
+    let l:id = s:BufWinId()
+    call setloclist(l:id, [], ' ', { 'nr': '$', 'efm': efm#escapeEfm(efm#buildEfm()), 'lines': l:result, 'title': 'Gradle Run' })
     call s:finishBuilding()
     redraw!
-    call s:showQuickfix()
+    call s:showLoclist()
   endif
-
-  let &shellpipe = shellpipe
 
   return [gradle#getErrorCount(), gradle#getWarningCount()]
 
-endfunction
-
-function! s:runHandler(id, data, event) dict
-  if a:event ==# 'exit'
-    call s:finishBuilding()
-    execute('cgetfile ' . self.errorfile)
-    call s:showQuickfix()
-  endif
 endfunction
 
 function! gradle#glyph()
@@ -313,17 +318,19 @@ function! s:finishBuilding()
   let s:isBuilding = s:isBuilding - 1
 endfunction
 
-" This method returns the number of valid errors in the quickfix window. This
+" This method returns the number of valid errors in the loclist. This
 " allows us to check if there are errors after compilation.
 function! gradle#getErrorCount()
-  let l:list = deepcopy(getqflist())
+  let l:id = s:BufWinId()
+  let l:list = deepcopy(getloclist(l:id))
   return len(filter(l:list, "v:val['valid'] > 0 && tolower(v:val['type']) ==# 'e'"))
 endfunction
 
-" This method returns the number of valid warnings in the quickfix window. This
+" This method returns the number of valid warnings in the loclist window. This
 " allows us to check if there are errors after compilation.
 function! gradle#getWarningCount()
-  let l:list = deepcopy(getqflist())
+  let l:id = s:BufWinId()
+  let l:list = deepcopy(getloclist(l:id))
   return len(filter(l:list, "v:val['valid'] > 0 && tolower(v:val['type']) ==# 'w'"))
 endfunction
 
@@ -341,6 +348,15 @@ function! gradle#syncCmd()
   return join(l:cmd, ' ')
 endfunction
 
+function! s:What(result) abort
+    return {
+    \ 'nr': '$',
+    \ 'efm': efm#escapeEfm(efm#buildEfm()),
+    \ 'lines': a:result,
+    \ 'title': 'gradle'
+    \}
+endfunction
+
 " Sync vim-android environment with build.gradle file.
 function! gradle#sync() abort
 
@@ -356,11 +372,13 @@ function! gradle#sync() abort
           \ 'gradleFile': l:gradleFile
           \ }
 
-    let vimTaskJob = jobstart(gradle#syncCmd(), s:callbacks)
+    let s:chunks[jobstart(gradle#syncCmd(), s:callbacks)] = ['']
   else
     call gradle#logi('Gradle sync, please wait...')
-    let l:result = system(gradle#syncCmd())
-    call s:parseVimTaskOutput(l:gradleFile, split(l:result, '\n'))
+    let l:result = split(system(gradle#syncCmd()), '\n')
+    call s:parseVimTaskOutput(l:gradleFile, l:result)
+    let l:id = s:BufWinId()
+    call setloclist(l:id, [], ' ', s:What(l:result))
     call gradle#setup()
     call gradle#logi('')
     call s:finishBuilding()
@@ -395,19 +413,23 @@ function! gradle#setup()
 
 endfunction
 
+
 " Callback invoked when the gradle#sync() method finishes processing. Used when
 " using nvim async functionality.
 function! s:vimTaskHandler(id, data, event) dict
 
   if a:event ==# 'stdout' || a:event ==# 'stderr'
-    call s:parseVimTaskOutput(self.gradleFile, a:data)
-    call setqflist([], 'a', { 'efm': efm#escapeEfm(efm#buildEfm()), 'lines': a:data, 'title': 'Gradle Sync' })
+    if !empty(a:data)
+      let s:chunks[a:id][-1] .= a:data[0]
+      call extend(s:chunks[a:id], a:data[1:])
+    endif
   elseif a:event ==# 'exit'
     call s:finishBuilding()
-    if a:data != 0
-      call s:showQuickfix()
-      call gradle#logi('Gradle sync task failed')
-    endif
+    call s:parseVimTaskOutput(self.gradleFile, s:chunks[a:id])
+    let l:id = s:BufWinId()
+    call setloclist(l:id, [], ' ', s:What(s:chunks[a:id]))
+    call remove(s:chunks, a:id)
+    call s:showLoclist()
     call gradle#setup()
   endif
 
@@ -598,7 +620,8 @@ function! s:showSigns()
   execute('sign unplace *')
   execute('sign define gradleErrorSign text=' . gradle#glyphError() . ' texthl=Error')
   execute('sign define gradleWarningSign text=' . gradle#glyphWarning() . ' texthl=Warning')
-  for item in getqflist()
+  let l:id = s:BufWinId()
+  for item in getloclist(l:id)
     if item.valid && item.bufnr != 0 && item.lnum > 0
       let l:signId = s:lpad(item.bufnr) . s:lpad(item.lnum)
       let l:sign = 'sign place ' . l:signId . ' line=' . item.lnum
@@ -613,24 +636,31 @@ function! s:showSigns()
   endfor
 endfunction
 
-function! s:showQuickfix()
+function! s:showLoclist()
 
+  " Backward compatibility
   if !exists('g:gradle_quickfix_show')
     let g:gradle_quickfix_show = 1
   endif
 
+  if !exists('g:gradle_loclist_show')
+    let g:gradle_loclist_show = g:gradle_quickfix_show
+  endif
+
   call s:showSigns()
 
-  if g:gradle_quickfix_show
-    if gradle#getErrorCount() > 0
-      execute('botright copen | wincmd p')
-    else
-      execute('cclose')
-      " Work around bug that causes file to loose syntax after the quick fix
-      " window is closed.
-      if exists('g:syntax_on')
-        execute('syntax enable')
-      endif
+  if !g:gradle_loclist_show
+    return
+  end
+
+  if gradle#getErrorCount() > 0
+    execute('botright lopen | wincmd p')
+  else
+    execute('lclose')
+    " Work around bug that causes file to loose syntax after the quick fix
+    " window is closed.
+    if exists('g:syntax_on')
+      execute('syntax enable')
     endif
   endif
 endfunction

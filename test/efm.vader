@@ -1,6 +1,6 @@
 Execute (Test Gradle Errorformat):
   call efm#testEfm("gradle.efm")
-  echomsg string(getqflist())
+  echomsg string(getloclist(0))
 
 Expect (Test Gradle Errorformat):
   || Build failed with an exception.
@@ -9,7 +9,7 @@ Expect (Test Gradle Errorformat):
 
 Execute (Test Build Failure):
   call efm#testEfm("test01.efm")
-  echomsg string(getqflist())
+  echomsg string(getloclist(0))
 
 Expect (Test Build Failure):
   || Build failed with an exception.
@@ -18,7 +18,7 @@ Expect (Test Build Failure):
 
 Execute (Test Javac Failure):
   call efm#testEfm("test02.efm")
-  echomsg string(getqflist())
+  echomsg string(getloclist(0))
 
 Expect (Test Javac Failure):
   /home/ryujin/Projects/Join/android-client/joindatabase/src/main/java/jp/co/skillupjapan/joindatabase/database/JoinDatabase.kt|27 col 13 warning| Variable 'dbFile' is never used
@@ -122,7 +122,7 @@ Expect (Test Javac Failure):
   ||   Run with --stacktrace option to get the stack trace. Run with --info or --debug option to get more log output.
 Execute (Test Javac Warning):
   call efm#testEfm("test03.efm")
-  echomsg string(getqflist())
+  echomsg string(getloclist(0))
 
 Expect (Test Javac Warning):
   /home/ryujin/Projects/Join/android-client/Join/src/main/java/jp/co/skillupjapan/join/activities/BindingBaseActivity.java|31 warning| The component BindingBaseActivity_ is not registered in the AndroidManifest.xml file.
@@ -202,7 +202,7 @@ Expect (Test Javac Warning):
 
 Execute (Test AAPT Errorformat):
   call efm#testEfm("test04.efm")
-  echomsg string(getqflist())
+  echomsg string(getloclist(0))
 
 Expect (Test AAPT Errorformat):
   /home/ryujin/Projects/Join/android-client/Join/src/main/res/values-ja/strings.xml|7 col 39 error| The element type "sring" must be terminated by the matching end-tag "</sring>".
@@ -212,7 +212,7 @@ Expect (Test AAPT Errorformat):
 
 Execute (Test Lint Errorformat):
   call efm#testEfm("test05.efm")
-  echomsg string(getqflist())
+  echomsg string(getloclist(0))
 
 Expect (Test Lint Errorformat):
   || Build failed with an exception.
@@ -314,7 +314,7 @@ Expect (Test Lint Errorformat):
 
 Execute (Test PMD Errorformat):
   call efm#testEfm("test06.efm")
-  echomsg string(getqflist())
+  echomsg string(getloclist(0))
 
 Expect (Test PMD Errorformat):
   || Build failed with an exception.
@@ -442,7 +442,7 @@ Expect (Test PMD Errorformat):
 
 Execute (Test findbugs Errorformat):
   call efm#testEfm("test07.efm")
-  echomsg string(getqflist())
+  echomsg string(getloclist(0))
 
 Expect (Test findbugs Errorformat):
   || Build failed with an exception.
@@ -558,7 +558,7 @@ Expect (Test findbugs Errorformat):
 
 Execute (Test checkstyle Errorformat):
   call efm#testEfm("test08.efm")
-  echomsg string(getqflist())
+  echomsg string(getloclist(0))
 
 Expect (Test checkstyle Errorformat):
   || Build failed with an exception.
