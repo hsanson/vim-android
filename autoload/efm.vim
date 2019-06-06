@@ -14,10 +14,13 @@ function! efm#buildMakeprg()
     call add(s:makeprg, '--no-daemon')
   endif
 
-  if gradle#versionMinor() >= 3
+  if gradle#versionMajor() > 2
     call add(s:makeprg, '--console')
     call add(s:makeprg, 'plain')
-  elseif gradle#versionMinor() > 0
+  elseif gradle#versionMajor() ==# 2 && gradle#versionMinor() > 3
+    call add(s:makeprg, '--console')
+    call add(s:makeprg, 'plain')
+  else
     call add(s:makeprg, '--no-color')
   endif
 
