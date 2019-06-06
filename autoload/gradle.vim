@@ -67,11 +67,11 @@ function! gradle#version()
 endfunction
 
 function! gradle#versionMajor()
-  return cache#get(gradle#key(), 'version', ['', '', ''])[1]
+  return str2nr(cache#get(gradle#key(), 'version', ['', '', ''])[1])
 endfunction
 
 function! gradle#versionMinor()
-  return cache#get(gradle#key(), 'version', ['', '', ''])[2]
+  return str2nr(cache#get(gradle#key(), 'version', ['', '', ''])[2])
 endfunction
 
 " Verifies if the android sdk is available and if the gradle build and binary
