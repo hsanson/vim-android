@@ -8,14 +8,14 @@ function! ant#bin()
     let g:ant_path = $ANT_HOME
   endif
 
-  let g:ant_bin = g:ant_path . "/bin/ant"
+  let g:ant_bin = g:ant_path . '/bin/ant'
 
   if(!executable(g:ant_bin))
-    if executable("ant")
-      let g:ant_bin = "ant"
+    if executable('ant')
+      let g:ant_bin = 'ant'
     else
-      echoerr "ant tool could not be found"
-      let g:ant_bin = "/bin/false"
+      echoerr 'ant tool could not be found'
+      let g:ant_bin = '/bin/false'
     endif
   endif
 

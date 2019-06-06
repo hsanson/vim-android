@@ -9,16 +9,16 @@ function! efm#buildMakeprg()
    \ ]
 
   if gradle#isDaemonEnabled()
-    call add(s:makeprg, "--daemon")
+    call add(s:makeprg, '--daemon')
   else
-    call add(s:makeprg, "--no-daemon")
+    call add(s:makeprg, '--no-daemon')
   endif
 
   if gradle#versionMinor() >= 3
-    call add(s:makeprg, "--console")
-    call add(s:makeprg, "plain")
+    call add(s:makeprg, '--console')
+    call add(s:makeprg, 'plain')
   elseif gradle#versionMinor() > 0
-    call add(s:makeprg, "--no-color")
+    call add(s:makeprg, '--no-color')
   endif
 
   return join(s:makeprg, '\ ')
@@ -49,31 +49,31 @@ endfunction
 " TODO: Cannot make the java errors column number get detected with the %p^
 " pattern.
 function! efm#buildEfm()
-  let efm="%-G:%.%#,"                          " Filter out everything that starts with :
-  let efm.="%-GNote:%.%#,"                     " Filter out everything that starts with Note:
-  let efm.="%-G  warning:%.%#,"
-  let efm.="%Wwarning: %m,"
-  let efm.="findbugs: %tarning %f:%l:%c %m,"   " Find bugs
-  let efm.="pmd: %tarning %f:%l:%c %m,"        " PMD
-  let efm.="checkstyle: %tarning %f:%l:%c %m," " Checkstyle
-  let efm.="lint: %tarning %f:%l:%c %m,"       " Linter
-  let efm.="%f:%l:%c: %trror: %m,"             " single aapt
-  let efm.="%f:%l:%c: %tarning: %m,"           " single aapt
-  let efm.="%EFAILURE: %m,"                    " Catch all exception start
-  let efm.="%-ZBUILD FAILED,"                  " Catch all exception end
-  let efm.="%Ee: %f:%l: error: %m,"
-  let efm.="%Ww: %f:%l: warning: %m,"
-  let efm.="%E%f:%l: error: %m,"
-  let efm.="%W%f:%l: warning: %m,"
-  let efm.="%W%f:%l:%c-%.%# Warning: %m,"      " multi manifest start
-  let efm.="%E%f:%l:%c-%.%# Error: %m,"        " multi manifest start
-  let efm.="%C%.%#%p^,"
-  let efm.="%+Ie:  %.%#,"
-  let efm.="%+Iw:  %.%#,"
-  let efm.="%+I  %.%#,"
-  let efm.="%t: %f: (%l\\, %c): %m,"           " single Kotlin
-  let efm.="%t: %f: %m,"                       " single Kotlin
-  let efm.="%-G%.%#"                           " Remove not matching messages
+  let efm='%-G:%.%#,'                          " Filter out everything that starts with :
+  let efm.='%-GNote:%.%#,'                     " Filter out everything that starts with Note:
+  let efm.='%-G  warning:%.%#,'
+  let efm.='%Wwarning: %m,'
+  let efm.='findbugs: %tarning %f:%l:%c %m,'   " Find bugs
+  let efm.='pmd: %tarning %f:%l:%c %m,'        " PMD
+  let efm.='checkstyle: %tarning %f:%l:%c %m,' " Checkstyle
+  let efm.='lint: %tarning %f:%l:%c %m,'       " Linter
+  let efm.='%f:%l:%c: %trror: %m,'             " single aapt
+  let efm.='%f:%l:%c: %tarning: %m,'           " single aapt
+  let efm.='%EFAILURE: %m,'                    " Catch all exception start
+  let efm.='%-ZBUILD FAILED,'                  " Catch all exception end
+  let efm.='%Ee: %f:%l: error: %m,'
+  let efm.='%Ww: %f:%l: warning: %m,'
+  let efm.='%E%f:%l: error: %m,'
+  let efm.='%W%f:%l: warning: %m,'
+  let efm.='%W%f:%l:%c-%.%# Warning: %m,'      " multi manifest start
+  let efm.='%E%f:%l:%c-%.%# Error: %m,'        " multi manifest start
+  let efm.='%C%.%#%p^,'
+  let efm.='%+Ie:  %.%#,'
+  let efm.='%+Iw:  %.%#,'
+  let efm.='%+I  %.%#,'
+  let efm.='%t: %f: (%l\\, %c): %m,'           " single Kotlin
+  let efm.='%t: %f: %m,'                       " single Kotlin
+  let efm.='%-G%.%#'                           " Remove not matching messages
   return efm
 endfunction
 
@@ -96,8 +96,8 @@ endfunction
 function! efm#testEfm(testFile)
   let tmpEfm = &errorformat
   try
-    execute("setlocal errorformat=" . efm#escapeEfm(efm#buildEfm()))
-    execute('cgetfile ' . g:gradle_test_dir . "/efm/" . a:testFile)
+    execute('setlocal errorformat=' . efm#escapeEfm(efm#buildEfm()))
+    execute('cgetfile ' . g:gradle_test_dir . '/efm/' . a:testFile)
     copen
   catch
     echo v:exception
@@ -123,8 +123,8 @@ endfunction
 function! efm#testSingleEfm(fmt, testFile)
   let tmpEfm = &errorformat
   try
-    execute("setlocal errorformat=" .efm#escapeEfm(a:fmt))
-    execute('cgetfile ' . g:gradle_test_dir . "/efm/" . a:testFile)
+    execute('setlocal errorformat=' .efm#escapeEfm(a:fmt))
+    execute('cgetfile ' . g:gradle_test_dir . '/efm/' . a:testFile)
     copen
   catch
     echo v:exception

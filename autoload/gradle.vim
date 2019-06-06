@@ -8,7 +8,7 @@ endfunction
 " TODO: The default works only in Linux OS.
 function! gradle#gradleHome()
 
-  if exists("$GRADLE_HOME")
+  if exists('$GRADLE_HOME')
     let g:gradle_path = $GRADLE_HOME
     return g:gradle_path
   endif
@@ -17,16 +17,16 @@ function! gradle#gradleHome()
     return g:gradle_path
   endif
 
-  let g:gradle_path = "/usr"
+  let g:gradle_path = '/usr'
   return g:gradle_path
 
 endfunction
 
 function! gradle#wrapper()
-  if gradle#getOS() == 'Windows' && executable("\.gradlew.bat")
-      return "\.gradlew.bat"
-  elseif executable("./gradlew")
-    return "./gradlew"
+  if gradle#getOS() ==# 'Windows' && executable('\.gradlew.bat')
+      return '\.gradlew.bat'
+  elseif executable('./gradlew')
+    return './gradlew'
   endif
 endfunction
 
@@ -48,13 +48,13 @@ function! gradle#bin()
     return g:gradle_bin
   endif
 
-  if finddir(gradle#gradleHome()) != "" && executable(gradle#gradleHome() . "/bin/gradle")
-    let g:gradle_bin = gradle#gradleHome() . "/bin/gradle"
+  if finddir(gradle#gradleHome()) !=# '' && executable(gradle#gradleHome() . '/bin/gradle')
+    let g:gradle_bin = gradle#gradleHome() . '/bin/gradle'
     return g:gradle_bin
   endif
 
-  if executable("gradle")
-    let g:gradle_bin = "gradle"
+  if executable('gradle')
+    let g:gradle_bin = 'gradle'
     return g:gradle_bin
   endif
 
@@ -97,14 +97,14 @@ endfunction
 function! gradle#install(device, mode)
   let l:old_serial = $ANDROID_SERIAL
   let $ANDROID_SERIAL=a:device
-  let l:result = call("gradle#run", ["install" . android#capitalize(a:mode)])
+  let l:result = call('gradle#run', ['install' . android#capitalize(a:mode)])
   let $ANDROID_SERIAL = l:old_serial
 endfunction
 
 function! gradle#uninstall(device, mode)
   let l:old_serial = $ANDROID_SERIAL
   let $ANDROID_SERIAL=a:device
-  let l:result = call("gradle#run", ["uninstall" . android#capitalize(a:mode)])
+  let l:result = call('gradle#run', ['uninstall' . android#capitalize(a:mode)])
   let $ANDROID_SERIAL = l:old_serial
 endfunction
 
@@ -119,31 +119,31 @@ endfunction
 " current buffer location.
 function! gradle#findGradleFile()
 
-  let l:file = ""
-  let l:path = expand("%:p:h")
+  let l:file = ''
+  let l:path = expand('%:p:h')
 
   if len(l:path) <= 0
     let l:path = getcwd()
   endif
 
-  let l:file = findfile("build.gradle", l:path . ";$HOME")
+  let l:file = findfile('build.gradle', l:path . ';$HOME')
 
   if len(l:file) == 0
-    return ""
+    return ''
   endif
 
-  return copy(fnamemodify(l:file, ":p"))
+  return copy(fnamemodify(l:file, ':p'))
 endfunction
 
 " Tries to find the root of the android project. It uses the build.gradle file
 " location as root. This allows vim-android to work with multi-project
 " environments.
 function! gradle#findRoot()
-  return fnamemodify(gradle#findGradleFile(), ":p:h")
+  return fnamemodify(gradle#findGradleFile(), ':p:h')
 endfunction
 
 function! gradle#isCompilerSet()
-  if(exists("b:current_compiler") && b:current_compiler == "gradle")
+  if(exists('b:current_compiler') && b:current_compiler ==# 'gradle')
     return 1
   else
     return 0
@@ -151,8 +151,8 @@ function! gradle#isCompilerSet()
 endfunction
 
 function! gradle#compile(...)
-  call gradle#logi("Gradle " . join(a:000, " "))
-  let l:result = call("gradle#run", a:000)
+  call gradle#logi('Gradle ' . join(a:000, ' '))
+  let l:result = call('gradle#run', a:000)
 endfunction
 
 function! gradle#run(...)
@@ -170,11 +170,11 @@ function! gradle#run(...)
           \ 'on_exit':   function('s:runHandler'),
           \ 'errorfile': s:errorfile
           \ }
-    execute("compiler gradle")
+    execute('compiler gradle')
     let l:cmd = &makeprg . ' ' . join(a:000, ' ') . ' ' . &shellpipe . ' ' . s:errorfile
     let vimTaskJob = jobstart(l:cmd, s:callbacks)
   else
-    execute("compiler gradle | silent! make " . join(a:000, " "))
+    execute('compiler gradle | silent! make ' . join(a:000, ' '))
     call s:finishBuilding()
     redraw!
     call s:showQuickfix()
@@ -187,7 +187,7 @@ function! gradle#run(...)
 endfunction
 
 function! s:runHandler(id, data, event) dict
-  if a:event == 'exit'
+  if a:event ==# 'exit'
     call s:finishBuilding()
     execute('cgetfile ' . self.errorfile)
     call s:showQuickfix()
@@ -196,28 +196,28 @@ endfunction
 
 function! gradle#glyph()
   if !exists('g:gradle_glyph_gradle')
-    let g:gradle_glyph_gradle = "G"
+    let g:gradle_glyph_gradle = 'G'
   endif
   return g:gradle_glyph_gradle
 endfunction
 
 function! gradle#glyphError()
   if !exists('g:gradle_glyph_error')
-    let g:gradle_glyph_error = "E"
+    let g:gradle_glyph_error = 'E'
   endif
   return g:gradle_glyph_error
 endfunction
 
 function! gradle#glyphWarning()
   if !exists('g:gradle_glyph_warning')
-    let g:gradle_glyph_warning = "W"
+    let g:gradle_glyph_warning = 'W'
   endif
   return g:gradle_glyph_warning
 endfunction
 
 function! gradle#glyphBuilding()
   if !exists('g:gradle_glyph_building')
-    let g:gradle_glyph_building = "building..."
+    let g:gradle_glyph_building = 'building...'
   endif
   return g:gradle_glyph_building
 endfunction
@@ -274,7 +274,7 @@ function! gradle#statusLineError()
   elseif l:warnCount > 0
     return l:warnMsg
   else
-    return ""
+    return ''
   endif
 
 endfunction
@@ -317,25 +317,25 @@ endfunction
 " allows us to check if there are errors after compilation.
 function! gradle#getErrorCount()
   let l:list = deepcopy(getqflist())
-  return len(filter(l:list, "v:val['valid'] > 0 && tolower(v:val['type']) == 'e'"))
+  return len(filter(l:list, "v:val['valid'] > 0 && tolower(v:val['type']) ==# 'e'"))
 endfunction
 
 " This method returns the number of valid warnings in the quickfix window. This
 " allows us to check if there are errors after compilation.
 function! gradle#getWarningCount()
   let l:list = deepcopy(getqflist())
-  return len(filter(l:list, "v:val['valid'] > 0 && tolower(v:val['type']) == 'w'"))
+  return len(filter(l:list, "v:val['valid'] > 0 && tolower(v:val['type']) ==# 'w'"))
 endfunction
 
 function! gradle#syncCmd()
   let l:cmd = [
    \ gradle#bin(),
-   \ "-b",
+   \ '-b',
    \ gradle#findGradleFile(),
-   \ "-I",
+   \ '-I',
    \ g:gradle_init_file,
-   \ "vim",
-   \ "2>&1"
+   \ 'vim',
+   \ '2>&1'
    \ ]
 
   return join(l:cmd, ' ')
@@ -358,11 +358,11 @@ function! gradle#sync() abort
 
     let vimTaskJob = jobstart(gradle#syncCmd(), s:callbacks)
   else
-    call gradle#logi("Gradle sync, please wait...")
+    call gradle#logi('Gradle sync, please wait...')
     let l:result = system(gradle#syncCmd())
-    call s:parseVimTaskOutput(l:gradleFile, split(l:result, "\n"))
+    call s:parseVimTaskOutput(l:gradleFile, split(l:result, '\n'))
     call gradle#setup()
-    call gradle#logi("")
+    call gradle#logi('')
     call s:finishBuilding()
   endif
 
@@ -391,7 +391,7 @@ function! gradle#setup()
   silent! call javacomplete#SetClassPath($CLASSPATH)
   silent! call javacomplete#SetSourcePath($SRCPATH)
 
-  let g:syntastic_java_javac_classpath = $CLASSPATH . ":" . $SRCPATH
+  let g:syntastic_java_javac_classpath = $CLASSPATH . ':' . $SRCPATH
 
 endfunction
 
@@ -399,14 +399,14 @@ endfunction
 " using nvim async functionality.
 function! s:vimTaskHandler(id, data, event) dict
 
-  if a:event == 'stdout' || a:event == 'stderr'
+  if a:event ==# 'stdout' || a:event ==# 'stderr'
     call s:parseVimTaskOutput(self.gradleFile, a:data)
     call setqflist([], 'a', { 'efm': efm#escapeEfm(efm#buildEfm()), 'lines': a:data, 'title': 'Gradle Sync' })
-  elseif a:event == 'exit'
+  elseif a:event ==# 'exit'
     call s:finishBuilding()
     if a:data != 0
       call s:showQuickfix()
-      call gradle#logi("Gradle sync task failed")
+      call gradle#logi('Gradle sync task failed')
     endif
     call gradle#setup()
   endif
@@ -471,7 +471,7 @@ function! gradle#setClassPath()
   let l:srcList = []
 
   let l:oldJars = split($CLASSPATH, gradle#classPathSep())
-  let l:oldSrcs = split($SRCPATH, ",")
+  let l:oldSrcs = split($SRCPATH, ',')
 
   call extend(l:jarList, l:oldJars)
   call extend(l:srcList, l:oldSrcs)
@@ -492,7 +492,7 @@ function! gradle#setClassPath()
   let $CLASSPATH = join(l:jarList, gradle#classPathSep())
   let $SRCPATH = join(l:srcList, gradle#classPathSep())
 
-  exec "set path=" . join(l:srcList, ',')
+  exec 'set path=' . join(l:srcList, ',')
 
 endfunction
 
@@ -500,8 +500,8 @@ function! gradle#sourcePaths()
   " By default gradle projects have well defined source structure. Make sure
   " we add it the the path
   let l:srcs = []
-  let l:javapath = fnamemodify(gradle#findRoot() . "/src/main/java", ':p')
-  let l:respath = fnamemodify(gradle#findRoot() . "/src/main/res", ':p')
+  let l:javapath = fnamemodify(gradle#findRoot() . '/src/main/java', ':p')
+  let l:respath = fnamemodify(gradle#findRoot() . '/src/main/res', ':p')
 
   if isdirectory(l:javapath)
     call add(l:srcs, l:javapath)
@@ -553,8 +553,8 @@ endfunction
 function! gradle#getOS()
 
   if !exists('g:gradle_os')
-    if has("win64") || has("win32") || has("win16")
-      let g:gradle_os = "Windows"
+    if has('win64') || has('win32') || has('win16')
+      let g:gradle_os = 'Windows'
     else
       let g:gradle_os = substitute(system('uname'), '\n', '', '')
     endif
@@ -568,7 +568,7 @@ endfunction
 function! gradle#classPathSep()
 
   if !exists('g:gradle_sep')
-    if gradle#getOS() == "Windows"
+    if gradle#getOS() ==# 'Windows'
       let g:gradle_sep = ';'
     else
       let g:gradle_sep = ':'
@@ -584,8 +584,8 @@ function! gradle#setupGradleCommands()
     command! -nargs=+ Gradle call gradle#compile(<f-args>)
     command! GradleSync call gradle#sync()
   else
-    command! -nargs=? Gradle echoerr "Gradle binary could not be found, vim-android gradle commands are disabled"
-    command! GradleSync echoerr "Gradle binary could not be found, vim-android gradle commands are disabled"
+    command! -nargs=? Gradle echoerr 'Gradle binary could not be found, vim-android gradle commands are disabled'
+    command! GradleSync echoerr 'Gradle binary could not be found, vim-android gradle commands are disabled'
   endif
 endfunction
 
@@ -595,19 +595,19 @@ function! s:showSigns()
     return
   endif
 
-  execute("sign unplace *")
-  execute("sign define gradleErrorSign text=" . gradle#glyphError() . " texthl=Error")
-  execute("sign define gradleWarningSign text=" . gradle#glyphWarning() . " texthl=Warning")
+  execute('sign unplace *')
+  execute('sign define gradleErrorSign text=' . gradle#glyphError() . ' texthl=Error')
+  execute('sign define gradleWarningSign text=' . gradle#glyphWarning() . ' texthl=Warning')
   for item in getqflist()
     if item.valid && item.bufnr != 0 && item.lnum > 0
       let l:signId = s:lpad(item.bufnr) . s:lpad(item.lnum)
-      let l:sign = "sign place " . l:signId . " line=" . item.lnum
-      if item.type == 'e'
-        let l:sign = l:sign . " name=gradleErrorSign"
+      let l:sign = 'sign place ' . l:signId . ' line=' . item.lnum
+      if item.type ==# 'e'
+        let l:sign = l:sign . ' name=gradleErrorSign'
       else
-        let l:sign = l:sign . " name=gradleWarningSign"
+        let l:sign = l:sign . ' name=gradleWarningSign'
       endif
-      let l:sign = l:sign . " buffer=" . item.bufnr
+      let l:sign = l:sign . ' buffer=' . item.bufnr
       execute(l:sign)
     endif
   endfor
