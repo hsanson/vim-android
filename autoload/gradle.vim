@@ -222,7 +222,7 @@ endfunction
 
 function! gradle#glyphBuilding()
   if !exists('g:gradle_glyph_building')
-    let g:gradle_glyph_building = 'building...'
+    let g:gradle_glyph_building = 'B'
   endif
   return g:gradle_glyph_building
 endfunction
@@ -264,26 +264,6 @@ function! gradle#isDaemonEnabled()
   return g:gradle_daemon
 endfunction
 
-function! gradle#statusLineError()
-
-  let l:errCount = gradle#getErrorCount()
-  let l:warnCount = gradle#getWarningCount()
-
-  let l:errMsg = l:errCount . gradle#glyphError()
-  let l:warnMsg = l:warnCount . gradle#glyphWarning()
-
-  if l:errCount > 0 && l:warnCount > 0
-    return l:errMsg . ' ' . l:warnMsg
-  elseif l:errCount > 0
-    return l:errMsg
-  elseif l:warnCount > 0
-    return l:warnMsg
-  else
-    return ''
-  endif
-
-endfunction
-
 function! gradle#glyphProject()
   if(android#isAndroidProject())
     return android#glyph()
@@ -292,15 +272,21 @@ function! gradle#glyphProject()
   endif
 endfunction
 
+" Deprecated.
 function! gradle#statusLine()
-  if s:isBuilding()
-    return gradle#glyphProject() . ' ' . gradle#glyphBuilding()
-  else
-    return gradle#glyphProject() . ' ' . gradle#statusLineError()
-  endif
+  return join([
+        \ lightline#gradle#running(),
+        \ lightline#gradle#errors(),
+        \ lightline#gradle#warnings(),
+        \ lightline#gradle#project()
+        \], ' ')
 endfunction
 
-function! s:isBuilding()
+function! gradle#jobCount() abort
+  return gradle#running() ? s:isBuilding : 0
+endfunction
+
+function! gradle#running() abort
   return exists('s:isBuilding') && s:isBuilding > 0
 endfunction
 
@@ -309,6 +295,7 @@ function! s:startBuilding()
     let s:isBuilding = 0
   endif
   let s:isBuilding = s:isBuilding + 1
+  silent! call lightline#update()
 endfunction
 
 function! s:finishBuilding()
@@ -316,6 +303,7 @@ function! s:finishBuilding()
     let s:isBuilding = 0
   endif
   let s:isBuilding = s:isBuilding - 1
+  silent! call lightline#update()
 endfunction
 
 " This method returns the number of valid errors in the loclist. This

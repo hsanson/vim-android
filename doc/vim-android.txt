@@ -398,25 +398,23 @@ window populated with all linter errors and warnings:
 ------------------------------------------------------------------------------
 STATUS LINE                                             *vim-android-statusline*
 
-This plugin provides a gradle#statusLine() method that returns an string
-indiciating the plugin status. The default status line looks like below:
->
-    A  12 E 1 W
-<
-The first glyph can be either A or G to indicate if the file belongs to an
-Android project or a Gradle project respectively.
+This plugin provides some methods that return strings indiciating the plugin
+status.
 
-In the loclist window if there are compilation errors then the number of
-errors is shown followed by E and if there are warning then the number of
-warnings is shown followed by W.
+Function |lightline#gradle#running()| returns |g:gradle_glyph_building|
+followed with the number of running gradle jobs. If no jobs are currently
+running then an empty string is returned.
 
-If your are running NeoVim the status will show *building...* instead in the
-status to indicate that some long background process is being executed (e.g.
-Gradle build or GradleSync).
+Function |lightline#gradle#project()| returns |g:gradle_glyph_android| if the
+current project is an android project, |g:gradle_glyph_gradle| if the
+current project is a gradle project, or an empty string otherwise.
 
-You can customize the glyphs shown in the status bar by setting the global
-variables below. This is specially useful if you have a powerline enabled
-font.
+Function |lightline#gradle#errors()| returns |g:gradle_glyph_errors| followed
+by the number of errors currently listed in the loclist.
+
+Function |lightline#gradle#warnings()| returns |g:gradle_glyph_warnings| followed
+by the number of warnings currently listed in the loclist.
+
 
                                                  *g:gradle_glyph_gradle*
 g:gradle_glyph_gradle~
@@ -444,7 +442,7 @@ Default: "W"
 <
                                                  *g:gradle_glyph_building*
 g:gradle_glyph_building~
-Default: "building..."
+Default: "B"
 >
         let g:gradle_glyph_building... = 'U+f253'
 <
@@ -458,16 +456,40 @@ the glyph you can copy/paste it or input it by presing <Ctrl+v> followed by
 AIRLINE STATUS LINE                                      *vim-android-airline*
 
 To show the gradle/android status line in Airline you can add the following to
-your vim configuration to create a vim-gradle-status part:
+your vim configuration to create airline gradle parts:
 >
-   call airline#parts#define_function('vim-gradle-status', 'gradle#statusLine')
+   call airline#parts#define_function(
+       \ 'gradle-running',
+       \ 'ligthline#gradle#running'
+       \)
+
+   call airline#parts#define_function(
+       \ 'gradle-errors',
+       \ 'ligthline#gradle#errors'
+       \)
+
+   call airline#parts#define_function(
+       \ 'gradle-warnings',
+       \ 'ligthline#gradle#warnings'
+       \)
+
+   call airline#parts#define_function(
+       \ 'gradle-project',
+       \ 'ligthline#gradle#project'
+       \)
 <
-then you can add to any airline section you want:
+Then you can add the parts to any airline section you want:
 >
-   let g:airline_section_x= airline#section#create_right(['tagbar', 'filetype', 'vim-gradle-status'])
+   let g:airline_section_x= airline#section#create_right([
+     \ 'tagbar',
+     \ 'filetype',
+     \ 'gradle-running',
+     \ 'gradle-errors',
+     \ 'gradle-warnings
+     \])
 <
 
-refer to airline documentation for details on how parts and sections are
+Refer to airline documentation for details on how parts and sections are
 defined and used.
 
 ------------------------------------------------------------------------------
@@ -477,21 +499,26 @@ To show the gradle/android status line in Lightline you can add the following
 to your vim configuration:
 
 let g:lightline = {
-  \ 'colorcheme': 'PaperColor',
   \ 'active': {
-  \    'left': [ [ 'mode', 'paste' ], [ 'fugitive', 'readonly', 'filename', 'modified' ] ],
-  \    'right': [ ['lineinfo'], ['percent'], ['gradle'] ]
+  \    'left': [ ['gradle_project'] ],
+  \    'right': [ ['gradle_running'], ['gradle_errors'], ['gradle_warnings'] ]
   \ },
-  \ 'component': {
-  \    'gradle': '%{exists("*gradle#statusLine")?gradle#statusLine():""}'
-  \    },
-  \ 'component_visible_condition': {
-  \    'gradle': '(exists("*gradle#statusLine") && ""!=gradle#statusLine())'
-  \    }
+  \ 'component_expand': {
+  \    'gradle_errors': 'lightline#gradle#errors',
+  \    'gradle_warnings': 'lightline#gradle#warnings',
+  \    'gradle_running': 'lightline#gradle#running',
+  \    'gradle_project': 'lightline#gradle#project'
+  \ },
+  \ 'component_type': {
+  \    'gradle_errors': 'error',
+  \    'gradle_warnings': 'warning',
+  \    'gradle_running': 'left',
+  \    'gradle_project': 'left'
+  \ }
   \ }
 
-make sure you read the Lightline documentation for details on how this
-configuration works and adapt to your own usage.
+Read the Lightline documentation for details on how this configuration works and
+adapt to your own usage.
 
 ------------------------------------------------------------------------------
 TROUBLESHOOTING                                    *vim-android-troubleshooting*
