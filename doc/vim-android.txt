@@ -1,9 +1,9 @@
-*vim-android.txt*   For Vim version 7.3 or NeoVim   Last change: 2016 March 26
+*vim-android.txt*   For Vim version 7.3 or NeoVim   Last change: 2019 Jun 07
 
 Author:         Horacio Sanson
 Licence:        Vim licence, see |license|
 Homepage:       https://github.com/hsanson/vim-android
-Version:        1.4.0
+Version:        1.6.0
 
 ==============================================================================
 Contents                                   *vim-android* *vim-android-contents*
@@ -33,8 +33,8 @@ Contents                                   *vim-android* *vim-android-contents*
 1. Intro                                                      *vim-android-intro*
 
 vim-android is a plugin that facilitates the development of Gradle and Android
-applications within vim. When editing a java or xml file this plugin tries
-to find gradle.build file in the current directory and if found it
+applications within vim. When editing a java, kotlin or xml file this plugin
+tries to find gradle.build file in the current directory and if found it
 configures a set of variables and commands that allows easier development for
 Gradle projects. If the gradle.build file contains the android gradle plugin
 then Android specific commands are also configured.
@@ -44,12 +44,12 @@ SUPPORTED FEATURES                                         *vim-android-features
 
 The following features are supported by vim-android:
 
-  - Auto-detection of Gradle and Android projects when opening a Java or
+  - Auto-detection of Gradle and Android projects when opening a Java, kotlin or
     XML file. For this the plugin uses findfile function that searches from the
     current buffer path backwards until it finds a build.gradle file for the
     project.
-  - Custom gradle vim task that invokes gradle directly with any
-    arguments passed to the command.
+  - Custom gradle vim task that invokes gradle directly with any arguments
+    passed to the command.
   - Custom errorformat that captures java errors, linter errors, test errors,
     aapt errors, checkstyle, pmd, findbugs and displays them in the loclist 
     window. This requires that gradle be invoked with the vim init file
@@ -66,7 +66,7 @@ The following features are supported by vim-android:
   - Adds useful commands to generate tags for the current project source and
     the Android SDK sources.
   - Improved XML omnicompletion for Android resource and manifest XML files.
-  - Takes advantage of NVIM async functions to perfom long running tasks in
+  - Takes advantage of neovim async functions to perfom long running tasks in
     the background (e.g. GradleSync)
 
 ------------------------------------------------------------------------------
@@ -76,7 +76,7 @@ Known Issues                                                *vim-android-issues*
     dependencies for the project and a cache with all the packages found in the
     gradle home folder. This process can be extremely slow depending on the
     number of dependencies the project has and the number of packages cached in
-    your gradle home. When running in NVIM with async functions these tasks do
+    your gradle home. When running in neovim with async functions these tasks do
     not block the interface but all Gradle and Android commands won't be
     available until the tasks complete in the background.
 
@@ -91,9 +91,9 @@ Known Issues                                                *vim-android-issues*
 
   - The javacomplete plugin is nice but in some situations it hangs or spits
     thousands of incomprehensible error messages. For this reason I recommend
-    you use the new javacomplete2 plugin instead:
+    you use ale plugin with the javalsp language server instead:
 
-      See: https://github.com/artur-shaik/vim-javacomplete2
+      See: https://github.com/w0rp/ale
 
 ==============================================================================
 2. Requirements                                        *vim-android-requirements*
@@ -106,7 +106,7 @@ The following requirements have to be met in order to be able to use vim-android
     PATH environment variable.
     - Android gradle plugin 1.3.0 or newer recommended.
     - Android build tools 22.0.1 or newer recommended.
-  - Gradle 2.2+ in your PATH.
+  - Gradle 2.2+ in your PATH or gradle wrapper script.
   - The exuberant-ctags package if you want to generate tags for the android
     project, dependencies and the Android SDK.
 
@@ -129,8 +129,8 @@ installed. There are two ways to do this: you can set the ANDROID_HOME
 environment variable to the absolute path of the android SDK or you can set
 it to the global variable g:android_sdk_path in your vimrc file.
 
-When you open a Java or XML file this plugin looks for a build.gradle file
-starting from the location of the current open buffer upwards until your
+When you open a Java, Kotlin or XML file this plugin looks for a build.gradle
+file starting from the location of the current open buffer upwards until your
 HOME directory. If it is found this plugin activates and enables several
 commands that faciliate working on Android projects and exports environment
 variables that can be used by other plugins for omnicomplete and debugging.
@@ -144,9 +144,9 @@ COMMANDS                                                   *vim-android-commands
 
 :GradleSync
     Synchronizes the vim-android environment with that of the gradle.build
-    file. This is run automatically when opening a buffer with a xml or java
-    file inside a gradle or android project. You should execute this command
-    every time you make changes to your build.gradle file.
+    file. This is run automatically when opening a buffer with a java, kotlin
+    or xml file inside a gradle or android project. You should execute this
+    command every time you make changes to your build.gradle file.
 
 :Gradle <options>
     Invokes gradle passing the <options> verbatim. Any gradle options
@@ -162,8 +162,8 @@ COMMANDS                                                   *vim-android-commands
     command will present you a list of emulators/devices so you can choose to
     which one the APK should be installed to. If there are not apk files
     build this command fails with an error. Current version of gradle can also
-    install the APK on all connected devices so invoking :Android installDebug
-    or :Android installRelease should have the same effect if you have a recent
+    install the APK on all connected devices so invoking :Gradle installDebug
+    or :Gradle installRelease should have the same effect if you have a recent
     enough version of the android gradle plugin.
 
 :AndroidUninstall                                           *:AndroidUninstall*
@@ -171,7 +171,7 @@ COMMANDS                                                   *vim-android-commands
     emulators running and/or several devices connected, then this command will
     prompt you with a list of emulators/devices so you can choose from which one
     the app should be uninstalled. Current version of gradle can also uninstall
-    the APKs from all connected devices so invoking :Android uninstallAll should
+    the APKs from all connected devices so invoking :Gradle uninstallAll should
     have the same effect as long as you have a recent version of android gradle
     plugin.
 
@@ -215,7 +215,7 @@ Android application.
 
 Every time you modify the build.gradle file by adding or removing dependencies
 it is a good idea to run the GradleSync command so the dependencies get loaded
-into vim-android. If you are using NeoVim and have async (g:gradle_async)
+into vim-android. If you are using NeoVim and have async |g:gradle_async|
 enabled you may prefer to set an autocommand so this happens automatically.
 For this simply add the following to your vim configuration:
 
