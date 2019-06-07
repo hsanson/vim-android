@@ -1,5 +1,5 @@
-function! efm#buildMakeprg()
-  let s:makeprg = [
+function! s:cmd() abort
+  let l:makeprg = [
    \  'LC_ALL=en_US.UTF8',
    \  gradle#bin(),
    \  '-I',
@@ -9,27 +9,35 @@ function! efm#buildMakeprg()
    \ ]
 
   if gradle#isDaemonEnabled()
-    call add(s:makeprg, '--daemon')
+    call add(l:makeprg, '--daemon')
   else
-    call add(s:makeprg, '--no-daemon')
+    call add(l:makeprg, '--no-daemon')
   endif
 
   if gradle#versionMajor() > 2
-    call add(s:makeprg, '--console')
-    call add(s:makeprg, 'plain')
+    call add(l:makeprg, '--console')
+    call add(l:makeprg, 'plain')
   elseif gradle#versionMajor() ==# 2 && gradle#versionMinor() > 3
-    call add(s:makeprg, '--console')
-    call add(s:makeprg, 'plain')
+    call add(l:makeprg, '--console')
+    call add(l:makeprg, 'plain')
   else
-    call add(s:makeprg, '--no-color')
+    call add(l:makeprg, '--no-color')
   endif
 
-  return join(s:makeprg, ' ')
+  return l:makeprg
+endfunction
+
+function! efm#cmd()
+  return join(s:cmd(), ' ')
+endfunction
+
+function! efm#makeprg()
+  return join(s:cmd(), '\ ')
 endfunction
 
 " Builds and returns the shellpipe used when runing the gradle compiler.
 " TODO: Win and Mac support?
-function! efm#buildShellpipe()
+function! efm#shellpipe()
 
   let s:shellpipe = [
    \ '2>&1',
@@ -51,7 +59,7 @@ endfunction
 "
 " TODO: Cannot make the java errors column number get detected with the %p^
 " pattern.
-function! efm#buildEfm()
+function! efm#efm()
   let efm='%-G:%.%#,'                          " Filter out everything that starts with :
   let efm.='%-GNote:%.%#,'                     " Filter out everything that starts with Note:
   let efm.='%-G  warning:%.%#,'
@@ -83,7 +91,7 @@ endfunction
 " Trying to write errorformat strings with included escaping is extremely
 " confusing and not recommended. Better write them normally and then escape them
 " before passing them to the setlocal or SetCompiler commands.
-function! efm#escapeEfm(efm)
+function! efm#escape(efm)
   return substitute(substitute(a:efm, '\', '\\\\', 'g'), ' ', '\\\ ', 'g')
 endfunction
 
@@ -96,10 +104,10 @@ endfunction
 "
 " To see the list of error output samples see the test/efm folder. To
 " add more samples simply add them to this folder.
-function! efm#testEfm(testFile)
+function! efm#test(testFile)
   let tmpEfm = &errorformat
   try
-    execute('setlocal errorformat=' . efm#escapeEfm(efm#buildEfm()))
+    execute('setlocal errorformat=' . efm#escape(efm#efm()))
     execute('cgetfile ' . g:gradle_test_dir . '/efm/' . a:testFile)
     copen
   catch
@@ -123,7 +131,7 @@ endfunction
 "
 " To see the list of error output samples see the test/efm folder. To
 " add more samples simply add them to this folder.
-function! efm#testSingleEfm(fmt, testFile)
+function! efm#testSingle(fmt, testFile)
   let tmpEfm = &errorformat
   try
     execute('setlocal errorformat=' .efm#escapeEfm(a:fmt))

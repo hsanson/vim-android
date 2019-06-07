@@ -1,5 +1,5 @@
 Execute (Test Gradle Errorformat):
-  call efm#testEfm("gradle.efm")
+  call efm#test("gradle.efm")
   echomsg string(getloclist(0))
 
 Expect (Test Gradle Errorformat):
@@ -8,7 +8,7 @@ Expect (Test Gradle Errorformat):
   ||   Run gradlew tasks to get a list of available tasks. Run with --stacktrace option to get the stack trace. Run with --info or --debug option to get more log output.
 
 Execute (Test Build Failure):
-  call efm#testEfm("test01.efm")
+  call efm#test("test01.efm")
   echomsg string(getloclist(0))
 
 Expect (Test Build Failure):
@@ -17,7 +17,7 @@ Expect (Test Build Failure):
   ||   Run with --stacktrace option to get the stack trace. Run with --info or --debug option to get more log output.
 
 Execute (Test Javac Failure):
-  call efm#testEfm("test02.efm")
+  call efm#test("test02.efm")
   echomsg string(getloclist(0))
 
 Expect (Test Javac Failure):
@@ -121,7 +121,7 @@ Expect (Test Javac Failure):
   ||   Execution failed for task ':Join:kaptDebugKotlin'.
   ||   Run with --stacktrace option to get the stack trace. Run with --info or --debug option to get more log output.
 Execute (Test Javac Warning):
-  call efm#testEfm("test03.efm")
+  call efm#test("test03.efm")
   echomsg string(getloclist(0))
 
 Expect (Test Javac Warning):
@@ -201,7 +201,7 @@ Expect (Test Javac Warning):
   ||   
 
 Execute (Test AAPT Errorformat):
-  call efm#testEfm("test04.efm")
+  call efm#test("test04.efm")
   echomsg string(getloclist(0))
 
 Expect (Test AAPT Errorformat):
@@ -211,7 +211,7 @@ Expect (Test AAPT Errorformat):
   ||   Run with --stacktrace option to get the stack trace. Run with --info or --debug option to get more log output.
 
 Execute (Test Lint Errorformat):
-  call efm#testEfm("test05.efm")
+  call efm#test("test05.efm")
   echomsg string(getloclist(0))
 
 Expect (Test Lint Errorformat):
@@ -313,7 +313,7 @@ Expect (Test Lint Errorformat):
   ||       constants, calls obey those rules.
 
 Execute (Test PMD Errorformat):
-  call efm#testEfm("test06.efm")
+  call efm#test("test06.efm")
   echomsg string(getloclist(0))
 
 Expect (Test PMD Errorformat):
@@ -441,7 +441,7 @@ Expect (Test PMD Errorformat):
   /home/ryujin/Projects/Manabook/manabook-sdk/src/main/java/jp/co/skillupjapan/manabook/api/models/User.java|98 col 10 warning| A getX() method which returns a boolean should be named isX()
 
 Execute (Test findbugs Errorformat):
-  call efm#testEfm("test07.efm")
+  call efm#test("test07.efm")
   echomsg string(getloclist(0))
 
 Expect (Test findbugs Errorformat):
@@ -557,7 +557,7 @@ Expect (Test findbugs Errorformat):
   ||     Details: http://findbugs.sourceforge.net/bugDescriptions.html#RV_RETURN_VALUE_IGNORED
 
 Execute (Test checkstyle Errorformat):
-  call efm#testEfm("test08.efm")
+  call efm#test("test08.efm")
   echomsg string(getloclist(0))
 
 Expect (Test checkstyle Errorformat):

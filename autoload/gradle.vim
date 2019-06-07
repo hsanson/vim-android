@@ -163,9 +163,9 @@ endfunction
 
 function! gradle#cmd(...) abort
   return join([
-        \ efm#buildMakeprg(),
+        \ efm#cmd(),
         \ join(a:000, ' '),
-        \ efm#buildShellpipe(),
+        \ efm#shellpipe(),
         \ tempname()
         \], ' ')
 endfunction
@@ -189,7 +189,7 @@ function! gradle#run(...)
   else
     let l:result = split(system(l:cmd), '\n')
     let l:id = s:BufWinId()
-    call setloclist(l:id, [], ' ', { 'nr': '$', 'efm': efm#escapeEfm(efm#buildEfm()), 'lines': l:result, 'title': 'Gradle Run' })
+    call setloclist(l:id, [], ' ', { 'nr': '$', 'efm': efm#escape(efm#efm()), 'lines': l:result, 'title': 'Gradle Run' })
     call s:finishBuilding()
     redraw!
     call s:showLoclist()
@@ -339,7 +339,7 @@ endfunction
 function! s:What(result) abort
     return {
     \ 'nr': '$',
-    \ 'efm': efm#escapeEfm(efm#buildEfm()),
+    \ 'efm': efm#escape(efm#efm()),
     \ 'lines': a:result,
     \ 'title': 'gradle'
     \}
