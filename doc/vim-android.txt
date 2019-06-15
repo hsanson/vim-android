@@ -561,6 +561,13 @@ Example:
 >
     let g:gradle_bin=/opt/gradle/bin/gradle
 <
+                                                       *g:gradle_sync_on_load*
+g:gradle_sync_on_load~
+Default: 1
+
+This plugin runs gradle#sync() the first time a java, kotlin, or xml file of a
+project is open. This behavior can be disabled by setting this variable to 0.
+
                                                                *g:gradle_path*
 g:gradle_path~
 Default: GRADLE_HOME

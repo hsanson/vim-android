@@ -242,6 +242,13 @@ function! gradle#showSigns()
   return g:gradle_show_signs
 endfunction
 
+function! gradle#syncOnLoad()
+  if !exists('g:gradle_sync_on_load')
+    let g:gradle_sync_on_load = 1
+  endif
+  return g:gradle_sync_on_load
+endfunction
+
 function! gradle#isAsyncEnabled()
   if !exists('g:gradle_async')
     let g:gradle_async = 1
