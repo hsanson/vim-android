@@ -14,7 +14,10 @@ function ale_linters#java#android#Define(language) abort
 endfunction
 
 function ale_linters#java#android#Executable(buffer) abort
-	return gradle#bin()
+  if android#isAndroidProject()
+    return gradle#bin()
+  endif
+  return ''
 endfunction
 
 function ale_linters#java#android#Handler(buffer, lines) abort
