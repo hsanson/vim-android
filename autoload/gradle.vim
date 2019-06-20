@@ -381,6 +381,7 @@ function! gradle#sync() abort
     call gradle#setup()
     call gradle#logi('')
     call s:finishBuilding()
+    call ale_linters#java#javalsp#NotifyConfigChange()
   endif
 
 endfunction
@@ -430,6 +431,7 @@ function! s:vimTaskHandler(id, data, event) dict
     call remove(s:chunks, a:id)
     call s:showLoclist()
     call gradle#setup()
+    call ale_linters#java#javalsp#NotifyConfigChange()
   endif
 
 endfunction

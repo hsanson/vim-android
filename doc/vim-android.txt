@@ -1,9 +1,9 @@
-*vim-android.txt*   For Vim version 7.3 or NeoVim   Last change: 2019 Jun 07
+*vim-android.txt*   For Vim version 7.3 or NeoVim   Last change: 2019 Jun 20
 
 Author:         Horacio Sanson
 Licence:        Vim licence, see |license|
 Homepage:       https://github.com/hsanson/vim-android
-Version:        1.6.0
+Version:        1.6.1
 
 ==============================================================================
 Contents                                   *vim-android* *vim-android-contents*
@@ -19,15 +19,15 @@ Contents                                   *vim-android* *vim-android-contents*
               Omnicompletion ................ |vim-android-omnicomplete|
               PMD Plugin .................... |vim-android-pmd|
               FindBugs Plugin ............... |vim-android-findbugs|
-              CheckStyle Plugin ............. |vim-android-checkstyle|
               Linter Support................. |vim-android-linter|
               Status Line.................... |vim-android-statusline|
                 Airline Status Line.......... |vim-android-airline|
                 LightLine Status Line........ |vim-android-lightline|
               Troubleshooting ............... |vim-android-troubleshooting|
-         5. Configuration ................... |vim-android-configuration|
-         6. Todo ............................ |vim-android-todo|
-         7. Credits ......................... |vim-android-credits|
+         5. ALE Integration ................. |vim-android-ale|
+         6. Configuration ................... |vim-android-configuration|
+         7. Todo ............................ |vim-android-todo|
+         8. Credits ......................... |vim-android-credits|
 
 ==============================================================================
 1. Intro                                                      *vim-android-intro*
@@ -51,13 +51,12 @@ The following features are supported by vim-android:
   - Custom gradle vim task that invokes gradle directly with any arguments
     passed to the command.
   - Custom errorformat that captures java errors, linter errors, test errors,
-    aapt errors, checkstyle, pmd, findbugs and displays them in the loclist 
-    window. This requires that gradle be invoked with the vim init file
-    loaded.
+    aapt errors, pmd, findbugs and displays them in the loclist window. This
+    requires that gradle be invoked with the vim init file loaded.
   - Updates the CLASSPATH environment variable to include paths for your
     current project, external libs, external lib-projects and the current
     target Android SDK jars. This allows auto-completion of Java code using
-    other plugins such as javacomplete2.
+    other plugins.
   - Updates the SRCPATH environment variable to include source paths for the
     current project and dependencies if available. This allows debuggers like
     vebugger to follow source code during step debugging.
@@ -68,6 +67,7 @@ The following features are supported by vim-android:
   - Improved XML omnicompletion for Android resource and manifest XML files.
   - Takes advantage of neovim async functions to perfom long running tasks in
     the background (e.g. GradleSync)
+  - Integration with ALE for linter and auto-completion support.
 
 ------------------------------------------------------------------------------
 Known Issues                                                *vim-android-issues*
@@ -89,11 +89,6 @@ Known Issues                                                *vim-android-issues*
         https://code.google.com/p/android/issues/detail?id=57513
         https://code.google.com/p/android/issues/detail?id=174778
 
-  - The javacomplete plugin is nice but in some situations it hangs or spits
-    thousands of incomprehensible error messages. For this reason I recommend
-    you use ale plugin with the javalsp language server instead:
-
-      See: https://github.com/w0rp/ale
 
 ==============================================================================
 2. Requirements                                        *vim-android-requirements*
@@ -227,12 +222,9 @@ For this simply add the following to your vim configuration:
 ANDROID OMNI-COMPLETION                              *vim-android-omnicomplete*
 
 This plugin by itself does not provide omni-completion of Android classes
-and/or methods. Instead it sets the CLASSPATH envirnment variable with the
-paths of all jar and class files used in the project. This include projects
-own classes and dependencies.
+and/or methods. It is highly recommended to install ALE
+(https://github.com/w0rp/ale) with the `javalsp` LSP linter.
 
-With the CLASSPATH set, plugins such as the javacomplete2 can be used to
-enable omnicompletion (https://github.com/artur-shaik/vim-javacomplete2).
 
 ------------------------------------------------------------------------------
 PMD PLUGIN SUPPORT                                          *vim-android-pmd*
@@ -353,36 +345,6 @@ detailed explanation of the error in your favorite browser:
 <
 See the :h gx for more details on this functionality.
 
-------------------------------------------------------------------------------
-CHECKSTYLE PLUGIN SUPPORT                              *vim-android-checkstyle*
-
-This plugin automatically detects if the checkstyle gradle plugin is loaded,
-parses the xml reports it generates and populates the loclist window with the
-errors and warnings reported by it.
-
-The checkstyle gradle plugin does not work by default with the android gradle plugin.
-To make it work with android applications you need to explicitly create a task
-of type *Checkstyle* in you build.gradle file:
-
->
-    task checkstyle(type: Checkstyle) {
-        configFile file("${project.rootDir}/config/checkstyle.xml")
-        source 'src'
-        include '**/*.java'
-        exclude '**/gen/**'
-        exclude '**/androidTest/**'
-        classpath = files()
-    }
-<
-
-After creating the task you can make it execute after running the check task
-by adding the following to your build.gradle file:
->
-    check.finalizedBy 'checkstyle'
-<
-refer to the gradle checkstyle plugin documetnation for more options:
-
-  https://docs.gradle.org/current/userguide/checkstyle_plugin.html
 
 ------------------------------------------------------------------------------
 ANDROID LINTER SUPPORT                                      *vim-android-linter*
@@ -534,9 +496,35 @@ vim to verify your setup:
         :call health#gradle#check()
 <
 ==============================================================================
-5. Configuration                                     *vim-android-configuration*
+5. ALE Integration                                             *vim-android-ale*
 
-                                                        *g:android_sdk_path*
+ALE (https://github.com/w0rp/ale) provides linter and auto-completion for
+Gradle and Maven projects using `checkstyle` and `javalsp` linters. This
+plugin enhances ALE support for Android projects by providing Android
+dependencies to `javalsp` linter. This functionality is automatic if the ALE
+plugin is installed.
+
+Both ALE and vim-android modify the loclist and buffer signs conflicting with
+each other. Is recommented to set both |g:gradle_loclist_show| and
+|g:gradle_show_signs| variables to 0 and let ALE take care of handling them.
+
+Example configuration for best ALE/vim-android combination:
+
+>
+    let g:ale_linters = {
+     \ 'java': ['checkstyle', 'javalsp'],
+     \ 'kotlin': ['ktlint', 'languageserver']
+     \ }
+<
+
+Refer to ALE documentation for installation and configuration details of each
+linter.
+
+
+==============================================================================
+6. Configuration                                     *vim-android-configuration*
+
+                                                            *g:android_sdk_path*
 g:android_sdk_path~
 Default: $ANDROID_HOME
 
@@ -546,7 +534,7 @@ Example:
 >
         let g:android_sdk_path = '/opt/adroid-sdk'
 <
-                                                               *g:gradle_bin*
+                                                                  *g:gradle_bin*
 g:gradle_bin~
 Default: Gradle Wrapper
 
@@ -561,14 +549,14 @@ Example:
 >
     let g:gradle_bin=/opt/gradle/bin/gradle
 <
-                                                       *g:gradle_sync_on_load*
+                                                          *g:gradle_sync_on_load*
 g:gradle_sync_on_load~
 Default: 1
 
 This plugin runs gradle#sync() the first time a java, kotlin, or xml file of a
 project is open. This behavior can be disabled by setting this variable to 0.
 
-                                                               *g:gradle_path*
+                                                                 *g:gradle_path*
 g:gradle_path~
 Default: GRADLE_HOME
 
@@ -585,7 +573,7 @@ Example:
 The above will cause the plugin to search for the gradle binary in the
 /bin directory within /opt/gradle folder.
 
-                                                             *g:gradle_daemon*
+                                                                *g:gradle_daemon*
 g:gradle_daemon~
 Default: 1
 
@@ -670,26 +658,26 @@ g:gradle_show_signs~
 Default: 1
 
 This variable determines if the plugin should display vim signs marking
-errors and warnings. This may conflict with other plugins (e.g. vim-ale) that
-do a better job at displaying signs indication the lines with issues. If you
-use other plugins like vim-ale or syntastic it is better to disable signs
-support on this plugin.
+errors and warnings. This may conflict with other plugins (e.g. ALE) that
+do a better job at displaying signs, thus is recommended to disable this if
+using ALE.
 
 Example:
 >
         let g:gradle_show_signs=0
 <
 ==============================================================================
-9. Todo                                                       *vim-android-todo*
+7. Todo                                                       *vim-android-todo*
 
   - Project creation commands.
 
 ==============================================================================
-10. Credits                                                *vim-android-credits*
+8. Credits                                                 *vim-android-credits*
 
 Contributors:
 
  - Donnie West (https://github.com/DonnieWest)
+ - Grim Kriegor (https://github.com/GrimKriegor)
 
 Ideas stolen from:
 
@@ -699,10 +687,7 @@ Ideas stolen from:
 
 Recommended :
 
- - https://github.com/powerline/fonts
- - https://github.com/bling/vim-airline
- - https://github.com/artur-shaik/vim-javacomplete2
- - https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts
+ - https://github.com/w0rp/ale
 
 ==============================================================================
  vim: tw=78 ts=8 sw=4 sts=4 et ft=help
