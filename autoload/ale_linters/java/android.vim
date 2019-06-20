@@ -38,5 +38,5 @@ function ale_linters#java#android#Handler(buffer, lines) abort
 endfunction
 
 function ale_linters#java#android#Command(buffer) abort
-  return gradle#cmd('lint') . ' %t'
+  return join(gradle#cmd('lint'), ' ') . ' %t'
 endfunction

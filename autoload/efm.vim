@@ -1,6 +1,5 @@
-function! s:cmd() abort
+function! efm#cmd() abort
   let l:makeprg = [
-   \  'LC_ALL=en_US.UTF8',
    \  gradle#bin(),
    \  '-I',
    \  g:gradle_init_file,
@@ -20,26 +19,20 @@ function! s:cmd() abort
   return l:makeprg
 endfunction
 
-function! efm#cmd()
-  return join(s:cmd(), ' ')
-endfunction
-
 function! efm#makeprg()
-  return join(s:cmd(), '\ ')
+  return join(efm#cmd(), '\ ')
 endfunction
 
 " Builds and returns the shellpipe used when runing the gradle compiler.
 " TODO: Win and Mac support?
 function! efm#shellpipe()
-
-  let s:shellpipe = [
+  return [
    \ '2>&1',
    \ '|',
    \ g:gradle_efm_sanity,
-   \ '|tee'
+   \ '|',
+   \ 'tee'
    \ ]
-
-  return join(s:shellpipe, '')
 endfunction
 
 " Ultimate errorformat string for Gradle development. It supports several
