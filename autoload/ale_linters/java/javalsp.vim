@@ -2,7 +2,7 @@ function! s:LoadDeps() abort
   return extend(gradle#classPaths(), android#classPaths())
 endfunction
 
-function! s:LoadedAle() abort
+function! s:LoadedAle(buffer) abort
   if !exists('g:loaded_ale')
     return 0
   endif
@@ -11,11 +11,13 @@ function! s:LoadedAle() abort
     return 0
   endif
 
-  if !has_key(g:ale_linters, 'java')
+  let l:ft = getbufvar(a:buffer, '&filetype')
+
+  if !has_key(g:ale_linters, l:ft)
     return 0
   endif
 
-  if index(g:ale_linters['java'], 'javalsp') < 0
+  if index(g:ale_linters[l:ft], 'javalsp') < 0
     return 0
   endif
 
@@ -24,11 +26,12 @@ endfunction
 
 function! ale_linters#java#javalsp#NotifyConfigChange() abort
 
-  if !s:LoadedAle()
+  let l:buffer = bufnr('%')
+
+  if !s:LoadedAle(l:buffer)
     return
   endif
 
-  let l:buffer = bufnr('%')
   let config =
         \ { 
         \  'settings': {
