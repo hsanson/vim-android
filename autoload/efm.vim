@@ -14,15 +14,8 @@ function! s:cmd() abort
     call add(l:makeprg, '--no-daemon')
   endif
 
-  if gradle#versionMajor() > 2
-    call add(l:makeprg, '--console')
-    call add(l:makeprg, 'plain')
-  elseif gradle#versionMajor() ==# 2 && gradle#versionMinor() > 3
-    call add(l:makeprg, '--console')
-    call add(l:makeprg, 'plain')
-  else
-    call add(l:makeprg, '--no-color')
-  endif
+  call add(l:makeprg, '--console')
+  call add(l:makeprg, 'plain')
 
   return l:makeprg
 endfunction
