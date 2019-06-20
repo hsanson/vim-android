@@ -6,6 +6,19 @@ function! s:LoadedAle() abort
   if !exists('g:loaded_ale')
     return 0
   endif
+
+  if !exists('g:ale_linters')
+    return 0
+  endif
+
+  if !has_key(g:ale_linters, 'java')
+    return 0
+  endif
+
+  if index(g:ale_linters['java'], 'javalsp') < 0
+    return 0
+  endif
+
   return g:loaded_ale
 endfunction
 

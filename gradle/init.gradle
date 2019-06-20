@@ -95,6 +95,9 @@ allprojects { project ->
       if( filePath == null ) {
         filePath = file([project.projectDir, "build", "outputs", "lint-results.xml"].join(File.separator))
       }
+      if( !filePath.exists() ) {
+        filePath = file([project.projectDir, "build", "reports", "lint-results.xml"].join(File.separator))
+      }
       if( filePath.exists() ) {
         def xml = (new XmlParser()).parse(filePath)
         xml.issue.each { issue ->

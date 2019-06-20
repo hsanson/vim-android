@@ -26,9 +26,9 @@ endfunction
 
 function! gradle#wrapper()
   if gradle#getOS() ==# 'Windows' && executable('\.gradlew.bat')
-      return '\.gradlew.bat'
+      return fnamemodify('\.gradlew.bat', ':p')
   elseif executable('./gradlew')
-    return './gradlew'
+    return fnamemodify('./gradlew', ':p')
   endif
 endfunction
 
@@ -169,8 +169,7 @@ function! gradle#cmd(...) abort
   return join([
         \ efm#cmd(),
         \ join(a:000, ' '),
-        \ efm#shellpipe(),
-        \ tempname()
+        \ efm#shellpipe()
         \], ' ')
 endfunction
 
@@ -406,9 +405,20 @@ function! gradle#setup()
     call android#setClassPath()
   endif
 
-  silent! call javacomplete#SetClassPath($CLASSPATH)
-  silent! call javacomplete#SetSourcePath($SRCPATH)
+  " [LEGACY] Is recommended to use ALE plugin with javalsp linter instead of
+  " javacomplete plugin.
+  if exists('*javacomplete#SetClassPath')
+    call javacomplete#SetClassPath($CLASSPATH)
+  endif
 
+  " [LEGACY] Is recommended to use ALE plugin with javalsp linter instead of
+  " javacomplete plugin.
+  if exists('*javacomplete#SetSourcePath')
+    call javacomplete#SetSourcePath($SRCPATH)
+  endif
+
+  " [LEGACY] Is recommended to use ALE plugin with javalsp linter instead of
+  " syntastic plugin.
   let g:syntastic_java_javac_classpath = $CLASSPATH . ':' . $SRCPATH
 
 endfunction

@@ -19,7 +19,6 @@ Contents                                   *vim-android* *vim-android-contents*
               Omnicompletion ................ |vim-android-omnicomplete|
               PMD Plugin .................... |vim-android-pmd|
               FindBugs Plugin ............... |vim-android-findbugs|
-              Linter Support................. |vim-android-linter|
               Status Line.................... |vim-android-statusline|
                 Airline Status Line.......... |vim-android-airline|
                 LightLine Status Line........ |vim-android-lightline|
@@ -223,7 +222,8 @@ ANDROID OMNI-COMPLETION                              *vim-android-omnicomplete*
 
 This plugin by itself does not provide omni-completion of Android classes
 and/or methods. It is highly recommended to install ALE
-(https://github.com/w0rp/ale) with the `javalsp` LSP linter.
+(https://github.com/w0rp/ale) with the `javalsp` LSP linter to get this
+functionality.
 
 
 ------------------------------------------------------------------------------
@@ -345,17 +345,6 @@ detailed explanation of the error in your favorite browser:
 <
 See the :h gx for more details on this functionality.
 
-
-------------------------------------------------------------------------------
-ANDROID LINTER SUPPORT                                      *vim-android-linter*
-
-When gradle finishes building the project this plugin will try to find the
-lint-report.xml file, parse it and print to stderr the list of lint errors and
-warnings in a format that is easy to parse for vim error format. All that
-needs to be done is to execute the linter within vim to get the loclist
-window populated with all linter errors and warnings:
-
-    :Gradle lint
 
 ------------------------------------------------------------------------------
 STATUS LINE                                             *vim-android-statusline*
@@ -498,27 +487,34 @@ vim to verify your setup:
 ==============================================================================
 5. ALE Integration                                             *vim-android-ale*
 
-ALE (https://github.com/w0rp/ale) provides linter and auto-completion for
-Gradle and Maven projects using `checkstyle` and `javalsp` linters. This
-plugin enhances ALE support for Android projects by providing Android
-dependencies to `javalsp` linter. This functionality is automatic if the ALE
-plugin is installed.
+This plugin full potential is achieved when used in combination with the super
+ALE (https://github.com/w0rp/ale) plugin. When this plugin is installed and
+configured we get additional features:
+
+ - ALE with javalsp linter gets support for linting and auto-completing Android
+   dependencies. No configuration required.
+ - ALE gains a new `android` linter available for xml, java, kotlin, and groovy
+   files. You need to add `android` to these file types in your |g:ale_linters|
+   configuration.
+ - vim-android benefits from all linters/fixers available in ALE like 
+   pmd, checkstyle, google_format, etc.
+ - vim-android benefits from ALE auto-completion for java/kotlin files.
+
+Example configuration for best ALE/vim-android combination:
+>
+    let g:ale_linters = {
+     \ 'xml': ['android'],
+     \ 'groovy': ['android'],
+     \ 'java': ['android', 'checkstyle', 'javalsp'],
+     \ 'kotlin': ['android', 'ktlint', 'languageserver']
+     \ }
+<
+Refer to ALE documentation for installation and configuration details of each
+linter.
 
 Both ALE and vim-android modify the loclist and buffer signs conflicting with
 each other. Is recommented to set both |g:gradle_loclist_show| and
 |g:gradle_show_signs| variables to 0 and let ALE take care of handling them.
-
-Example configuration for best ALE/vim-android combination:
-
->
-    let g:ale_linters = {
-     \ 'java': ['checkstyle', 'javalsp'],
-     \ 'kotlin': ['ktlint', 'languageserver']
-     \ }
-<
-
-Refer to ALE documentation for installation and configuration details of each
-linter.
 
 
 ==============================================================================
