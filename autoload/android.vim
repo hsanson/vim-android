@@ -65,48 +65,6 @@ function! android#checkAndroidHome()
   return 1
 endfunction
 
-""
-" Appends ctags for all referenced libraries used for the Android project. The
-" library list is obtained from the project.properties file.
-function! android#updateLibraryTags()
-  " TODO: Implement this method
-endfunction
-
-""
-" Create a tags file inside the g:android_sdk_tags folder that includes tags for
-" the current project source, the target android sdk source, all library
-" dependencies, all xml resource files, etc.
-function! android#updateAndroidTags()
-
-  if !executable("ctags")
-    call android#logw("updateAndroidTags() failed: ctags tool not found.")
-    return 0
-  endif
-
-  let l:android_sources = substitute(copy($SRCPATH), ":", " ", "g")
-  let l:ctags_cmd = 'ctags --recurse --fields=+l --langdef=XML --langmap=Java:.java,XML:.xml --languages=Java,XML --regex-XML=/id="([a-zA-Z0-9_]+)"/\1/d,definition/  -f '
-
-  if exists('*mkdir')
-    let l:basepath = fnamemodify(g:android_sdk_tags, ':h')
-    call mkdir(l:basepath, 's')
-  endif
-
-  if finddir(l:basepath) == ""
-    call android#loge("Tags folder " . l:basepath . " does not exists. Create the path or change your g:android_sdk_tags variable to a path that exists.")
-    return
-  endif
-
-  let l:cmd = l:ctags_cmd . g:android_sdk_tags . " " . l:android_sources
-
-  "if exists('g:loaded_dispatch')
-  ""  silent! exe 'Start!' l:cmd
-  "else
-    call android#logi("Generating android SDK tags (may take a while to finish)" )
-    call system(l:cmd)
-    call android#logi("  Done!" )
-  "endif
-endfunction
-
 " Compatibility method to run android build commands. If the passed command is
 " build or debug it is converted to assembleBuild and assembleDebug before
 " passing it to gradle.
@@ -157,17 +115,6 @@ function! android#uninstall(mode)
       call android#logi ("")
     endif
   endfor
-endfunction
-
-""
-" Add the android sdk ctags file to the local tags. This assumes the android
-" tags file is located at '~/.vim/tags/android' by default or the value set on
-" the g:android_sdk_tags variable if defined.
-function! android#setAndroidSdkTags()
-  if !exists('g:android_sdk_tags')
-    let g:android_sdk_tags = getcwd() . '/.tags'
-  endif
-  execute 'silent! setlocal ' . 'tags+=' . g:android_sdk_tags
 endfunction
 
 " Find the adroid sdk srouce files for the target sdk version.
@@ -359,7 +306,6 @@ function! android#setupAndroidCommands()
     command! -nargs=? AndroidBuild call android#compile(<f-args>)
     command! -nargs=1 AndroidInstall call android#install(<f-args>)
     command! -nargs=1 AndroidUninstall call android#uninstall(<f-args>)
-    command! AndroidUpdateTags call android#updateAndroidTags()
     command! AndroidDevices call android#listDevices()
     command! AndroidEmulator call android#emulator()
   else
