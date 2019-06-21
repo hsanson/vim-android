@@ -40,7 +40,7 @@ function! s:findManifestFile()
 endfunction
 
 function! android#manifestFile() abort
-  return cache#get(gradle#key(), 'manifest', s:findManifestFile())
+  return cache#get(gradle#key(gradle#findGradleFile()), 'manifest', s:findManifestFile())
 endfunction
 
 function! android#homePath()
@@ -86,9 +86,9 @@ function! android#updateAndroidTags()
   let l:android_sources = substitute(copy($SRCPATH), ":", " ", "g")
   let l:ctags_cmd = 'ctags --recurse --fields=+l --langdef=XML --langmap=Java:.java,XML:.xml --languages=Java,XML --regex-XML=/id="([a-zA-Z0-9_]+)"/\1/d,definition/  -f '
 
-  if exists("*mkdir")
-    let l:basepath = fnamemodify(g:android_sdk_tags, ":h")
-    silent! mkdir(l:basepath, "p")
+  if exists('*mkdir')
+    let l:basepath = fnamemodify(g:android_sdk_tags, ':h')
+    call mkdir(l:basepath, 's')
   endif
 
   if finddir(l:basepath) == ""
@@ -201,7 +201,7 @@ function! android#getGradleTargetJar()
 endfunction
 
 function! android#getSdkJar()
-  return cache#get(gradle#key(), 'targetJar', android#getGradleTargetJar())
+  return cache#get(gradle#key(gradle#findGradleFile()), 'targetJar', android#getGradleTargetJar())
 endfunction
 
 " Return array of android dependency classpath.
@@ -243,24 +243,6 @@ function! android#sourcePaths()
   endif
 
   return l:paths
-endfunction
-
-function! android#setClassPath()
-
-  if ! android#isAndroidProject()
-    return
-  endif
-
-  let l:oldJars = split($CLASSPATH, gradle#classPathSep())
-  let l:oldSrcs = split($SRCPATH, gradle#classPathSep())
-
-  let l:jarList = gradle#uniq(sort(extend(l:oldJars, android#classPaths())))
-  let l:srcList = gradle#uniq(sort(extend(l:oldSrcs, android#sourcePaths())))
-
-  let $CLASSPATH = join(l:jarList, gradle#classPathSep())
-  let $SRCPATH = join(l:srcList, gradle#classPathSep())
-  exec "set path=" . join(l:srcList, ',')
-
 endfunction
 
 function! android#listDevices()

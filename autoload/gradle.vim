@@ -1,4 +1,8 @@
 let s:chunks = {}
+let s:files = {}
+let s:jobidseq = 0
+let s:isBuilding = 0
+let $LC_ALL='en_US.UTF8'
 
 function! gradle#logi(msg)
   redraw
@@ -63,15 +67,15 @@ function! gradle#bin()
 endfunction
 
 function! gradle#version()
-  return cache#get(gradle#key(), 'version', ['', '', ''])[0]
+  return cache#get(gradle#key(gradle#findGradleFile()), 'version', ['', '', ''])[0]
 endfunction
 
 function! gradle#versionMajor()
-  return str2nr(cache#get(gradle#key(), 'version', ['', '', ''])[1])
+  return str2nr(cache#get(gradle#key(gradle#findGradleFile()), 'version', ['', '', ''])[1])
 endfunction
 
 function! gradle#versionMinor()
-  return str2nr(cache#get(gradle#key(), 'version', ['', '', ''])[2])
+  return str2nr(cache#get(gradle#key(gradle#findGradleFile()), 'version', ['', '', ''])[2])
 endfunction
 
 " Verifies if the android sdk is available and if the gradle build and binary
@@ -113,8 +117,8 @@ endfunction
 " Return a unique key identifier for the gradle project. This key is generated
 " based on the gradle file of the project, therefore it changes if the gradle
 " file contents is changed.
-function! gradle#key() abort
-  return cache#key(gradle#findGradleFile())
+function! gradle#key(path) abort
+  return cache#key(a:path)
 endfunction
 
 " Tries to determine the location of the build.gradle file starting from the
@@ -166,40 +170,10 @@ function! s:BufWinId() abort
 endfunction
 
 function! gradle#cmd(...) abort
-  return join([
-        \ efm#cmd(),
-        \ join(a:000, ' '),
-        \ efm#shellpipe()
-        \], ' ')
-endfunction
-
-function! gradle#run(...)
-
-  let l:gradleFile = gradle#findGradleFile()
-
-  let l:cmd = call('gradle#cmd', a:000)
-
-  call s:startBuilding()
-
-  if gradle#isAsyncEnabled()
-    let s:callbacks = {
-          \ 'on_stdout': function('s:vimTaskHandler'),
-          \ 'on_stderr': function('s:vimTaskHandler'),
-          \ 'on_exit':   function('s:vimTaskHandler'),
-          \ 'gradleFile': l:gradleFile
-          \ }
-    let s:chunks[jobstart(l:cmd, s:callbacks)] = ['']
-  else
-    let l:result = split(system(l:cmd), '\n')
-    let l:id = s:BufWinId()
-    call setloclist(l:id, [], ' ', { 'nr': '$', 'efm': efm#escape(efm#efm()), 'lines': l:result, 'title': 'Gradle Run' })
-    call s:finishBuilding()
-    redraw!
-    call s:showLoclist()
-  endif
-
-  return [gradle#getErrorCount(), gradle#getWarningCount()]
-
+  let l:cmd = efm#cmd()
+  let l:cmd = extend(l:cmd, a:000)
+  let l:cmd = extend(l:cmd, efm#shellpipe())
+  return l:cmd
 endfunction
 
 function! gradle#glyph()
@@ -256,7 +230,7 @@ function! gradle#isAsyncEnabled()
   if !exists('g:gradle_async')
     let g:gradle_async = 1
   endif
-  return has('nvim') && exists('*jobstart') && g:gradle_async
+  return g:gradle_async
 endfunction
 
 function! gradle#asyncToggle()
@@ -300,22 +274,6 @@ function! gradle#running() abort
   return exists('s:isBuilding') && s:isBuilding > 0
 endfunction
 
-function! s:startBuilding()
-  if ! exists('s:isBuilding')
-    let s:isBuilding = 0
-  endif
-  let s:isBuilding = s:isBuilding + 1
-  silent! call lightline#update()
-endfunction
-
-function! s:finishBuilding()
-  if ! exists('s:isBuilding')
-    let s:isBuilding = 0
-  endif
-  let s:isBuilding = s:isBuilding - 1
-  silent! call lightline#update()
-endfunction
-
 " This method returns the number of valid errors in the loclist. This
 " allows us to check if there are errors after compilation.
 function! gradle#getErrorCount()
@@ -333,117 +291,55 @@ function! gradle#getWarningCount()
 endfunction
 
 function! gradle#syncCmd()
-  let l:cmd = [
+  return [
    \ gradle#bin(),
    \ '-b',
    \ gradle#findGradleFile(),
    \ '-I',
    \ g:gradle_init_file,
-   \ 'vim',
-   \ '2>&1'
+   \ 'vim'
    \ ]
-
-  return join(l:cmd, ' ')
 endfunction
 
-function! s:What(result) abort
-    return {
-    \ 'nr': '$',
-    \ 'efm': efm#escape(efm#efm()),
-    \ 'lines': a:result,
-    \ 'title': 'gradle'
-    \}
+function! gradle#run(...)
+
+  let l:cmd = call('gradle#cmd', a:000)
+
+  if gradle#isAsyncEnabled() && has('nvim') && exists('*jobstart')
+    call s:nvim_job(l:cmd)
+  elseif gradle#isAsyncEnabled() && exists('*job_start')
+    call s:vim_job(l:cmd)
+  else
+    let l:gradleFile = gradle#findGradleFile()
+    let l:result = split(system(join(l:cmd, ' ')), '\n')
+    let l:id = s:BufWinId()
+    call setloclist(l:id, [], ' ', s:What(l:result))
+    redraw!
+    call s:showLoclist()
+  endif
+
+  return [gradle#getErrorCount(), gradle#getWarningCount()]
+
 endfunction
+
 
 " Sync vim-android environment with build.gradle file.
 function! gradle#sync() abort
-
-  let l:gradleFile = gradle#findGradleFile()
-
-  call s:startBuilding()
-
-  if gradle#isAsyncEnabled()
-    let s:callbacks = {
-          \ 'on_stdout': function('s:vimTaskHandler'),
-          \ 'on_stderr': function('s:vimTaskHandler'),
-          \ 'on_exit':   function('s:vimTaskHandler'),
-          \ 'gradleFile': l:gradleFile
-          \ }
-
-    let s:chunks[jobstart(gradle#syncCmd(), s:callbacks)] = ['']
+  if gradle#isAsyncEnabled() && has('nvim') && exists('*jobstart')
+    call s:nvim_job(gradle#syncCmd())
+  elseif gradle#isAsyncEnabled() && exists('*job_start')
+    call s:vim_job(gradle#syncCmd())
   else
+   let l:gradleFile = gradle#findGradleFile()
     call gradle#logi('Gradle sync, please wait...')
-    let l:result = split(system(gradle#syncCmd()), '\n')
+    let l:result = split(system(join(gradle#syncCmd(), ' ')), '\n')
     call s:parseVimTaskOutput(l:gradleFile, l:result)
     let l:id = s:BufWinId()
     call setloclist(l:id, [], ' ', s:What(l:result))
-    call gradle#setup()
+    call s:setClassPath()
     call gradle#logi('')
-    call s:finishBuilding()
     call ale_linters#java#javalsp#NotifyConfigChange()
   endif
-
-endfunction
-
-" Helper method to setup all gradle/android environments. This task must be
-" called only after the gradle#sync() method finishes and the dependencies are
-" already cached.
-function! gradle#setup()
-
-  if !exists('g:gradle_set_classpath')
-    let g:gradle_set_classpath = 1
-  endif
-
-  if g:gradle_set_classpath != 1
-    return
-  endif
-
-  call gradle#setClassPath()
-
-  if android#isAndroidProject()
-    call android#setAndroidSdkTags()
-    call android#setClassPath()
-  endif
-
-  " [LEGACY] Is recommended to use ALE plugin with javalsp linter instead of
-  " javacomplete plugin.
-  if exists('*javacomplete#SetClassPath')
-    call javacomplete#SetClassPath($CLASSPATH)
-  endif
-
-  " [LEGACY] Is recommended to use ALE plugin with javalsp linter instead of
-  " javacomplete plugin.
-  if exists('*javacomplete#SetSourcePath')
-    call javacomplete#SetSourcePath($SRCPATH)
-  endif
-
-  " [LEGACY] Is recommended to use ALE plugin with javalsp linter instead of
-  " syntastic plugin.
-  let g:syntastic_java_javac_classpath = $CLASSPATH . ':' . $SRCPATH
-
-endfunction
-
-
-" Callback invoked when the gradle#sync() method finishes processing. Used when
-" using nvim async functionality.
-function! s:vimTaskHandler(id, data, event) dict
-
-  if a:event ==# 'stdout' || a:event ==# 'stderr'
-    if !empty(a:data)
-      let s:chunks[a:id][-1] .= a:data[0]
-      call extend(s:chunks[a:id], a:data[1:])
-    endif
-  elseif a:event ==# 'exit'
-    call s:finishBuilding()
-    call s:parseVimTaskOutput(self.gradleFile, s:chunks[a:id])
-    let l:id = s:BufWinId()
-    call setloclist(l:id, [], ' ', s:What(s:chunks[a:id]))
-    call remove(s:chunks, a:id)
-    call s:showLoclist()
-    call gradle#setup()
-    call ale_linters#java#javalsp#NotifyConfigChange()
-  endif
-
 endfunction
 
 function! s:parseVimTaskOutput(gradleFile, result)
@@ -452,22 +348,22 @@ function! s:parseVimTaskOutput(gradleFile, result)
 
     let mlist = matchlist(line, '^gradle-version\s\(\d\+\)\.\(\d\+\).*$')
     if empty(mlist) == 0
-      call cache#set(gradle#key(), 'version', copy(mlist))
+      call cache#set(gradle#key(a:gradleFile), 'version', copy(mlist))
     endif
 
     let mlist = matchlist(line, '^vim-gradle\s\(.*\.jar\)$')
     if empty(mlist) == 0 && len(mlist[1]) > 0
-      call add(cache#get(gradle#key(), 'jars', []), mlist[1])
+      call add(cache#get(gradle#key(a:gradleFile), 'jars', []), mlist[1])
     endif
 
     let mlist = matchlist(line, '^vim-project\s\(.*\)$')
     if empty(mlist) == 0 && len(mlist[1]) > 0
-      call cache#set(gradle#key(), 'name', mlist[1])
+      call cache#set(gradle#key(a:gradleFile), 'name', mlist[1])
     endif
 
     let mlist = matchlist(line, '^vim-target\s\(.*\)$')
     if empty(mlist) == 0 && len(mlist[1]) > 0
-      call cache#set(gradle#key(), 'target', mlist[1])
+      call cache#set(gradle#key(a:gradleFile), 'target', mlist[1])
     endif
 
   endfor
@@ -475,63 +371,23 @@ function! s:parseVimTaskOutput(gradleFile, result)
 endfunction
 
 function! gradle#projectName() abort
-  return cache#get(gradle#key(), 'name', '')
+  return cache#get(gradle#key(gradle#findGradleFile()), 'name', '')
 endfunction
 
 function! gradle#targetVersion() abort
-  return cache#get(gradle#key(), 'target', 'android-28')
+  return cache#get(gradle#key(gradle#findGradleFile()), 'target', 'android-28')
 endfunction
 
 ""
 " Return the gradle dependencies per project from the cache if available or an
 " empty array if not available.
-function! gradle#classPaths()
-  return cache#get(gradle#key(), 'jars', [])
+function! gradle#classPaths() abort
+  return cache#get(gradle#key(gradle#findGradleFile()), 'jars', [])
 endfunction
 
-""
-" Returns 1 if the project jar dependencies are changed or 0 otherwise.
-function! gradle#isGradleDepsCached()
-  return !empty(gradle#classPaths())
-endfunction
-
-""
-" Update the CLASSPATH environment variable to include all classes related to
-" the current Android project.
-function! gradle#setClassPath()
-
-  let l:jarList = []
-  let l:srcList = []
-
-  let l:oldJars = split($CLASSPATH, gradle#classPathSep())
-  let l:oldSrcs = split($SRCPATH, ',')
-
-  call extend(l:jarList, l:oldJars)
-  call extend(l:srcList, l:oldSrcs)
-
-  let l:depJars = gradle#classPaths()
-  if !empty(l:depJars)
-    call extend(l:jarList, l:depJars)
-  endif
-
-  let l:sourcePaths = gradle#sourcePaths()
-  if !empty(l:sourcePaths)
-    call extend(l:srcList, l:sourcePaths)
-  endif
-
-  let l:jarList = gradle#uniq(sort(l:jarList))
-  let l:srcList = gradle#uniq(sort(l:srcList))
-
-  let $CLASSPATH = join(l:jarList, gradle#classPathSep())
-  let $SRCPATH = join(l:srcList, gradle#classPathSep())
-
-  exec 'set path=' . join(l:srcList, ',')
-
-endfunction
-
-function! gradle#sourcePaths()
-  " By default gradle projects have well defined source structure. Make sure
-  " we add it the the path
+" By default gradle projects have well defined source structure. Make sure
+" we add it the the path
+function! gradle#sourcePaths() abort
   let l:srcs = []
   let l:javapath = fnamemodify(gradle#findRoot() . '/src/main/java', ':p')
   let l:respath = fnamemodify(gradle#findRoot() . '/src/main/res', ':p')
@@ -545,6 +401,12 @@ function! gradle#sourcePaths()
   endif
 
   return l:srcs
+endfunction
+
+""
+" Returns 1 if the project jar dependencies are changed or 0 otherwise.
+function! gradle#isGradleDepsCached()
+  return !empty(gradle#classPaths())
 endfunction
 
 " Compatibility function.
@@ -682,4 +544,136 @@ function! s:lpad(s)
   return repeat('0', 5 - len(a:s)) . a:s
 endfunction
 
+function! s:What(result) abort
+    return {
+    \ 'nr': '$',
+    \ 'efm': efm#escape(efm#efm()),
+    \ 'lines': a:result,
+    \ 'title': 'gradle'
+    \}
+endfunction
 
+function! s:updateLightline() abort
+  if exists('*lightline#update')
+    call lightline#update()
+  endif
+endfunction
+
+function! s:startBuilding()
+  let s:isBuilding = s:isBuilding + 1
+  call s:updateLightline()
+endfunction
+
+function! s:finishBuilding()
+  let s:isBuilding = s:isBuilding - 1
+  call s:updateLightline()
+endfunction
+
+function! s:out_cb(chid, id, data) abort
+  call s:job_cb(a:chid, split(a:data, "\n", 1), 'stdout')
+endfunction
+
+function! s:err_cb(chid, id, data) abort
+  call s:job_cb(a:chid, split(a:data, "\n", 1), 'stderr')
+endfunction
+
+function! s:exit_cb(chid, id, status) abort
+  call s:job_cb(a:chid, a:status, 'exit')
+endfunction
+
+" Callback invoked when the gradle#sync() method finishes processing. Used when
+" using nvim async functionality.
+function! s:job_cb(id, data, event) abort
+  if a:event ==# 'stdout' || a:event ==# 'stderr'
+    if !empty(a:data)
+      let s:chunks[a:id][-1] .= a:data[0]
+      call extend(s:chunks[a:id], a:data[1:])
+    endif
+  elseif a:event ==# 'exit'
+    call s:parseVimTaskOutput(s:files[a:id], s:chunks[a:id])
+    let l:id = s:BufWinId()
+    call setloclist(l:id, [], ' ', s:What(s:chunks[a:id]))
+    call remove(s:chunks, a:id)
+    call s:showLoclist()
+    call s:setClassPath()
+    call s:finishBuilding()
+    call ale_linters#java#javalsp#NotifyConfigChange()
+  endif
+endfunction
+
+function! s:nvim_job(cmd) abort
+
+  let l:gradleFile = gradle#findGradleFile()
+
+  let l:options = {
+        \ 'on_stdout': function('s:job_cb'),
+        \ 'on_stderr': function('s:job_cb'),
+        \ 'on_exit':   function('s:job_cb')
+        \ }
+
+  call s:startBuilding()
+
+  let l:ch = jobstart(a:cmd, l:options)
+  let s:chunks[l:ch] = ['']
+  let s:files[l:ch] = l:gradleFile
+endfunction
+
+function! s:vim_job(cmd) abort
+
+  let l:gradleFile = gradle#findGradleFile()
+  let s:jobidseq = s:jobidseq + 1
+  let l:ch = s:jobidseq
+
+  let l:options = {
+      \ 'out_cb': function('s:out_cb', [l:ch]),
+      \ 'err_cb': function('s:err_cb', [l:ch]),
+      \ 'exit_cb': function('s:exit_cb', [l:ch]),
+      \ 'mode': 'raw'
+      \ }
+
+  if has('patch-8.1.889')
+    let l:options['noblock'] = 1
+  endif
+
+  let s:chunks[l:ch] = ['']
+  let s:files[l:ch] = l:gradleFile
+  call s:startBuilding()
+  call job_start(a:cmd, l:options)
+endfunction
+
+" Helper method to setup all gradle/android environments. This task must be
+" called only after the gradle#sync() method finishes and the dependencies are
+" already cached.
+function! s:setClassPath() abort
+
+  if !exists('g:gradle_set_classpath')
+    let g:gradle_set_classpath = 1
+  endif
+
+  if g:gradle_set_classpath != 1
+    return
+  endif
+
+  let l:deps = extend(gradle#classPaths(), android#classPaths())
+  let l:srcs = extend(gradle#sourcePaths(), android#sourcePaths())
+  let $CLASSPATH = join(gradle#uniq(sort(l:deps)), gradle#classPathSep())
+  let $SRCPATH = join(gradle#uniq(sort(l:srcs)), gradle#classPathSep())
+  exec 'set path=' . join(gradle#uniq(sort(l:srcs)), gradle#classPathSep())
+
+  " [LEGACY] Is recommended to use ALE plugin with javalsp linter instead of
+  " javacomplete plugin.
+  if exists('*javacomplete#SetClassPath')
+    call javacomplete#SetClassPath($CLASSPATH)
+  endif
+
+  " [LEGACY] Is recommended to use ALE plugin with javalsp linter instead of
+  " javacomplete plugin.
+  if exists('*javacomplete#SetSourcePath')
+    call javacomplete#SetSourcePath($SRCPATH)
+  endif
+
+  " [LEGACY] Is recommended to use ALE plugin with javalsp linter instead of
+  " syntastic plugin.
+  let g:syntastic_java_javac_classpath = $CLASSPATH . ':' . $SRCPATH
+
+endfunction
