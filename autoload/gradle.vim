@@ -351,6 +351,11 @@ function! s:parseVimTaskOutput(gradleFile, result)
       call cache#set(gradle#key(a:gradleFile), 'version', copy(mlist))
     endif
 
+    let mlist = matchlist(line, '^vim-builddir\s\(.*\)$')
+    if empty(mlist) == 0 && len(mlist[1]) > 0 && isdirectory(mlist[1])
+      call add(cache#get(gradle#key(a:gradleFile), 'jars', []), mlist[1])
+    endif
+
     let mlist = matchlist(line, '^vim-gradle\s\(.*\.jar\)$')
     if empty(mlist) == 0 && len(mlist[1]) > 0
       call add(cache#get(gradle#key(a:gradleFile), 'jars', []), mlist[1])

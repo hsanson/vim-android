@@ -25,6 +25,14 @@ allprojects { project ->
           }
         }
       } else {
+        // Print build class directories. These assume the project follows a
+        // standard gradle project with a main and test source sets. Custom
+        // projects that change the build dir will not work.
+        println "vim-builddir " + project.buildDir + '/classes/java/main'
+        println "vim-builddir " + project.buildDir + '/classes/java/test'
+        println "vim-builddir " + project.buildDir + '/classes/kotlin/main'
+        println "vim-builddir " + project.buildDir + '/classes/kotlin/test'
+
         // Print the list of all dependencies jar files. This allows vim to parse
         // the list and fill the CLASSPATH with the list of dependencies.
         project.configurations.findAll {

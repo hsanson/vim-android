@@ -25,7 +25,7 @@ endfunction
 " Generates a unique key from a file on disk.
 function! cache#key(filepath) abort
   if !filereadable(a:filepath)
-    throw 'File '. a:filepath . ' not found'
+    return 'nogradle'
   end
   return a:filepath . getftime(a:filepath)
 endfunction
