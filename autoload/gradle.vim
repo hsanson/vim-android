@@ -214,7 +214,11 @@ endfunction
 
 function! gradle#showSigns()
   if !exists('g:gradle_show_signs')
-    let g:gradle_show_signs = 1
+    if exists('g:loaded_ale')
+      let g:gradle_show_signs = 0
+    else
+      let g:gradle_show_signs = 1
+    end
   endif
   return g:gradle_show_signs
 endfunction
@@ -518,7 +522,7 @@ function! s:showLoclist()
 
   " Backward compatibility
   if !exists('g:gradle_quickfix_show')
-    let g:gradle_quickfix_show = 1
+    let g:gradle_quickfix_show = 0
   endif
 
   if !exists('g:gradle_loclist_show')

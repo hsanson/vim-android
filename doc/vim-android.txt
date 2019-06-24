@@ -580,15 +580,15 @@ Example:
 
                                                         *g:gradle_loclist_show*
 g:gradle_loclist_show~
-Default: 1
+Default: 0
 
-By default this plugin opens the loclist window if there are errors after
-running a build. If you do not like this behaviour it is possible to disable
-it by setting this variable to 0.
+Setting this variable will cause the plugin to open the loclist automatically
+if there are any errors present. Since this may conflict with other plugins
+that also modify the loclist (e.g. ALE) this is disabled by default.
 
 Example:
 >
-        let g:gradle_loclist_show=0
+        let g:gradle_loclist_show=1
 <
                                                               *g:gradle_async*
 g:gradle_async~
@@ -619,12 +619,11 @@ Example:
 <
                                                         *g:gradle_show_signs*
 g:gradle_show_signs~
-Default: 1
+Default: 1 (0 if ALE is present)
 
 This variable determines if the plugin should display vim signs marking
-errors and warnings. This may conflict with other plugins (e.g. ALE) that
-do a better job at displaying signs, thus is recommended to disable this if
-using ALE.
+errors and warnings. To avoid conflict with ALE, this is disabled by default
+if the ALE plugin is also installed and loaded.
 
 Example:
 >
