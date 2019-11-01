@@ -66,16 +66,52 @@ function! gradle#bin()
 
 endfunction
 
+function! s:getGradleVersion()
+  let l:cmd = join([gradle#bin(), ' --version'])
+  let l:pattern = 'Gradle\s*\(\d\+\)\.\(\d\+\)'
+  let l:result = system(l:cmd)
+  let l:version_list = matchlist(l:result, l:pattern)
+  let l:version_major = l:version_list[1]
+  let l:version_minor = l:version_list[2]
+  let l:version = l:version_major . '.' . l:version_minor
+  let l:cache_key = gradle#key(gradle#findGradleFile())
+  call cache#set(l:cache_key, 'version', l:version)
+  call cache#set(l:cache_key, 'version_major', l:version_major)
+  call cache#set(l:cache_key, 'version_minor', l:version_minor)
+endfunction
+
 function! gradle#version()
-  return cache#get(gradle#key(gradle#findGradleFile()), 'version', ['', '', ''])[0]
+
+  let l:key = gradle#key(gradle#findGradleFile())
+  let l:gradle_version = cache#get(l:key, 'version', '')
+
+  if l:gradle_version ==# ''
+    call s:getGradleVersion()
+  endif
+
+  return cache#get(l:key, 'version', 'unknown')
 endfunction
 
 function! gradle#versionMajor()
-  return str2nr(cache#get(gradle#key(gradle#findGradleFile()), 'version', ['', '', ''])[1])
+  let l:key = gradle#key(gradle#findGradleFile())
+  let l:gradle_version = cache#get(l:key, 'version_major', '')
+
+  if l:gradle_version ==# ''
+    call s:getGradleVersion()
+  endif
+
+  return str2nr(cache#get(l:key, 'version_major', ''))
 endfunction
 
 function! gradle#versionMinor()
-  return str2nr(cache#get(gradle#key(gradle#findGradleFile()), 'version', ['', '', ''])[2])
+  let l:key = gradle#key(gradle#findGradleFile())
+  let l:gradle_version = cache#get(l:key, 'version_minor', '')
+
+  if l:gradle_version ==# ''
+    call s:getGradleVersion()
+  endif
+
+  return str2nr(cache#get(l:key, 'version_minor', ''))
 endfunction
 
 " Verifies if the android sdk is available and if the gradle build and binary

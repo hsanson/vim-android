@@ -13,8 +13,12 @@ function! efm#cmd() abort
     call add(l:makeprg, '--no-daemon')
   endif
 
-  call add(l:makeprg, '--console')
-  call add(l:makeprg, 'plain')
+  if gradle#versionMajor() >= 2 && gradle#versionMinor() >= 3
+    call add(l:makeprg, '--console')
+    call add(l:makeprg, 'plain')
+  else
+    call add(l:makeprg, '--no-color')
+  endif
 
   return l:makeprg
 endfunction
