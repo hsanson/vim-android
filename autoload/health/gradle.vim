@@ -91,8 +91,8 @@ function! health#gradle#checkNvim() abort
         \ ])
   endif
 
-  if(filereadable(android#findManifestFile()))
-    call health#report_ok('Android manifest found at ' . android#findManifestFile())
+  if(filereadable(android#manifestFile()))
+    call health#report_ok('Android manifest found at ' . android#manifestFile())
   else
     call health#report_warn('Android manifest not found.', [
        \ 'Current path maybe not an android project?.'
