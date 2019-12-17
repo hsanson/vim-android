@@ -114,6 +114,10 @@ function! gradle#versionMinor()
   return str2nr(cache#get(l:key, 'version_minor', ''))
 endfunction
 
+function! gradle#versionNumber()
+  return gradle#versionMajor() * 100 + gradle#versionMinor()
+endfunction
+
 " Verifies if the android sdk is available and if the gradle build and binary
 " are present.
 function! gradle#isGradleProject()
