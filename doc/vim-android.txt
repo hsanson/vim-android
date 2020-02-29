@@ -416,7 +416,7 @@ Then you can add the parts to any airline section you want:
      \ 'filetype',
      \ 'gradle-running',
      \ 'gradle-errors',
-     \ 'gradle-warnings
+     \ 'gradle-warnings'
      \])
 <
 
