@@ -101,6 +101,46 @@ function! android#install(mode)
   endfor
 endfunction
 
+function! android#launch(mode)
+
+  let l:devices = adb#selectDevice()
+
+  let l:gradleResult = gradle#build(a:mode)
+
+  if (l:gradleResult[0] > 0) || (l:gradleResult[1] > 0)
+    call android#logi("Could not build APK. Launch failed")
+    return
+  endif
+
+  let l:apk = system('find $(pwd)/*/build/** -name "app-' . a:mode . '.apk" | tr "\n" " " | tr "//" "/"')
+
+  if empty(l:apk)
+    call android#logi("Could not find APK. Install/Launch failed")
+    return
+  endif
+
+  let l:mainId = system('apkanalyzer manifest print ' . l:apk .  ' | xmlstarlet sel -t -c "///activity[intent-filter/action[@android:name=''android.intent.action.MAIN'']]" | xmlstarlet sel -t -c "string(//*[local-name()=''activity'']/@android:name)"')
+
+  let l:appId = system('apkanalyzer manifest application-id ' . l:apk . ' | tr "\n" " " | tr "//" "/" | xargs echo -n')
+
+  for l:device in l:devices
+    call android#logi("Install and Launch " . a:mode . " " . l:device)
+    let l:result = adb#install(l:device, l:apk)
+    if (l:result[0] > 0) || (l:result[1] > 0)
+      call android#logi("Install/Launch failed")
+      return
+    else
+      let l:launchResult = adb#launch(l:device, l:appId . '/' . l:mainId)
+      if (l:launchResult[0] > 0) || (l:launchResult[1] > 0)
+        call android#logi("Launch failed")
+        return
+      else
+        call android#logi("")
+      endif
+    endif
+  endfor
+endfunction
+
 function! android#uninstall(mode)
 
   let l:devices = adb#selectDevice()
@@ -306,6 +346,7 @@ function! android#setupAndroidCommands()
     command! -nargs=? AndroidBuild call android#compile(<f-args>)
     command! -nargs=1 AndroidInstall call android#install(<f-args>)
     command! -nargs=1 AndroidUninstall call android#uninstall(<f-args>)
+    command! -nargs=1 AndroidLaunch call android#launch(<f-args>)
     command! AndroidDevices call android#listDevices()
     command! AndroidEmulator call android#emulator()
   else

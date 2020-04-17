@@ -147,6 +147,10 @@ function! gradle#install(device, mode)
   let $ANDROID_SERIAL = l:old_serial
 endfunction
 
+function! gradle#build(mode)
+  let l:result = call('gradle#run', ['assemble' . android#capitalize(a:mode)])
+endfunction
+
 function! gradle#uninstall(device, mode)
   let l:old_serial = $ANDROID_SERIAL
   let $ANDROID_SERIAL=a:device

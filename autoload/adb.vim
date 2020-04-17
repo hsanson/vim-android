@@ -131,6 +131,26 @@ function! adb#getDeviceInfo(device)
 endfunction
 
 ""
+" Launch android app on device
+function! adb#launch(device, activityId)
+  call android#logi('Launching ' . a:activityId . ' on ' . a:device)
+  let l:cmd = adb#bin() . ' -s ' . a:device . ' shell am start -n ' . a:activityId
+  execute 'silent !' . l:cmd
+  redraw!
+endfunction
+
+""
+" Install android app on device
+function! adb#install(device, apk)
+  " TODO: Make this support a multi-apk install
+  call android#logi('Installing ' . a:apk . ' on ' . a:device)
+  let l:cmd = adb#bin() . ' -s ' . a:device . ' install -r -d ' . a:apk
+  execute 'silent !' . l:cmd
+  redraw!
+endfunction
+
+
+""
 " Uninstall android package from device
 function! adb#uninstall(device)
   call android#logi('Uninstalling ' . android#packageName() . ' from ' . a:device)
