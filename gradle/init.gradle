@@ -127,6 +127,9 @@ allprojects { project ->
     }
 
     if( result.getFailure() != null ) {
+      def hasCheckstyle = project.getPlugins().hasPlugin('checkstyle')
+      def hasFindbugs   = project.getPlugins().hasPlugin('findbugs')
+      def hasPmd = project.getPlugins().hasPlugin('pmd')
 
       if(hasPmd) {
         project.tasks.withType(Pmd) { task ->
