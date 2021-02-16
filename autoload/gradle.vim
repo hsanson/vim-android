@@ -30,10 +30,21 @@ endfunction
 
 function! gradle#wrapper()
   if gradle#getOS() ==# 'Windows' && executable('\.gradlew.bat')
-      return fnamemodify('\.gradlew.bat', ':p')
+    return fnamemodify('\.gradlew.bat', ':p')
   elseif executable('./gradlew')
     return fnamemodify('./gradlew', ':p')
   endif
+endfunction
+
+
+function! gradle#isExecutable(exec)
+    if type(a:exec) != type('')
+        return 0
+    elseif strlen(a:exec) == 0
+        return 0
+    else
+        return executable(a:exec)
+    endif
 endfunction
 
 " Function that tries to determine the location of the gradle binary. If
@@ -49,12 +60,12 @@ function! gradle#bin()
     return g:gradle_bin
   endif
 
-  if executable(gradle#wrapper())
+  if gradle#isExecutable(gradle#wrapper())
     let g:gradle_bin = gradle#wrapper()
     return g:gradle_bin
   endif
 
-  if finddir(gradle#gradleHome()) !=# '' && executable(gradle#gradleHome() . '/bin/gradle')
+  if finddir(gradle#gradleHome()) !=# '' && gradle#isExecutable(gradle#gradleHome() . '/bin/gradle')
     let g:gradle_bin = gradle#gradleHome() . '/bin/gradle'
     return g:gradle_bin
   endif
@@ -123,7 +134,7 @@ endfunction
 function! gradle#isGradleProject()
 
   let l:gradle_cfg_exists = filereadable(gradle#findGradleFile())
-  let l:gradle_bin_exists = executable(gradle#bin())
+  let l:gradle_bin_exists = gradle#isExecutable(gradle#bin())
 
   if( ! l:gradle_cfg_exists )
     return 0
@@ -528,7 +539,7 @@ function! gradle#classPathSep()
 endfunction
 
 function! gradle#setupGradleCommands()
-  if executable(gradle#bin())
+  if gradle#isExecutable(gradle#bin())
     command! -nargs=+ Gradle call gradle#compile(<f-args>)
     command! GradleSync call gradle#sync()
   else
