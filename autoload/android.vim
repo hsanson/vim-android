@@ -247,28 +247,6 @@ function! android#capitalize(str)
 endfunction
 
 ""
-" Function that tries to determine the location of the android binary.
-function! android#bin()
-
-  if exists('g:android_tool')
-    return g:android_tool
-  endif
-
-  let g:android_tool = android#homePath() . "/tools/android"
-
-  if(!executable(g:android_tool))
-    if executable("android")
-      let g:android_tool = "android"
-    else
-      let g:android_tool = "/bin/false"
-    endif
-  endif
-
-  return g:android_tool
-
-endfunction
-
-""
 " Find android emulator binary
 function! android#emulatorbin()
 
@@ -276,13 +254,13 @@ function! android#emulatorbin()
     return g:android_emulator
   endif
 
-  let g:android_emulator = android#homePath() . "/tools/emulator"
+  let g:android_emulator = android#homePath() . '/emulator/emulator'
 
   if(!executable(g:android_emulator))
-    if executable("emulator")
-      let g:android_emulator = "emulator"
+    if executable('emulator')
+      let g:android_emulator = 'emulator'
     else
-      throw "Unable to find android emulator binary. Ensure you set g:android_sdk_path correctly."
+      throw 'Unable to find android emulator binary. Ensure you set g:android_sdk_path correctly.'
     endif
   endif
 
@@ -293,9 +271,8 @@ endfunction
 " List AVD emulators
 function! android#avds()
 
-  let l:avd_output = system(android#bin() . " list avd")
-  let l:avd_devices = filter(split(l:avd_output, '\n'), 'v:val =~ "Name: "')
-  let l:avd = map(l:avd_devices, 'v:key . ". " . substitute(v:val, "Name: ", "", "")')
+  let l:avd_output = split(system(android#emulatorbin() . ' -list-avds'))
+  let l:avd = map(l:avd_output, 'v:key+1 . ". " . v:val')
 
   "call android#logi(len(l:devices) . "  Devices " . join(l:devices, " || "))
 
@@ -304,38 +281,33 @@ endfunction
 
 function! android#emulator()
 
-  let l:avds = android#avds()
+  let l:avds = extend(['0. Cancel'], android#avds())
 
   " There are no avds defined
   if len(l:avds) == 0
-    call android#logw("No android emulator defined")
+    call android#logw('No android emulator defined')
     return 0
   endif
 
-  " If only one device is found automatically install to it.
-  if len(l:avds) == 1
-    let l:avd = strpart(l:avds[0], 3)
-    execute 'silent !' . android#emulatorbin() . " -avd " . l:avd . " &> /dev/null &"
-    redraw!
-  endif
-
-  " If more than one emulator avd is found give a list so the user can choose.
   let l:choice = -1
 
   while(l:choice < 0 || l:choice >= len(l:avds))
-    echom "Select target device"
+    echom 'Select target device'
     call inputsave()
     let l:choice = inputlist(l:avds)
     call inputrestore()
     echo "\n"
   endwhile
 
-  echomsg l:choice
+  if l:choice <= 0
+    redraw!
+    return 0
+  endif
 
   let l:option = l:avds[l:choice]
   let l:avd = strpart(l:option, 3)
 
-  execute 'silent !' . android#emulatorbin() . " -avd " . l:avd . " &> /dev/null &"
+  execute 'silent !' . android#emulatorbin() . ' -avd ' . l:avd . ' 2>/dev/null  &'
   redraw!
 
 endfunction

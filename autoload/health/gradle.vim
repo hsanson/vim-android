@@ -19,10 +19,6 @@ function! health#gradle#checkVim() abort
     echom '  Android home is not set correctly. Ensure g:android_sdk_path variable or ANDROID_HOME environment are set.'
   end
 
-  if(!executable(android#bin()))
-    echom '  Android binary not found. Ensure g:android_sdk_path variable or the ANDROID_HOME environment are set.'
-  endif
-
   if(!executable(adb#bin()))
     echom '  ADB binary not found. Ensure g:android_sdk_path variable or the ANDROID_HOME environment are set.'
   endif
@@ -63,15 +59,6 @@ function! health#gradle#checkNvim() abort
   call health#report_info('Gradle version ' . gradle#version())
 
   call health#report_start('Android checks')
-
-  if(executable(android#bin()))
-    call health#report_ok('Android binary found at ' . android#bin())
-  else
-    call health#report_error('Android binary not found.', [
-        \ 'Ensure you have set g:android_sdk_path variable.',
-        \ 'Or have ANDROID_HOME environment variable set.'
-        \ ])
-  endif
 
   if(android#checkAndroidHome())
     call health#report_ok('Android home set to ' . g:android_sdk_path)
