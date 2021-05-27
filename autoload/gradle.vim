@@ -79,7 +79,7 @@ endfunction
 
 function! s:getGradleVersion()
   let l:cmd = join([gradle#bin(), ' --version'])
-  let l:pattern = 'Gradle\s*\(\d\+\)\.\(\d\+\)''Gradle\s*\(\d\+\)\.\(\d\+\)'
+  let l:pattern = 'Gradle\s*\(\d\+\)\.\(\d\+\)'
   let l:result = system(l:cmd)
   let l:version_list = matchlist(l:result, l:pattern)
 
@@ -410,11 +410,6 @@ endfunction
 function! s:parseVimTaskOutput(gradleFile, result)
 
   for line in a:result
-
-    let mlist = matchlist(line, '^gradle-version\s\(\d\+\)\.\(\d\+\).*$')
-    if empty(mlist) == 0
-      call cache#set(gradle#key(a:gradleFile), 'version', copy(mlist))
-    endif
 
     let mlist = matchlist(line, '^vim-builddir\s\(.*\)$')
     if empty(mlist) == 0 && len(mlist[1]) > 0 && isdirectory(mlist[1])
