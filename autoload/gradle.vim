@@ -79,9 +79,15 @@ endfunction
 
 function! s:getGradleVersion()
   let l:cmd = join([gradle#bin(), ' --version'])
-  let l:pattern = 'Gradle\s*\(\d\+\)\.\(\d\+\)'
+  let l:pattern = 'Gradle\s*\(\d\+\)\.\(\d\+\)''Gradle\s*\(\d\+\)\.\(\d\+\)'
   let l:result = system(l:cmd)
   let l:version_list = matchlist(l:result, l:pattern)
+
+  if empty(l:version_list)
+    call gradle#logi('Failed to determine gradle version')
+    return
+  endif
+
   let l:version_major = l:version_list[1]
   let l:version_minor = l:version_list[2]
   let l:version = l:version_major . '.' . l:version_minor
