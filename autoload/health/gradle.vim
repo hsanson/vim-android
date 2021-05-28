@@ -31,13 +31,12 @@ function! health#gradle#checkNvim() abort
 
   call health#report_start('Gradle checks')
 
-  if(executable(gradle#bin()))
-    call health#report_ok('Gradle binary found at ' . gradle#bin())
+  call health#report_ok('Gradle binary: ' . gradle#bin())
+
+  if(empty(gradle#version()))
+    call health#report_warn('Gradle version could not be determined')
   else
-    call health#report_error('Gradle binary not found', [
-          \ 'Ensure gradle is in your path or that the project has gradlew script.',
-          \ 'Set the g:gradle_bin variable is still having issues.'
-          \])
+    call health#report_ok('Gradle version ' . gradle#version())
   endif
 
   if(gradle#isAsyncEnabled())
@@ -55,8 +54,6 @@ function! health#gradle#checkNvim() abort
          \ 'Consider enabling daemon mode for faster builds.'
          \ ])
   endif
-
-  call health#report_info('Gradle version ' . gradle#version())
 
   call health#report_start('Android checks')
 
@@ -85,16 +82,6 @@ function! health#gradle#checkNvim() abort
        \ 'Current path maybe not an android project?.'
        \ ])
   endif
-
-  let indentation = '        '
-
-  call health#report_info("Configured glyps:\n" .
-        \ indentation . 'android glyph: ' . android#glyph() . '\n' .
-        \ indentation . 'gradle glyph:  ' . gradle#glyph() . '\n' .
-        \ indentation . 'error glyph:   ' . gradle#glyphError() . '\n' .
-        \ indentation . 'warning glyph: ' . gradle#glyphWarning() . '\n' .
-        \ indentation . 'building glyph: ' . gradle#glyphBuilding() . '\n'
-        \ )
 
   call health#report_start('ADB checks')
 

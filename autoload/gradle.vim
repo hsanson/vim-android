@@ -75,6 +75,7 @@ function! gradle#bin()
     return g:gradle_bin
   endif
 
+  return ''
 endfunction
 
 function! s:getGradleVersion()
@@ -84,7 +85,6 @@ function! s:getGradleVersion()
   let l:version_list = matchlist(l:result, l:pattern)
 
   if empty(l:version_list)
-    call gradle#logi('Failed to determine gradle version')
     return
   endif
 
