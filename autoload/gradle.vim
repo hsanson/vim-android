@@ -678,7 +678,7 @@ function! s:nvim_job(cmd) abort
 
   call s:startBuilding()
 
-  let l:ch = jobstart(a:cmd, l:options)
+  let l:ch = jobstart(join(a:cmd), l:options)
   let s:chunks[l:ch] = ['']
   let s:files[l:ch] = l:gradleFile
 endfunction
