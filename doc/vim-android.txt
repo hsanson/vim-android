@@ -17,8 +17,6 @@ Contents                                   *vim-android* *vim-android-contents*
               Commands ...................... |vim-android-commands|
               Key mappings .................. |vim-android-keys|
               Omnicompletion ................ |vim-android-omnicomplete|
-              PMD Plugin .................... |vim-android-pmd|
-              FindBugs Plugin ............... |vim-android-findbugs|
               Status Line.................... |vim-android-statusline|
                 Airline Status Line.......... |vim-android-airline|
                 LightLine Status Line........ |vim-android-lightline|
@@ -50,7 +48,7 @@ The following features are supported by vim-android:
   - Custom gradle vim task that invokes gradle directly with any arguments
     passed to the command.
   - Custom errorformat that captures java errors, linter errors, test errors,
-    aapt errors, pmd, findbugs and displays them in the loclist window. This
+    aapt errors and displays them in the loclist window. This
     requires that gradle be invoked with the vim init file loaded.
   - Updates the CLASSPATH environment variable to include paths for your
     current project, external libs, external lib-projects and the current
@@ -208,126 +206,6 @@ functionality.
 
 
 ------------------------------------------------------------------------------
-PMD PLUGIN SUPPORT                                          *vim-android-pmd*
-
-This plugin automatically detects if the pmd gradle plugin is loaded,
-parses the xml reports it generates and populates the loclist window with the
-errors and warnings reported by it.
-
-The pmd gradle plugin does not work by default with the android gradle plugin.
-To make it work with android applications you need to explicitly create a task
-of type *Pmd* in you build.gradle file:
->
-    apply plugin: 'pmd'
-
-    task pmd(type: Pmd) {
-        ruleSets = ["java-basic", "java-braces", "java-strings",
-                    "java-android", "java-imports", /*"java-codesize",
-                    "java-design", */"java-unusedcode"]
-
-        source 'src'
-        include '**/*.java'
-        exclude '**/gen/**'
-        exclude '**/androidTest/**'
-
-        reports {
-            xml.enabled = true
-            html.enabled = true
-        }
-    }
-<
-After creating the task you can make it execute after running the check task
-by adding the following to your build.gradle file:
->
-    check.finalizedBy 'pmd'
-<
-refer to the gradle pmd plugin documetnation for more options:
-
-  https://docs.gradle.org/current/userguide/pmd_plugin.html
-
-------------------------------------------------------------------------------
-FindBugs PLUGIN SUPPORT                                  *vim-android-findbugs*
-
-This plugin automatically detects if the findbugs gradle plugin is loaded,
-parses the xml reports it generates and populates the loclist window with the
-errors and warnings reported by it.
-
-For projects that use the android gradle plugin, the findbugs plugin does not
-work by default. To make it work with android projects you need to explicitly
-create a task of type *FindBugs* in you build.gradle file:
->
-    task findbugs(type: FindBugs) {
-      effort = "max"
-      reportLevel = "high"
-      ignoreFailures = false
-      excludeFilter = new File("${project.rootDir}/config/findbugs.xml")
-      classes = files("$project.buildDir/intermediates/classes/")
-      source 'src'
-      include '**/*.java'
-      classpath = files()
-      reports {
-        xml {
-          destination "${project.buildDir}/reports/findbugs/findbugs.xml"
-        }
-      }
-    }
-<
-You also need to add this findbugs.xml filter file into a config folder. If
-you want it in another place change the excludeFilter path in the above
-FindBugs task definition:
->
-    <?xml version="1.0" encoding="UTF-8"?>
-    <!--
-      ~ Copyright 2015 Vincent Brison.
-      ~
-      ~ Licensed under the Apache License, Version 2.0 (the "License");
-      ~ you may not use this file except in compliance with the License.
-      ~ You may obtain a copy of the License at
-      ~
-      ~    http://www.apache.org/licenses/LICENSE-2.0
-      ~
-      ~ Unless required by applicable law or agreed to in writing, software
-      ~ distributed under the License is distributed on an "AS IS" BASIS,
-      ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-      ~ See the License for the specific language governing permissions and
-      ~ limitations under the License.
-      -->
-    <FindBugsFilter>
-        <!-- http://stackoverflow.com/questions/7568579/eclipsefindbugs-exclude-filter-files-doesnt-work -->
-        <Match>
-            <Class name="~.*\.R\$.*"/>
-        </Match>
-        <Match>
-            <Class name="~.*\.Manifest\$.*"/>
-        </Match>
-        <!-- All bugs in test classes, except for JUnit-specific bugs -->
-        <Match>
-            <Class name="~.*\.*Test" />
-            <Not>
-                <Bug code="IJU" />
-            </Not>
-        </Match>
-    </FindBugsFilter>
-<
-After creating the task you can make it execute after running the check task
-by adding the following to your build.gradle file:
->
-    check.finalizedBy 'findbugs'
-<
-Refer to the gradle findbugs plugin documetnation for more options:
-
-  https://docs.gradle.org/current/userguide/findbugs_plugin.html
-
-Pro Tip: Set *g:netrw_browsex_viewer* variable to your favorite browser and
-then with the cursor in the findbugs details URL press gx to open the
-detailed explanation of the error in your favorite browser:
->
-  let g:netrw_browsex_viewer = "firefox -new-tab"
-<
-See the :h gx for more details on this functionality.
-
-
-------------------------------------------------------------------------------
 STATUS LINE                                             *vim-android-statusline*
 
 This plugin provides some methods that return strings indiciating the plugin
@@ -476,8 +354,8 @@ configured we get additional features:
  - ALE gains a new `android` linter available for xml, java, kotlin, and groovy
    files. You need to add `android` to these file types in your |g:ale_linters|
    configuration.
- - vim-android benefits from all linters/fixers available in ALE like 
-   pmd, checkstyle, google_format, etc.
+ - vim-android benefits from all linters/fixers available in ALE like
+   checkstyle, google_format, etc.
  - vim-android benefits from ALE auto-completion for java/kotlin files.
 
 Example configuration for best ALE/vim-android combination:

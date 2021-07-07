@@ -6,7 +6,7 @@
 ## or too generic to create useful matches. This script tries to aleviate some
 ## of the pain points found in the output of gradle.
 
-## Taken from the errorformat example for javac. Changes tags to single spaces.
+## Taken from the errorformat example for javac. Changes tabs to single spaces.
 /\^$/s/\t/\ /g;
 
 ## Delete empty lines
@@ -29,24 +29,6 @@
 ## Make all AndroidManifest.xml errors one liners to simplify the errorformat
 ## string.
 :x /AndroidManifest.xml:.*[Warning|Error]:$/ { N; s/\n//g ; bx };
-
-## Findbugs outputs a list of missing classes in the form:
-##
-##    The following classes needed for analysis were missing:
-##      android.content.BroadcastReceiver
-##      android.support.v4.app.FragmentManager$OnBackStackChangedListener
-##      org.jdeferred.FailCallback
-##      org.jdeferred.DoneCallback
-##      ....
-##
-##    :Project:findbugs
-##
-## Since we use two spaces to identify informational text within multiline error
-## messages this causes the whole list to be shown in the quickfix window. To
-## avoid this we remove the empty spaces at the beginning of all rows after
-## the missing classes message up to the next line that does not start with
-## blank space.
-/The following classes needed for analysis were missing:/,/^[[:alpha:]].*/ s/^\s\+//;
 
 ## Magic code to add two spaces to convert this text:
 ##
