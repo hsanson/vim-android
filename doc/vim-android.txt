@@ -456,6 +456,19 @@ Example:
         let g:android_adb_tool=/path/to/tool/adb
 <
 
+                                                           *g:android_aapt_tool*
+g:android_aapt_tool~
+Default: ${g:android_sdk_path}/build-tools/{latest-version}/aapt
+
+Some functions such as AndroidLaunch require the aapt binary. By default this
+plugin looks for the latest version of build tools installed inside the
+android SDK path.
+
+Example:
+>
+        let g:android_aapt_tool=/path/to/tool/aapt
+<
+
                                                         *g:gradle_loclist_show*
 g:gradle_loclist_show~
 Default: 0

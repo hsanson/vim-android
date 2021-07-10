@@ -58,6 +58,12 @@ function! android#homePath()
   return g:android_sdk_path
 endfunction
 
+" Function returns the absolute path of the newest build-tools installed inside
+" android home directory.
+function! android#buildToolsPath()
+  return reverse(sort(globpath(android#homePath(), 'build-tools/*', v:true, v:true)))[0]
+endfunction
+
 function! android#checkAndroidHome()
   if finddir(android#homePath()) == ""
     return 0
@@ -119,7 +125,7 @@ function! android#launch(mode)
     return
   endif
 
- let l:mainId = system('aapt list -a ' . l:apk . ' | sed -n "/^Package Group[^s]/s/.*name=//p"  | sed "s/$/ 1/" ')
+ let l:mainId = system(aapt#bin() . ' list -a ' . l:apk . ' | sed -n "/^Package Group[^s]/s/.*name=//p"  | sed "s/$/ 1/" ')
 
   for l:device in l:devices
     call android#logi("Install and Launch " . a:mode . " " . l:device)
