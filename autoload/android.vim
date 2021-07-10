@@ -58,6 +58,12 @@ function! android#homePath()
   return g:android_sdk_path
 endfunction
 
+" Function returns the absolute path of the newest build-tools installed inside
+" android home directory.
+function! android#buildToolsPath()
+  return reverse(sort(globpath(android#homePath(), 'build-tools/*', v:true, v:true)))[0]
+endfunction
+
 function! android#checkAndroidHome()
   if finddir(android#homePath()) == ""
     return 0
@@ -119,9 +125,7 @@ function! android#launch(mode)
     return
   endif
 
-  let l:mainId = system('apkanalyzer manifest print ' . l:apk .  ' | xmlstarlet sel -t -c "///activity[intent-filter/action[@android:name=''android.intent.action.MAIN'']]" | xmlstarlet sel -t -c "string(//*[local-name()=''activity'']/@android:name)"')
-
-  let l:appId = system('apkanalyzer manifest application-id ' . l:apk . ' | tr "\n" " " | tr "//" "/" | xargs echo -n')
+ let l:mainId = system(aapt#bin() . ' list -a ' . l:apk . ' | sed -n "/^Package Group[^s]/s/.*name=//p"  | sed "s/$/ 1/" ')
 
   for l:device in l:devices
     call android#logi("Install and Launch " . a:mode . " " . l:device)
@@ -130,7 +134,8 @@ function! android#launch(mode)
       call android#logi("Install/Launch failed")
       return
     else
-      let l:launchResult = adb#launch(l:device, l:appId . '/' . l:mainId)
+      call android#logi('Main ' . l:mainId . '' )
+       let l:launchResult = adb#launch(l:device, l:mainId)
       if (l:launchResult[0] > 0) || (l:launchResult[1] > 0)
         call android#logi("Launch failed")
         return

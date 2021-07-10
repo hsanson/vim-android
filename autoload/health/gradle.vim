@@ -23,6 +23,10 @@ function! health#gradle#checkVim() abort
     echom '  ADB binary not found. Ensure g:android_sdk_path variable or the ANDROID_HOME environment are set.'
   endif
 
+  if(!executable(aapt#bin()))
+    echom '  AAPT build tools binary not found. Ensure g:android_sdk_path variable or the ANDROID_HOME environment are set.'
+  endif
+
 
 endfunction
 
@@ -89,6 +93,22 @@ function! health#gradle#checkNvim() abort
     call health#report_ok('ADB binary found: ' . adb#bin())
   else
     call health#report_error('ADB binary not found')
+  endif
+
+  call health#report_start('Build Tools checks')
+
+  if(isdirectory(android#buildToolsPath()))
+    call health#report_ok('Build tools path: ' . android#buildToolsPath())
+  else
+    call health#report_warn('Build tools path not found.', [
+       \ 'Without build tools some functions (e.g. launch) wont work'
+       \ ])
+  endif
+
+  if(executable(aapt#bin()))
+    call health#report_ok('AAPT binary found: ' . aapt#bin())
+  else
+    call health#report_error('AAPT binary not found')
   endif
 
 endfunction
