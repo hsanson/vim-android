@@ -133,9 +133,9 @@ endfunction
 ""
 " Launch android app on device
 function! adb#launch(device, activityId)
-  call android#logi('Launching ' . a:activityId . ' on ' . a:device)
-  let l:cmd = adb#bin() . ' -s ' . a:device . ' shell am start -n ' . a:activityId
-  execute 'silent !' . l:cmd
+  call android#logi('Launching ' . a:activityId . ' on ' . a:device) 
+  let l:cmd = adb#bin() . ' -s ' . a:device . ' shell monkey -p ' . a:activityId 
+  execute '!' . l:cmd
   redraw!
 endfunction
 
