@@ -107,6 +107,21 @@ function! android#install(mode)
   endfor
 endfunction
 
+
+function! android#buildremotedebug()
+  call android#logi('Build Debug on Remote') 
+  let l:cmd = gradle#bin() . ' assembleDebug' 
+  execute '!' . l:cmd
+  redraw!
+endfunction
+
+function! android#buildremoterelease()
+  call android#logi('Build Release on Remote') 
+  let l:cmd = gradle#bin() . ' assemble' 
+  execute '!' . l:cmd
+  redraw!
+endfunction
+
 function! android#launch(mode)
 
   let l:devices = adb#selectDevice()
@@ -320,6 +335,8 @@ endfunction
 function! android#setupAndroidCommands()
   if android#checkAndroidHome()
     command! -nargs=+ Android call android#compile(<f-args>)
+    command!  AndroidMirakleDebug call android#buildremotedebug()
+    command!  AndroidMirakleRelease call android#buildremoterelease()
     command! -nargs=? AndroidBuild call android#compile(<f-args>)
     command! -nargs=1 AndroidInstall call android#install(<f-args>)
     command! -nargs=1 AndroidUninstall call android#uninstall(<f-args>)
