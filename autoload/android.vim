@@ -110,16 +110,27 @@ endfunction
 
 function! android#buildremotedebug()
   call android#logi('Build Debug on Remote') 
-  let l:cmd = gradle#bin() . ' assembleDebug' 
-  execute '!' . l:cmd
-  redraw!
+  let l:cmd = gradle#bin() . ' assembleDebug ' 
+ " execute '!' . l:cmd
+ let winid = bufwinid('BuildOutput')
+  if winid > 0
+ call win_gotoid(winid)	  
+  bw! "BuildOutput"
+  endif
+ execute 'new BuildOutput | read ! ' . l:cmd 
+ " redraw!
 endfunction
 
 function! android#buildremoterelease()
   call android#logi('Build Release on Remote') 
-  let l:cmd = gradle#bin() . ' assemble' 
-  execute '!' . l:cmd
-  redraw!
+  let l:cmd = gradle#bin() . ' assemble ' 
+  " execute '!' . l:cmd
+ let winid = bufwinid('BuildOutput')
+  if winid > 0
+ call win_gotoid(winid)	  
+  bw! "BuildOutput"
+  endif
+  execute 'new BuildOutput | read ! ' . l:cmd
 endfunction
 
 function! android#launch(mode)
@@ -140,7 +151,7 @@ function! android#launch(mode)
     return
   endif
 
- let l:mainId = system(aapt#bin() . ' list -a ' . l:apk . ' | sed -n "/^Package Group[^s]/s/.*name=//p"  | sed "s/$/ 1/" ')
+ let l:mainId = system(aapt#bin() . ' dump packagename ' . l:apk . ' | sed "s/$/ 1/" ')
 
   for l:device in l:devices
     call android#logi("Install and Launch " . a:mode . " " . l:device)
