@@ -1,4 +1,5 @@
 let s:chunks = {}
+let s:lastOutput = []
 let s:files = {}
 let s:jobidseq = 0
 let s:isBuilding = 0
@@ -543,9 +544,11 @@ function! gradle#setupGradleCommands()
   if gradle#isExecutable(gradle#bin())
     command! -nargs=+ Gradle call gradle#compile(<f-args>)
     command! GradleSync call gradle#sync()
+    command! GradleInfo call gradle#output()
   else
     command! -nargs=? Gradle echoerr 'Gradle binary could not be found, vim-android gradle commands are disabled'
     command! GradleSync echoerr 'Gradle binary could not be found, vim-android gradle commands are disabled'
+    command! GradleInfo echoerr 'Gradle binary could not be found, vim-android gradle commands are disabled'
   endif
 endfunction
 
@@ -646,18 +649,28 @@ function! s:exit_cb(chid, id, status) abort
   call s:job_cb(a:chid, a:status, 'exit')
 endfunction
 
+function! gradle#output()
+  if gradle#running()
+    echom 'Gradle still running'
+  else
+    for l:line in s:lastOutput
+      echom l:line
+    endfor
+  endif
+endfunction
+
 " Callback invoked when the gradle#sync() method finishes processing. Used when
 " using nvim async functionality.
 function! s:job_cb(id, data, event) abort
-  if a:event ==# 'stdout' || a:event ==# 'stderr'
-    if !empty(a:data)
-      let s:chunks[a:id][-1] .= a:data[0]
-      call extend(s:chunks[a:id], a:data[1:])
-    endif
+
+  if (a:event ==# 'stdout' || a:event ==# 'stderr') && !empty(a:data)
+    let s:chunks[a:id][-1] .= a:data[0]
+    call extend(s:chunks[a:id], a:data[1:])
   elseif a:event ==# 'exit'
     call s:parseVimTaskOutput(s:files[a:id], s:chunks[a:id])
     let l:id = s:BufWinId()
     call setloclist(l:id, [], ' ', s:What(s:chunks[a:id]))
+    let s:lastOutput = deepcopy(s:chunks[a:id])
     call remove(s:chunks, a:id)
     call s:showLoclist()
     call s:setClassPath()

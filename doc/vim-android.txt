@@ -136,6 +136,10 @@ COMMANDS                                                   *vim-android-commands
     or xml file inside a gradle or android project. You should execute this
     command every time you make changes to your build.gradle file.
 
+:GradleInfo
+    Displays the output of the last command executed by the plugin. Useful
+    for figuring out why something may not be working properly.
+
 :Gradle <options>
     Invokes gradle passing the <options> verbatim. Any gradle options
     available via command line can be used using this command (e.g. :Gradle
