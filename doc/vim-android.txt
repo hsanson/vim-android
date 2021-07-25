@@ -270,22 +270,22 @@ your vim configuration to create airline gradle parts:
 >
    call airline#parts#define_function(
        \ 'gradle-running',
-       \ 'ligthline#gradle#running'
+       \ 'lightline#gradle#running'
        \)
 
    call airline#parts#define_function(
        \ 'gradle-errors',
-       \ 'ligthline#gradle#errors'
+       \ 'lightline#gradle#errors'
        \)
 
    call airline#parts#define_function(
        \ 'gradle-warnings',
-       \ 'ligthline#gradle#warnings'
+       \ 'lightline#gradle#warnings'
        \)
 
    call airline#parts#define_function(
        \ 'gradle-project',
-       \ 'ligthline#gradle#project'
+       \ 'lightline#gradle#project'
        \)
 <
 Then you can add the parts to any airline section you want:
@@ -294,7 +294,7 @@ Then you can add the parts to any airline section you want:
      \ 'filetype',
      \ 'gradle-running',
      \ 'gradle-errors',
-     \ 'gradle-warnings
+     \ 'gradle-warnings'
      \])
 <
 
