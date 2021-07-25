@@ -4,19 +4,20 @@ function! aapt#bin()
     return g:android_aapt_tool
   endif
 
-  let g:android_aapt_tool = android#buildToolsPath() . '/aapt'
+  let l:aapt_paths = [
+        \ android#buildToolsPath() . '/aapt2',
+        \ 'aapt2',
+        \ android#buildToolsPath() . '/aapt',
+        \ 'aapt',
+        \ '/bin/false'
+        \ ]
 
-  if(executable(g:android_aapt_tool))
-    return g:android_aapt_tool
-  endif
-
-  let g:android_aapt_tool='aapt'
-
-  if(executable(g:android_aapt_tool))
-    return g:android_aapt_tool
-  endif
-
-  let g:android_aapt_tool='/bin/false'
+  for l:path in l:aapt_paths
+    if(executable(l:path))
+      let g:android_aapt_tool = l:path
+      break
+    endif
+  endfor
 
   return g:android_aapt_tool
 endfunction
