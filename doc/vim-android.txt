@@ -261,9 +261,9 @@ Default: "B"
         let g:gradle_glyph_building... = 'U+f253'
 <
 Note: To use the examples above you must have a powerline enabled font. You
-can use a program such as fontmatrix to browse the glyphs availabe in your
+can use a program such as fontmatrix to browse the glyphs available in your
 font and find the HEX representation. Once you know the HEX representation of
-the glyph you can copy/paste it or input it by presing <Ctrl+v> followed by
+the glyph you can copy/paste it or input it by pressing <Ctrl+v> followed by
 'u' and the HEX code in insert mode.
 
 ------------------------------------------------------------------------------
@@ -375,7 +375,7 @@ Refer to ALE documentation for installation and configuration details of each
 linter.
 
 Both ALE and vim-android modify the loclist and buffer signs conflicting with
-each other. Is recommented to set both |g:gradle_loclist_show| and
+each other. Is recommended to set both |g:gradle_loclist_show| and
 |g:gradle_show_signs| variables to 0 and let ALE take care of handling them.
 
 
@@ -462,15 +462,15 @@ Example:
 
                                                            *g:android_aapt_tool*
 g:android_aapt_tool~
-Default: ${g:android_sdk_path}/build-tools/{latest-version}/aapt
+Default: ${g:android_sdk_path}/build-tools/{latest-version}/aapt2
 
-Some functions such as AndroidLaunch require the aapt binary. By default this
+Some functions such as AndroidLaunch require the aapt2 binary. By default this
 plugin looks for the latest version of build tools installed inside the
 android SDK path.
 
 Example:
 >
-        let g:android_aapt_tool=/path/to/tool/aapt
+        let g:android_aapt_tool=/path/to/tool/aapt2
 <
 
                                                         *g:gradle_loclist_show*
