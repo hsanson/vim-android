@@ -23,6 +23,14 @@ allprojects { project ->
               System.err.println "vim-gradle " + it
             }
           }
+
+          if(project.android.hasProperty('testVariants')) {
+            project.android.testVariants.all { variant ->
+              variant.getCompileClasspath().each {
+                System.err.println "vim-gradle " + it
+              }
+            }
+          }
         }
       } else {
         // Print build class directories. These assume the project follows a
