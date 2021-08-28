@@ -404,7 +404,7 @@ function! gradle#sync() abort
     call setloclist(l:id, [], ' ', s:What(l:result))
     call s:setClassPath()
     call gradle#logi('')
-    call ale_linters#java#javalsp#NotifyConfigChange()
+    call ale_linters#java#NotifyConfigChange()
   endif
 endfunction
 
@@ -669,7 +669,7 @@ function! s:job_cb(id, data, event) abort
     call s:showLoclist()
     call s:setClassPath()
     call s:finishBuilding()
-    call ale_linters#java#javalsp#NotifyConfigChange()
+    call ale_linters#java#NotifyConfigChange()
   endif
 endfunction
 

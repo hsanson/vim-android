@@ -4,4 +4,4 @@ endif
 
 call gradle#setupGradleCommands()
 call android#setupAndroidCommands()
-call ale_linters#java#android#Define('java')
+call ale_linters#android#Define('java')
