@@ -10,24 +10,47 @@ allprojects { project ->
       System.err.println "gradle-version " + gradleVersion
       System.err.println "vim-project " + project.name
 
+
       if(project.hasProperty('android')) {
+
+        // Inspect android properties.
+        // System.err.println project.properties.entrySet()*.toString()
 
         if(project.android.defaultConfig.targetSdkVersion != null) {
           def level = project.android.defaultConfig.targetSdkVersion.getApiLevel()
           System.err.println "vim-target android-" + level
         }
 
+        // Android API jar file
+        // e.g. /home/ryujin/Apps/android-sdk/platforms/android-29/android.jar
+        project.android.bootClasspath.each { bootClass ->
+          System.err.println "vim-gradle " + bootClass
+        }
+
         if(project.android.hasProperty('applicationVariants')) {
           project.android.applicationVariants.all { variant ->
+            System.err.println "vim-gradle " + project.buildDir + "/intermediates/javac/" + variant.name + "/classes"
+            variant.sourceSets.each { srcSet ->
+              srcSet.javaDirectories.each { javaDir ->
+                System.err.println "vim-src " + javaDir
+              }
+            }
+
             variant.getCompileClasspath().each {
               System.err.println "vim-gradle " + it
             }
           }
+        }
 
-          if(project.android.hasProperty('testVariants')) {
-            project.android.testVariants.all { variant ->
-              variant.getCompileClasspath().each {
-                System.err.println "vim-gradle " + it
+        if(project.android.hasProperty('testVariants')) {
+          project.android.testVariants.all { variant ->
+            System.err.println "vim-gradle " + project.buildDir + "/intermediates/javac/" + variant.name + "/classes"
+            variant.getCompileClasspath().each {
+               System.err.println "vim-gradle " + it
+            }
+            variant.sourceSets.each { srcSet ->
+              srcSet.javaDirectories.each { javaDir ->
+                System.err.println "vim-src " + javaDir
               }
             }
           }

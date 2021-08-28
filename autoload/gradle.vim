@@ -417,7 +417,12 @@ function! s:parseVimTaskOutput(gradleFile, result)
       call add(cache#get(gradle#key(a:gradleFile), 'jars', []), mlist[1])
     endif
 
-    let mlist = matchlist(line, '^vim-gradle\s\(.*\.jar\)$')
+    let mlist = matchlist(line, '^vim-src\s\(.*\)$')
+    if empty(mlist) == 0 && len(mlist[1]) > 0 && isdirectory(mlist[1])
+      call add(cache#get(gradle#key(a:gradleFile), 'srcs', []), mlist[1])
+    endif
+
+    let mlist = matchlist(line, '^vim-gradle\s\(.*\)$')
     if empty(mlist) == 0 && len(mlist[1]) > 0
       call add(cache#get(gradle#key(a:gradleFile), 'jars', []), mlist[1])
     endif
@@ -451,22 +456,11 @@ function! gradle#classPaths() abort
   return cache#get(gradle#key(gradle#findGradleFile()), 'jars', [])
 endfunction
 
-" By default gradle projects have well defined source structure. Make sure
-" we add it the the path
+""
+" Return the gradle source pahts per  project from the cache if available or an
+" empty array otherwise.
 function! gradle#sourcePaths() abort
-  let l:srcs = []
-  let l:javapath = fnamemodify(gradle#findRoot() . '/src/main/java', ':p')
-  let l:respath = fnamemodify(gradle#findRoot() . '/src/main/res', ':p')
-
-  if isdirectory(l:javapath)
-    call add(l:srcs, l:javapath)
-  endif
-
-  if isdirectory(l:respath)
-    call add(l:srcs, l:respath)
-  endif
-
-  return l:srcs
+  return cache#get(gradle#key(gradle#findGradleFile()), 'srcs', [])
 endfunction
 
 ""
@@ -732,7 +726,7 @@ function! s:setClassPath() abort
     return
   endif
 
-  let l:deps = extend(gradle#classPaths(), android#classPaths())
+  let l:deps = gradle#classPaths()
   let l:srcs = extend(gradle#sourcePaths(), android#sourcePaths())
   let $CLASSPATH = join(gradle#uniq(sort(l:deps)), gradle#classPathSep())
   let $SRCPATH = join(gradle#uniq(sort(l:srcs)), gradle#classPathSep())

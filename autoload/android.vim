@@ -168,55 +168,11 @@ function! android#targetSrcPath()
   if isdirectory(l:targetSrc)
     return targetSrc
   endif
-endfunction
-
-function! android#getProjectJar()
-  let l:path = gradle#findRoot() . '/build/intermediates/classes/debug'
-  let l:local = fnamemodify(l:path, ':p')
-  if isdirectory(l:local)
-    return l:local
-  else
-    return "."
-  endif
+  return ''
 endfunction
 
 function! android#targetVersion()
   return gradle#targetVersion()
-endfunction
-
-function! android#getGradleTargetJar()
-
-
-  let l:targetJar = android#homePath() . '/platforms/' . android#targetVersion() . "/android.jar"
-
-  return l:targetJar
-endfunction
-
-function! android#getSdkJar()
-  return cache#get(gradle#key(gradle#findGradleFile()), 'targetJar', android#getGradleTargetJar())
-endfunction
-
-" Return array of android dependency classpath.
-function! android#classPaths()
-
-  let l:paths = []
-
-  if ! android#isAndroidProject()
-    return l:paths 
-  endif
-
-  let l:projectJar = android#getProjectJar()
-
-  if len(l:projectJar) > 0
-    call add(l:paths, l:projectJar)
-  endif
-
-  let l:targetJar = android#getSdkJar()
-  if len(l:targetJar) > 0
-    call add(l:paths, l:targetJar)
-  endif
-
-  return l:paths
 endfunction
 
 " Return array of android source paths.
@@ -225,7 +181,7 @@ function! android#sourcePaths()
   let l:paths = []
 
   if ! android#isAndroidProject()
-    return l:paths 
+    return l:paths
   endif
 
   let l:targetSrc = android#targetSrcPath()

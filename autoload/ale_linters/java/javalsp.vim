@@ -1,5 +1,5 @@
 function! s:LoadDeps() abort
-  return extend(gradle#classPaths(), android#classPaths())
+  return gradle#classPaths()
 endfunction
 
 function! s:LoadedAle(buffer) abort
