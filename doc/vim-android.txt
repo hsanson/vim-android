@@ -145,6 +145,11 @@ COMMANDS                                                   *vim-android-commands
     available via command line can be used using this command (e.g. :Gradle
     build).
 
+:GradleGenClassPathFile
+    Creates a .classpath file with all gradle android dependencies and sources
+    in the subfolder app. This .classpath file is read by eclipse jdt language
+    server for lsp features.
+
 :Android <options>
     This is an alias to the Gradle command.
 

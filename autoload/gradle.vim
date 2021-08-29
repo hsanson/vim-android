@@ -545,6 +545,7 @@ function! gradle#setupGradleCommands()
     command! -nargs=+ Gradle call gradle#compile(<f-args>)
     command! GradleSync call gradle#sync()
     command! GradleInfo call gradle#output()
+    command! GradleGenClassPathFile call classpath#generateClasspath()
   else
     command! -nargs=? Gradle echoerr 'Gradle binary could not be found, vim-android gradle commands are disabled'
     command! GradleSync echoerr 'Gradle binary could not be found, vim-android gradle commands are disabled'
