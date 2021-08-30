@@ -4,13 +4,19 @@ let s:entry_sourcepath = "\t<classpathentry kind=\"<kind>\" path=\"<path>\" sour
 " Creates a .classpath file and fills it with dependency entries
 function! classpath#generateClasspath() abort
   let l:classes = gradle#classPaths()
+  let l:srcs = extend(gradle#sourcePaths(), android#sourcePaths())
+
   let classpath = ['<?xml version="1.0" encoding="UTF-8"?>', '<classpath>']
+  for src in l:srcs
+      let l:relativeSrc =  fnamemodify(src, ":s?" . gradle#findRoot() . "/??")
+      call add(classpath, s:newClassEntry('src', relativeSrc))
+  endfor
   for jar in l:classes
     call add(classpath, s:newClassEntry('lib', jar))
   endfor
-  call add(classpath, s:newClassEntry('src', 'src/main/java'))
   call add(classpath, s:newClassEntry('lib', '.'))
   call add(classpath, '</classpath>')
+
   call writefile(classpath, gradle#findRoot() . '/.classpath')
 endfunction
 
