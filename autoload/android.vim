@@ -108,48 +108,61 @@ function! android#install(mode)
 endfunction
 
 function! android#launch(mode)
-
-  let l:devices = adb#selectDevice()
-
-  let l:gradleResult = gradle#build(a:mode)
-
-  if (l:gradleResult[0] > 0) || (l:gradleResult[1] > 0)
-    call android#logi("Could not build APK. Launch failed")
-    return
-  endif
-
-  let l:name_parts = split(android#capitalize(a:mode), '\([a-z]\+\)\zs')
-
-  let l:name = join(l:name_parts[:-2], '')
-
-  let l:metadata = json_decode(readfile(system('find $(pwd)/*/build/outputs/apk/' . l:name . ' -name "output-metadata.json" | tr "\n" " " | tr "//" "/" | sed "s/ //g"' )))
-
-  let l:apk = system('find $(pwd)/*/build/outputs/apk/' . l:name . ' -name "' . l:metadata["elements"][0]["outputFile"] . '" | tr "\n" " " | tr "//" "/"')
-
-  let l:mainId = l:metadata["applicationId"]
-
-  if empty(l:apk)
-    call android#logi("Could not find APK. Install/Launch failed")
-    return
-  endif
-
-  for l:device in l:devices
-    call android#logi("Install and Launch " . a:mode . " " . l:device)
-    let l:result = adb#install(l:device, l:apk)
-    if (l:result[0] > 0) || (l:result[1] > 0)
-      call android#logi("Install/Launch failed")
+  function! Callback(id, data, event) closure abort
+    if (a:event ==# 'stdout' || a:event ==# 'stderr')
       return
-    else
-      call android#logi('Main ' . l:mainId . '' )
-       let l:launchResult = adb#launch(l:device, l:mainId)
-      if (l:launchResult[0] > 0) || (l:launchResult[1] > 0)
-        call android#logi("Launch failed")
+    endif
+
+    let l:name_parts = split(android#capitalize(a:mode), '\([a-z]\+\)\zs')
+
+    let l:name = join(l:name_parts[:-2], '')
+
+    let l:metadata = json_decode(readfile(system('find $(pwd)/*/build/outputs/apk/' . l:name . ' -name "output-metadata.json" | tr "\n" " " | tr "//" "/" | sed "s/ //g"' )))
+
+    let l:apk = system('find $(pwd)/*/build/outputs/apk/' . l:name . ' -name "' . l:metadata["elements"][0]["outputFile"] . '" | tr "\n" " " | tr "//" "/"')
+
+    let l:mainId = l:metadata["applicationId"]
+
+    if empty(l:apk)
+      call android#logi("Could not find APK. Install/Launch failed")
+      return
+    endif
+
+    let l:devices = adb#selectDevice()
+
+    for l:device in l:devices
+      call android#logi("Install and Launch " . a:mode . " " . l:device)
+      let l:result = adb#install(l:device, l:apk)
+      if (l:result[0] > 0) || (l:result[1] > 0)
+        call android#logi("Install/Launch failed")
         return
       else
-        call android#logi("")
+        call android#logi('Main ' . l:mainId . '' )
+        let l:launchResult = adb#launch(l:device, l:mainId)
+        if (l:launchResult[0] > 0) || (l:launchResult[1] > 0)
+          call android#logi("Launch failed")
+          return
+        else
+          call android#logi("")
+        endif
       endif
-    endif
-  endfor
+    endfor
+  endfunction
+
+  let l:options = {
+        \ 'on_exit': function('Callback'),
+        \ 'on_stderr': function('Callback'),
+        \ 'on_stdout': function('Callback')
+        \ }
+
+  let l:cmd = [
+   \ gradle#bin(),
+   \ '-b',
+   \ gradle#findGradleFile(),
+   \ 'assemble' . a:mode
+   \ ]
+
+  call job#start(join(l:cmd, ' '), l:options)
 endfunction
 
 function! android#uninstall(mode)
