@@ -176,6 +176,23 @@ function! gradle#uninstall(device, mode)
   let $ANDROID_SERIAL = l:old_serial
 endfunction
 
+function! gradle#listVariants() abort
+  let l:key = gradle#key(gradle#findGradleFile())
+  let l:gradle_variants = cache#get(l:key, 'variants', '')
+
+  if empty(l:gradle_variants)
+    let l:result = system(join([gradle#bin(), ' -I ', g:gradle_init_file,' variants -q']))
+
+    if empty(l:result)
+      return
+    endif
+
+    call cache#set(l:key, 'variants', l:result)
+  endif
+
+  return cache#get(l:key, 'variants', '')
+endfunction
+
 " Return a unique key identifier for the gradle project. This key is generated
 " based on the gradle file of the project, therefore it changes if the gradle
 " file contents is changed.

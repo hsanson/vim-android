@@ -292,13 +292,17 @@ function! android#emulator()
 
 endfunction
 
+function! s:variantCompletions(a, l, p) abort
+  return gradle#listVariants()
+endfunction
+
 function! android#setupAndroidCommands()
   if android#checkAndroidHome()
     command! -nargs=+ Android call android#compile(<f-args>)
-    command! -nargs=? AndroidBuild call android#compile(<f-args>)
-    command! -nargs=1 AndroidInstall call android#install(<f-args>)
-    command! -nargs=1 AndroidUninstall call android#uninstall(<f-args>)
-    command! -nargs=1 AndroidLaunch call android#launch(<f-args>)
+    command! -nargs=? -complete=custom,s:variantCompletions AndroidBuild call android#compile(<f-args>)
+    command! -nargs=1 -complete=custom,s:variantCompletions AndroidInstall call android#install(<f-args>)
+    command! -nargs=1 -complete=custom,s:variantCompletions AndroidUninstall call android#uninstall(<f-args>)
+    command! -nargs=1 -complete=custom,s:variantCompletions AndroidLaunch call android#launch(<f-args>)
     command! AndroidDevices call android#listDevices()
     command! AndroidEmulator call android#emulator()
   else
