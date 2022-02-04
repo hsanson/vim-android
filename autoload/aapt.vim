@@ -5,10 +5,10 @@ function! aapt#bin()
   endif
 
   let l:aapt_paths = [
-        \ android#buildToolsPath() . '/aapt2',
-        \ 'aapt2',
         \ android#buildToolsPath() . '/aapt',
         \ 'aapt',
+        \ android#buildToolsPath() . '/aapt2',
+        \ 'aapt2',
         \ '/bin/false'
         \ ]
 
