@@ -118,14 +118,20 @@ function! android#launch(mode)
     return
   endif
 
-  let l:apk = system('find $(pwd)/*/build/** -name "app-' . a:mode . '.apk" | tr "\n" " " | tr "//" "/"')
+  let l:name_parts = split(android#capitalize(a:mode), '\([a-z]\+\)\zs')
+
+  let l:name = join(l:name_parts[:-2], '')
+
+  let l:metadata = json_decode(readfile(system('find $(pwd)/*/build/outputs/apk/' . l:name . ' -name "output-metadata.json" | tr "\n" " " | tr "//" "/" | sed "s/ //g"' )))
+
+  let l:apk = system('find $(pwd)/*/build/outputs/apk/' . l:name . ' -name "' . l:metadata["elements"][0]["outputFile"] . '" | tr "\n" " " | tr "//" "/"')
+
+  let l:mainId = l:metadata["applicationId"]
 
   if empty(l:apk)
     call android#logi("Could not find APK. Install/Launch failed")
     return
   endif
-
- let l:mainId = system(aapt#bin() . ' list -a ' . l:apk . ' | sed -n "/^Package Group[^s]/s/.*name=//p"  | sed "s/$/ 1/" ')
 
   for l:device in l:devices
     call android#logi("Install and Launch " . a:mode . " " . l:device)
