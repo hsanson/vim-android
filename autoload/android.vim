@@ -118,7 +118,7 @@ function! android#launch(mode)
     return
   endif
 
-  let l:apk = system('find $(pwd)/*/build/** -name "app-' . a:mode . '.apk" | tr "\n" " " | tr "//" "/"')
+  let l:apk = system('find $(pwd)/**/build/** -name "app-' . a:mode . '.apk" | tr "\n" " " | tr "//" "/"')
 
   if empty(l:apk)
     call android#logi("Could not find APK. Install/Launch failed")
