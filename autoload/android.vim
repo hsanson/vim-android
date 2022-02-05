@@ -115,11 +115,17 @@ function! android#launch(mode)
 
     let l:name_parts = split(android#capitalize(a:mode), '\([a-z]\+\)\zs')
 
-    let l:name = join(l:name_parts[:-2], '')
+    let l:path = '$(pwd)/*/build/outputs/apk/'
 
-    let l:metadata = json_decode(readfile(system('find $(pwd)/*/build/outputs/apk/' . l:name . ' -name "output-metadata.json" | tr "\n" " " | tr "//" "/" | sed "s/ //g"' )))
+    if (len(l:name_parts) > 1)
+      let l:path = l:path . join(l:name_parts[:-2], '') . '/'
+    endif
 
-    let l:apk = system('find $(pwd)/*/build/outputs/apk/' . l:name . ' -name "' . l:metadata["elements"][0]["outputFile"] . '" | tr "\n" " " | tr "//" "/"')
+    let l:path = l:path . android#lowercase(l:name_parts[-1])
+
+    let l:metadata = json_decode(readfile(system('find ' . l:path . ' -name "output-metadata.json" | tr "\n" " " | tr "//" "/" | sed "s/ //g"' )))
+
+    let l:apk = system('find ' . l:path . . ' -name "' . l:metadata["elements"][0]["outputFile"] . '" | tr "\n" " " | tr "//" "/"')
 
     let l:mainId = l:metadata["applicationId"]
 
@@ -224,6 +230,11 @@ endfunction
 " Upcase the first leter of string.
 function! android#capitalize(str)
   return substitute(a:str, '\(^.\)', '\u&', 'g')
+endfunction
+
+" Lowercase the first letter of string.
+function! android#capitalize(str)
+  return substitute(a:str, '\(^.\)', '\L&', 'g')
 endfunction
 
 ""
