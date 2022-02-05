@@ -115,11 +115,9 @@ function! android#launch(mode)
 
     let l:name_parts = split(android#capitalize(a:mode), '\([a-z]\+\)\zs')
 
-    let l:name = join(l:name_parts[:-2], '')
+    let l:metadata = json_decode(readfile(trim(system('find $(pwd)/**/build/outputs/apk/'. a:mode  . ' -name "output-metadata.json" | tr "\n" " " | tr "//" "/" '))))
 
-    let l:metadata = json_decode(readfile(system('find $(pwd)/*/build/outputs/apk/' . l:name . ' -name "output-metadata.json" | tr "\n" " " | tr "//" "/" | sed "s/ //g"' )))
-
-    let l:apk = system('find $(pwd)/*/build/outputs/apk/' . l:name . ' -name "' . l:metadata["elements"][0]["outputFile"] . '" | tr "\n" " " | tr "//" "/"')
+    let l:apk = system('find $(pwd)/**/build/outputs/apk/' . a:mode . ' -name "' . l:metadata["elements"][0]["outputFile"] . '" | tr "\n" " " | tr "//" "/"')
 
     let l:mainId = l:metadata["applicationId"]
 
