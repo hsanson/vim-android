@@ -227,7 +227,7 @@ function! android#listDevices()
   endif
 endfunction
 
-" Upcase the first leter of string.
+" Upcase the first letter of string.
 function! android#capitalize(str)
   return substitute(a:str, '\(^.\)', '\u&', 'g')
 endfunction
