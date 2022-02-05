@@ -3,6 +3,15 @@
  */
 
 allprojects { project ->
+  task variants {
+    task -> doLast {
+      if (project.hasProperty('android')) {
+        project.android.applicationVariants.all { variant ->
+          System.err.println variant.name
+        }
+      }
+    }
+  }
 
   task vim {
     task -> doLast {
