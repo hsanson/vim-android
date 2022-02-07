@@ -113,23 +113,44 @@ function! android#launch(mode)
       return
     endif
 
-    let l:name_parts = split(android#capitalize(a:mode), '\([a-z]\+\)\zs')
+    " Dictionary to map variant names to APK filenames.
+    let l:variants = {}
+    let l:app_ids  = {}
 
-    let l:path = '$(pwd)/*/build/outputs/apk/'
+    " Find the outpus APK directory
+    let l:outputs = globpath('.', '**/outputs/apk', 1, 1)
 
-    if (len(l:name_parts) > 1)
-      let l:path = l:path . join(l:name_parts[:-2], '') . '/'
+    if empty(l:outputs)
+      call android#loge("Could not find APK outputs directory")
+      return
     endif
 
-    let l:path = l:path . android#lowercase(l:name_parts[-1])
+    let l:outputs = fnamemodify(l:outputs[0], ':p')
 
-    let l:metadata = json_decode(readfile(trim(system('find ' . l:path . ' -name "output-metadata.json" | tr "\n" " " | tr "//" "/"' ))))
+    if ! isdirectory(l:outputs)
+      call android#loge("Could not find APK outputs directory")
+      return
+    endif
 
-    let l:apk = system('find ' . l:path . ' -name "' . l:metadata["elements"][0]["outputFile"] . '" | tr "\n" " " | tr "//" "/"')
+    " Find all output-metadata.json files.
+    let l:metadata_files = globpath(l:outputs, '**/output-metadata.json', 1, 1)
 
-    let l:mainId = l:metadata["applicationId"]
+    " Build the variants map to APK and id dictionaries
+    for l:metadata_file in l:metadata_files
+      let l:metadata = json_decode(readfile(l:metadata_file))
+      let l:name = l:metadata['variantName']
+      let l:file = globpath(l:outputs . '/**', l:metadata['elements'][0]['outputFile'], 1, 0)
+      let l:id   = l:metadata['applicationId']
+      if filereadable(l:file)
+        let l:variants[l:name] = l:file
+        let l:app_ids[l:name] = l:id
+      endif
+    endfor
 
-    if empty(l:apk)
+    let l:apk    = get(l:variants, a:mode, '')
+    let l:mainId = get(l:app_ids, a:mode, '')
+
+    if ! filereadable(l:apk)
       call android#logi("Could not find APK. Install/Launch failed")
       return
     endif
@@ -154,6 +175,22 @@ function! android#launch(mode)
       endif
     endfor
   endfunction
+
+  let l:options = {
+        \ 'on_exit': function('Callback'),
+        \ 'on_stderr': function('Callback'),
+        \ 'on_stdout': function('Callback')
+        \ }
+
+  let l:cmd = [
+   \ gradle#bin(),
+   \ '-b',
+   \ gradle#findGradleFile(),
+   \ 'assemble' . a:mode
+   \ ]
+
+  call job#start(join(l:cmd, ' '), l:options)
+endfunction
 
   let l:options = {
         \ 'on_exit': function('Callback'),
@@ -230,11 +267,6 @@ endfunction
 " Upcase the first letter of string.
 function! android#capitalize(str)
   return substitute(a:str, '\(^.\)', '\u&', 'g')
-endfunction
-
-" Lowercase the first letter of string.
-function! android#lowercase(str)
-  return substitute(a:str, '\(^.\)', '\L&', 'g')
 endfunction
 
 ""
