@@ -123,9 +123,9 @@ function! android#launch(mode)
 
     let l:path = l:path . android#lowercase(l:name_parts[-1])
 
-    let l:metadata = json_decode(readfile(system('find ' . l:path . ' -name "output-metadata.json" | tr "\n" " " | tr "//" "/" | sed "s/ //g"' )))
+    let l:metadata = json_decode(readfile(trim(system('find ' . l:path . ' -name "output-metadata.json" | tr "\n" " " | tr "//" "/"' ))))
 
-    let l:apk = system('find ' . l:path . . ' -name "' . l:metadata["elements"][0]["outputFile"] . '" | tr "\n" " " | tr "//" "/"')
+    let l:apk = system('find ' . l:path . ' -name "' . l:metadata["elements"][0]["outputFile"] . '" | tr "\n" " " | tr "//" "/"')
 
     let l:mainId = l:metadata["applicationId"]
 
@@ -233,7 +233,7 @@ function! android#capitalize(str)
 endfunction
 
 " Lowercase the first letter of string.
-function! android#capitalize(str)
+function! android#lowercase(str)
   return substitute(a:str, '\(^.\)', '\L&', 'g')
 endfunction
 
