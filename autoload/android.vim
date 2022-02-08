@@ -192,22 +192,6 @@ function! android#launch(mode)
   call job#start(join(l:cmd, ' '), l:options)
 endfunction
 
-  let l:options = {
-        \ 'on_exit': function('Callback'),
-        \ 'on_stderr': function('Callback'),
-        \ 'on_stdout': function('Callback')
-        \ }
-
-  let l:cmd = [
-   \ gradle#bin(),
-   \ '-b',
-   \ gradle#findGradleFile(),
-   \ 'assemble' . a:mode
-   \ ]
-
-  call job#start(join(l:cmd, ' '), l:options)
-endfunction
-
 function! android#uninstall(mode)
 
   let l:devices = adb#selectDevice()
