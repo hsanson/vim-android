@@ -24,12 +24,15 @@ If you are working in an Android project then set the *g:android_sdk_path*  with
 
 Open a java, kotlin or xml source file and this plugin will automatically kick in and perform some tasks:
 
- - Execute a custom vim gradle task to inspect the project and extract dependencies, project names, and android sdk versions.
- - Set CLASSPATH environment variable with the JAR dependencies of the project and the Android SDK jar.
+ - Execute a custom vim gradle task to inspect the project and extract
+   dependencies, project names, and android sdk versions.
+ - Set CLASSPATH environment variable with the JAR dependencies of the project
+   and the Android SDK jar.
  - Set SRCPATH environment variables with the project source sets.
  - Create Gradle and Android commands that can be used to invoke gradle tasks.
+ - Send didChangeConfiguration notification with Gradle and Android dependencies to `eclipselsp` (jdtls) or `javalsp` (java-language-server) if you have them configured with [ALE](https://github.com/dense-analysis/ale)
 
-Once the plugin finishes loading the Gradle command becomes available to use:
+Once the plugin finishes synchronizing gradle dependencies the Gradle command becomes available to use:
 
     :Gradle <task>
 
@@ -59,6 +62,10 @@ Combined with the ligthline plugin my status line looks like the following scree
  - Adds commands to generate tag files for the Android SDK as well as your Android application.
  - Improved XML omnicompletion for android resource and manifest files. Thanks to [Donnie West](https://github.com/DonnieWest).
  - Customizable status line method that can be integrated with status line plugins (e.g. airline)
+
+## ALE
+
+In addition if you have [ALE](https://github.com/dense-analysis/ale) installed with either `eclipselsp` (recommended) or `javalsp` language servers, this plugin will send a [workspace/didChangeConfiguration](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#workspace_didChangeConfigurationmessage) notification to the language server with all gradle and Android dependencies. This enables ALE to auto-complete, auto-import, and go to definition of all dependencies, including Android core and generated classes (e.g. Activity, R, etc).
 
 # Details
 

@@ -4,4 +4,4 @@ endif
 
 call gradle#setupGradleCommands()
 call android#setupAndroidCommands()
-call ale_linters#java#android#Define('kotlin')
+call ale_linters#android#Define('kotlin')

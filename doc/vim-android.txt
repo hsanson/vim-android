@@ -210,8 +210,8 @@ ANDROID OMNI-COMPLETION                              *vim-android-omnicomplete*
 
 This plugin by itself does not provide omni-completion of Android classes
 and/or methods. It is highly recommended to install ALE
-(https://github.com/w0rp/ale) with the `javalsp` LSP linter to get this
-functionality.
+(https://github.com/w0rp/ale) with the `eclipselsp` or `javalsp` LSP linter to get
+this functionality.
 
 
 ------------------------------------------------------------------------------
@@ -354,25 +354,29 @@ vim to verify your setup:
 ==============================================================================
 5. ALE Integration                                             *vim-android-ale*
 
-This plugin full potential is achieved when used in combination with the super
+This plugin full potential is achieved when used in combination with the
 ALE (https://github.com/w0rp/ale) plugin. When this plugin is installed and
 configured we get additional features:
 
- - ALE with javalsp linter gets support for linting and auto-completing Android
-   dependencies. No configuration required.
- - ALE gains a new `android` linter available for xml, java, kotlin, and groovy
-   files. You need to add `android` to these file types in your |g:ale_linters|
-   configuration.
+ - ALE with eclipselsp (jdtls) or javalsp linter gets support for
+   linting, auto-completing, import, and go to definition of Android
+   dependencies.
+ - ALE gains a new `android` linter available for xml, java, kotlin, and
+   groovy files. You need to add `android` to these file types in your
+   |g:ale_linters| configuration.
  - vim-android benefits from all linters/fixers available in ALE like
    checkstyle, google_format, etc.
  - vim-android benefits from ALE auto-completion for java/kotlin files.
 
 Example configuration for best ALE/vim-android combination:
 >
+    let g:gradle_loclist_show = 0
+    let g:gradle_show_signs = 0
+
     let g:ale_linters = {
      \ 'xml': ['android'],
      \ 'groovy': ['android'],
-     \ 'java': ['android', 'checkstyle', 'javalsp'],
+     \ 'java': ['android', 'checkstyle', 'eclipselsp'],
      \ 'kotlin': ['android', 'ktlint', 'languageserver']
      \ }
 <

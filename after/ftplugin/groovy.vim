@@ -1,1 +1,1 @@
-call ale_linters#java#android#Define('groovy')
+call ale_linters#android#Define('groovy')
