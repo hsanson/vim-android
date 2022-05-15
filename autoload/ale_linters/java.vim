@@ -59,7 +59,7 @@ function! ale_linters#java#JavaLspNotifyConfigChange() abort
 
   if s:LoadedAle(l:buffer, 'javalsp')
     let config =
-          \ { 
+          \ {
           \  'settings': {
           \    'java': {
           \      'classPath': s:LoadDeps(),
