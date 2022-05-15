@@ -34,9 +34,7 @@ function! ale_linters#java#EclipseLspNotifyConfigChange() abort
           \  'settings': {
           \    'java': {
           \      'project': {
-          \        'referencedLibraries': {
-          \          'include': s:LoadDeps()
-          \        }
+          \        'referencedLibraries': s:LoadDeps()
           \      }
           \    }
           \  }
