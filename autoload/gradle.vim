@@ -31,9 +31,9 @@ endfunction
 
 function! gradle#wrapper()
   if gradle#getOS() ==# 'Windows' && executable('\.gradlew.bat')
-    return fnamemodify('\.gradlew.bat', ':p')
+    return findfile('gradlew.bat', expand('%:p:h').';')
   elseif executable('./gradlew')
-    return fnamemodify('./gradlew', ':p')
+    return findfile('gradlew', expand('%:p:h').';')
   endif
 endfunction
 
@@ -57,12 +57,12 @@ endfunction
 " operation.
 function! gradle#bin()
 
-  if exists('g:gradle_bin')
+  if gradle#isExecutable(gradle#wrapper())
+    let g:gradle_bin = gradle#wrapper()
     return g:gradle_bin
   endif
 
-  if gradle#isExecutable(gradle#wrapper())
-    let g:gradle_bin = gradle#wrapper()
+  if exists('g:gradle_bin')
     return g:gradle_bin
   endif
 
