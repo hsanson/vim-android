@@ -42,12 +42,12 @@ function! ale_linters#java#EclipseLspNotifyConfigChange() abort
 
     call ale#lsp_linter#SendRequest(
           \ l:buffer,
-          \ 'javalsp',
+          \ 'eclipselsp',
           \ [ 0, 'workspace/didChangeConfiguration', l:config ])
 
     call ale#lsp_linter#SendRequest(
           \ bufnr('%'),
-          \ 'javalsp',
+          \ 'eclipselsp',
           \ ale#lsp#message#DidChange(l:buffer))
   endif
 
