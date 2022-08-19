@@ -556,7 +556,7 @@ function! gradle#setupGradleCommands()
     command! -nargs=+ Gradle call gradle#compile(<f-args>)
     command! GradleSync call gradle#sync()
     command! GradleInfo call gradle#output()
-    command! GradleGenClassPathFile call classpath#generateClasspath()
+    command! GradleGenClassPathFile call classpath#generateClasspathFile()
   else
     command! -nargs=? Gradle echoerr 'Gradle binary could not be found, vim-android gradle commands are disabled'
     command! GradleSync echoerr 'Gradle binary could not be found, vim-android gradle commands are disabled'
@@ -686,8 +686,9 @@ function! s:job_cb(id, data, event) abort
     call remove(s:chunks, a:id)
     call s:showLoclist()
     call s:setClassPath()
+    call s:generateClasspathFile()
     call s:finishBuilding()
-    call ale_linters#java#NotifyConfigChange()
+    call ale_linters#java#JavaLspNotifyConfigChange()
   endif
 endfunction
 
@@ -766,4 +767,17 @@ function! s:setClassPath() abort
   " syntastic plugin.
   let g:syntastic_java_javac_classpath = $CLASSPATH . ':' . $SRCPATH
 
+endfunction
+
+function! s:generateClasspathFile() abort
+
+  if !exists('g:gradle_gen_classpath_file')
+    let g:gradle_gen_classpath_file = 1
+  endif
+
+  if g:gradle_gen_classpath_file != 1
+    return
+  endif
+
+  call classpath#generateClasspathFile()
 endfunction

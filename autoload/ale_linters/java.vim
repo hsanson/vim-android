@@ -29,24 +29,19 @@ function! ale_linters#java#EclipseLspNotifyConfigChange() abort
   let l:buffer = bufnr('%')
 
   if s:LoadedAle(l:buffer, 'eclipselsp')
-    let config =
+
+    let l:config = 
           \ {
-          \  'settings': {
-          \    'java': {
-          \      'project': {
-          \        'referencedLibraries': s:LoadDeps()
-          \      }
-          \    }
-          \  }
+          \    'uri': ale#path#ToFileURI(expand('%:p'))
           \ }
 
     call ale#lsp_linter#SendRequest(
           \ l:buffer,
           \ 'eclipselsp',
-          \ [ 0, 'workspace/didChangeConfiguration', l:config ])
+          \ [ 0, 'java/projectConfigurationUpdate', l:config ])
 
     call ale#lsp_linter#SendRequest(
-          \ bufnr('%'),
+          \ l:buffer,
           \ 'eclipselsp',
           \ ale#lsp#message#DidChange(l:buffer))
   endif
@@ -58,7 +53,7 @@ function! ale_linters#java#JavaLspNotifyConfigChange() abort
   let l:buffer = bufnr('%')
 
   if s:LoadedAle(l:buffer, 'javalsp')
-    let config =
+    let l:config =
           \ {
           \  'settings': {
           \    'java': {
@@ -74,7 +69,7 @@ function! ale_linters#java#JavaLspNotifyConfigChange() abort
           \ [ 0, 'workspace/didChangeConfiguration', l:config ])
 
     call ale#lsp_linter#SendRequest(
-          \ bufnr('%'),
+          \ l:buffer,
           \ 'javalsp',
           \ ale#lsp#message#DidChange(l:buffer))
   endif

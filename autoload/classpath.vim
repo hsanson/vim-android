@@ -2,23 +2,58 @@ let s:entry = "\t<classpathentry kind=\"<kind>\" path=\"<path>\"/>"
 let s:entry_sourcepath = "\t<classpathentry kind=\"<kind>\" path=\"<path>\" sourcepath=\"<src>\"/>"
 
 " Creates a .classpath file and fills it with dependency entries
-function! classpath#generateClasspath() abort
-  let l:classes = gradle#classPaths()
+function! classpath#generateClasspathFile() abort
+
+  " For non android project JDT generated .classpath file works fine. No need to
+  " fiddle with it. For android project in the other hand the JDT generated one
+  " does not work so we generate one that works with android dependencies.
+  if !android#isAndroidProject()
+    return
+  endif
+
+  let l:contents = []
+  let l:path = classpath#findClasspathFile()
+
+  if len(l:path) == 0
+    let l:path = gradle#findRoot() . '/.classpath'
+  endif
+
+  let l:contents = ['<?xml version="1.0" encoding="UTF-8"?>', '<classpath>', '</classpath>']
+
+  " Note that order is important. Sources must be added before libs in the
+  " .classpath file.
+  "
   let l:srcs = extend(gradle#sourcePaths(), android#sourcePaths())
 
-  let classpath = ['<?xml version="1.0" encoding="UTF-8"?>', '<classpath>']
   for src in l:srcs
-      let l:relativeSrc =  fnamemodify(src, ":s?" . gradle#findRoot() . "/??")
-      call add(classpath, s:newClassEntry('src', relativeSrc))
+      let l:relativeSrc =  fnamemodify(src, ':s?' . gradle#findRoot() . '/??')
+      let l:row = s:newClassEntry('src', relativeSrc)
+      if index(l:contents, l:row) < 0
+        call insert(l:contents, l:row, -1)
+      endif
   endfor
-  for jar in l:classes
-    call add(classpath, s:newClassEntry('lib', jar))
-  endfor
-  call add(classpath, s:newClassEntry('lib', '.'))
-  call add(classpath, '</classpath>')
 
-  call writefile(classpath, gradle#findRoot() . '/.classpath')
+  let l:classes = gradle#classPaths()
+
+  for jar in l:classes
+    let l:row = s:newClassEntry('lib', jar)
+    if index(l:contents, l:row) < 0
+      call insert(l:contents, l:row, -1)
+    endif
+  endfor
+
+  let l:row =  s:newClassEntry('lib', '.')
+
+  if index(l:contents, l:row) < 0
+    call insert(l:contents, l:row, -1)
+  endif
+
+  call writefile(l:contents, l:path)
+  call ale_linters#java#EclipseLspNotifyConfigChange()
 endfunction
+
+" Generates .classpath file required by some tools to figure out dependencies
+" (e.g. Eclipse JDT).
 
 " Adds a new entry to the current .classpath file.
 function! s:newClassEntry(kind, arg, ...)
@@ -41,4 +76,14 @@ function! s:newClassEntry(kind, arg, ...)
   endfor
 
   return template
+endfunction
+
+function! classpath#findClasspathFile()
+  let l:file = findfile('.classpath', gradle#findRoot() . ';$HOME')
+
+  if len(l:file) == 0
+    return ''
+  endif
+
+  return copy(fnamemodify(l:file, ':p'))
 endfunction
