@@ -420,6 +420,7 @@ function! gradle#sync() abort
     let l:id = s:BufWinId()
     call setloclist(l:id, [], ' ', s:What(l:result))
     call s:setClassPath()
+    call classpath#generateClasspathFile()
     call gradle#logi('')
     call ale_linters#java#NotifyConfigChange()
   endif
@@ -686,9 +687,9 @@ function! s:job_cb(id, data, event) abort
     call remove(s:chunks, a:id)
     call s:showLoclist()
     call s:setClassPath()
-    call s:generateClasspathFile()
+    call classpath#generateClasspathFile()
     call s:finishBuilding()
-    call ale_linters#java#JavaLspNotifyConfigChange()
+    call ale_linters#java#NotifyConfigChange()
   endif
 endfunction
 
@@ -767,17 +768,4 @@ function! s:setClassPath() abort
   " syntastic plugin.
   let g:syntastic_java_javac_classpath = $CLASSPATH . ':' . $SRCPATH
 
-endfunction
-
-function! s:generateClasspathFile() abort
-
-  if !exists('g:gradle_gen_classpath_file')
-    let g:gradle_gen_classpath_file = 1
-  endif
-
-  if g:gradle_gen_classpath_file != 1
-    return
-  endif
-
-  call classpath#generateClasspathFile()
 endfunction

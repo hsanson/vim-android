@@ -1,8 +1,21 @@
 let s:entry = "\t<classpathentry kind=\"<kind>\" path=\"<path>\"/>"
 let s:entry_sourcepath = "\t<classpathentry kind=\"<kind>\" path=\"<path>\" sourcepath=\"<src>\"/>"
 
-" Creates a .classpath file and fills it with dependency entries
 function! classpath#generateClasspathFile() abort
+
+  if !exists('g:gradle_gen_classpath_file')
+    let g:gradle_gen_classpath_file = 1
+  endif
+
+  if g:gradle_gen_classpath_file != 1
+    return
+  endif
+
+  call s:generateClasspathFile()
+endfunction
+
+" Creates a .classpath file and fills it with dependency entries
+function! s:generateClasspathFile() abort
 
   " For non android project JDT generated .classpath file works fine. No need to
   " fiddle with it. For android project in the other hand the JDT generated one
@@ -49,7 +62,6 @@ function! classpath#generateClasspathFile() abort
   endif
 
   call writefile(l:contents, l:path)
-  call ale_linters#java#EclipseLspNotifyConfigChange()
 endfunction
 
 " Generates .classpath file required by some tools to figure out dependencies
