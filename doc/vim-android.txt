@@ -159,7 +159,7 @@ COMMANDS                                                   *vim-android-commands
     you get unknown references it may be necessary to restart the language
     server itself.
 
-    Warning: for now this commnad only works for Android projects. For non
+    Warning: for now this command only works for Android projects. For non
     Android projects this command has no effect.
 
 :Android <options>
