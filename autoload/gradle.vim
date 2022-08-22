@@ -420,6 +420,7 @@ function! gradle#sync() abort
     let l:id = s:BufWinId()
     call setloclist(l:id, [], ' ', s:What(l:result))
     call s:setClassPath()
+    call classpath#generateClasspathFile()
     call gradle#logi('')
     call ale_linters#java#NotifyConfigChange()
   endif
@@ -556,7 +557,7 @@ function! gradle#setupGradleCommands()
     command! -nargs=+ Gradle call gradle#compile(<f-args>)
     command! GradleSync call gradle#sync()
     command! GradleInfo call gradle#output()
-    command! GradleGenClassPathFile call classpath#generateClasspath()
+    command! GradleGenClassPathFile call classpath#generateClasspathFile()
   else
     command! -nargs=? Gradle echoerr 'Gradle binary could not be found, vim-android gradle commands are disabled'
     command! GradleSync echoerr 'Gradle binary could not be found, vim-android gradle commands are disabled'
@@ -686,6 +687,7 @@ function! s:job_cb(id, data, event) abort
     call remove(s:chunks, a:id)
     call s:showLoclist()
     call s:setClassPath()
+    call classpath#generateClasspathFile()
     call s:finishBuilding()
     call ale_linters#java#NotifyConfigChange()
   endif

@@ -57,6 +57,7 @@ The following features are supported by vim-android:
   - Updates the SRCPATH environment variable to include source paths for the
     current project and dependencies if available. This allows debuggers like
     vebugger to follow source code during step debugging.
+  - Generates .classpath file that works with Android projects.
   - Adds useful commands to compile and install your application APK into
     your emulator/devices.
   - Improved XML omnicompletion for Android resource and manifest XML files.
@@ -146,9 +147,20 @@ COMMANDS                                                   *vim-android-commands
     build).
 
 :GradleGenClassPathFile
-    Creates a .classpath file with all gradle android dependencies and sources
-    in the subfolder app. This .classpath file is read by eclipse jdt language
-    server for lsp features.
+    Manually generate the .classpath file with all gradle dependencies and
+    sources. This .classpath file is read by some tools like Eclipse JDT
+    language server for lsp features.
+
+    Note that this command is affected by |g:gradle_gen_classpath_file|
+    configuration.
+
+    After generating the .classpath file you may want to run |GradleSync| to
+    update the language servers (Eclipse JDT) configurations. If after this
+    you get unknown references it may be necessary to restart the language
+    server itself.
+
+    Warning: for now this command only works for Android projects. For non
+    Android projects this command has no effect.
 
 :Android <options>
     This is an alias to the Gradle command.
@@ -520,6 +532,23 @@ variables.
 Example:
 >
         let g:gradle_set_classpath=0
+<
+                                                   *g:gradle_gen_classpath_file*
+g:gradle_gen_classpath_file~
+Default: 1
+
+This plugin will automatically generate a .classpath file with dependencies
+after gradle sync task completes for Android projects. This file is required
+for some language servers (e.g. Eclipse JDT) to figure out dependencies for
+auto completion, auto import, and other useful functions. If you prefer to not
+generate this file then set this configuration variable to 0.
+
+Note that the .classpath file is generated only for Android projects. For
+non-Android projects this configuration has no effect.
+
+Example:
+>
+        let g:gradle_gen_classpath_file=0
 <
                                                         *g:gradle_show_signs*
 g:gradle_show_signs~
