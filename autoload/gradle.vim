@@ -66,7 +66,7 @@ function! gradle#bin()
     return g:gradle_bin
   endif
 
-  if finddir(gradle#gradleHome()) !=# '' && gradle#isExecutable(gradle#gradleHome() . '/bin/gradle')
+  if finddir(escape(gradle#gradleHome(), ' ')) !=# '' && gradle#isExecutable(gradle#gradleHome() . '/bin/gradle')
     let g:gradle_bin = gradle#gradleHome() . '/bin/gradle'
     return g:gradle_bin
   endif
@@ -211,10 +211,10 @@ function! gradle#findGradleFile()
     let l:path = getcwd()
   endif
 
-  let l:file = findfile('build.gradle', l:path . ';$HOME')
+  let l:file = findfile('build.gradle', escape(l:path, ' ') . ';$HOME')
 
   if len(l:file) == 0
-    let l:file = findfile('build.gradle.kts', l:path . ';$HOME')
+    let l:file = findfile('build.gradle.kts', escape(l:path, ' ') . ';$HOME')
   endif
 
   if len(l:file) == 0
@@ -750,7 +750,7 @@ function! s:setClassPath() abort
   let l:srcs = extend(gradle#sourcePaths(), android#sourcePaths())
   let $CLASSPATH = join(gradle#uniq(sort(l:deps)), gradle#classPathSep())
   let $SRCPATH = join(gradle#uniq(sort(l:srcs)), gradle#classPathSep())
-  exec 'set path=' . join(gradle#uniq(sort(l:srcs)), gradle#classPathSep())
+  exec 'set path=' . escape(join(gradle#uniq(sort(l:srcs)), gradle#classPathSep()), ' ')
 
   " [LEGACY] Is recommended to use ALE plugin with javalsp linter instead of
   " javacomplete plugin.

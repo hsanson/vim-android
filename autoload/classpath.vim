@@ -91,7 +91,7 @@ function! s:newClassEntry(kind, arg, ...)
 endfunction
 
 function! classpath#findClasspathFile()
-  let l:file = findfile('.classpath', gradle#findRoot() . ';$HOME')
+  let l:file = findfile('.classpath', escape(gradle#findRoot(), ' ') . ';$HOME')
 
   if len(l:file) == 0
     return ''
