@@ -29,14 +29,28 @@ function! gradle#gradleHome()
 
 endfunction
 
+" Tries to determine the location of the Gradle wrapper starting from the
+" current buffer location.
 function! gradle#wrapper()
-  if gradle#getOS() ==# 'Windows' && executable('\.gradlew.bat')
-    return fnamemodify('\.gradlew.bat', ':p')
-  elseif executable('./gradlew')
-    return fnamemodify('./gradlew', ':p')
-  endif
-endfunction
+  let l:path = expand('%:p:h')
 
+  if len(l:path) <= 0
+    let l:path = getcwd()
+  endif
+
+  let l:file = 'gradlew'
+  if gradle#getOS() ==# 'Windows'
+      let l:file .= '.bat'
+  endif
+
+  let l:file = findfile(l:file, escape(l:path, ' ') . ';$HOME')
+
+  if len(l:file) == 0
+      return ''
+  endif
+
+  return exepath(fnamemodify(l:file, ':p'))
+endfunction
 
 function! gradle#isExecutable(exec)
     if type(a:exec) != type('')
