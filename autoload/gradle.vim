@@ -94,7 +94,7 @@ function! gradle#bin()
 endfunction
 
 function! s:getGradleVersion()
-  let l:cmd = join([gradle#bin(), ' --version'])
+  let l:cmd = join([shellescape(gradle#bin()), ' --version'])
   let l:pattern = 'Gradle\s*\(\d\+\)\.\(\d\+\)'
   let l:result = system(l:cmd)
   let l:version_list = matchlist(l:result, l:pattern)
@@ -195,7 +195,7 @@ function! gradle#listVariants() abort
   let l:gradle_variants = cache#get(l:key, 'variants', '')
 
   if empty(l:gradle_variants)
-    let l:result = system(join([gradle#bin(), ' -I ', g:gradle_init_file,' variants -q']))
+    let l:result = system(join([shellescape(gradle#bin()), ' -I ', g:gradle_init_file,' variants -q']))
 
     if empty(l:result)
       return
@@ -408,7 +408,7 @@ function! gradle#run(...)
     call s:vim_job(l:cmd)
   else
     let l:gradleFile = gradle#findGradleFile()
-    let l:result = split(system(join(l:cmd, ' ')), '\n')
+    let l:result = split(system(join(map(l:cmd, {k, v -> shellescape(v)})))), '\n')
     let l:id = s:BufWinId()
     call setloclist(l:id, [], ' ', s:What(l:result))
     redraw!
@@ -429,7 +429,7 @@ function! gradle#sync() abort
   else
    let l:gradleFile = gradle#findGradleFile()
     call gradle#logi('Gradle sync, please wait...')
-    let l:result = split(system(join(gradle#syncCmd(), ' ')), '\n')
+    let l:result = split(system(join(map(gradle#syncCmd(), {k, v -> shellescape(v)})))), '\n')
     call s:parseVimTaskOutput(l:gradleFile, l:result)
     let l:id = s:BufWinId()
     call setloclist(l:id, [], ' ', s:What(l:result))
@@ -719,7 +719,7 @@ function! s:nvim_job(cmd) abort
 
   call s:startBuilding()
 
-  let l:ch = jobstart(join(a:cmd), l:options)
+  let l:ch = jobstart(join(map(a:cmd, {k, v -> shellescape(v)})), l:options)
   let s:chunks[l:ch] = ['']
   let s:files[l:ch] = l:gradleFile
 endfunction
