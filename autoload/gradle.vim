@@ -29,14 +29,28 @@ function! gradle#gradleHome()
 
 endfunction
 
+" Tries to determine the location of the Gradle wrapper starting from the
+" current buffer location.
 function! gradle#wrapper()
-  if gradle#getOS() ==# 'Windows' && executable('\.gradlew.bat')
-    return fnamemodify('\.gradlew.bat', ':p')
-  elseif executable('./gradlew')
-    return fnamemodify('./gradlew', ':p')
-  endif
-endfunction
+  let l:path = expand('%:p:h')
 
+  if len(l:path) <= 0
+    let l:path = getcwd()
+  endif
+
+  let l:file = 'gradlew'
+  if gradle#getOS() ==# 'Windows'
+      let l:file .= '.bat'
+  endif
+
+  let l:file = findfile(l:file, escape(l:path, ' ') . ';$HOME')
+
+  if len(l:file) == 0
+      return ''
+  endif
+
+  return exepath(fnamemodify(l:file, ':p'))
+endfunction
 
 function! gradle#isExecutable(exec)
     if type(a:exec) != type('')
@@ -66,7 +80,7 @@ function! gradle#bin()
     return g:gradle_bin
   endif
 
-  if finddir(gradle#gradleHome()) !=# '' && gradle#isExecutable(gradle#gradleHome() . '/bin/gradle')
+  if finddir(escape(gradle#gradleHome(), ' ')) !=# '' && gradle#isExecutable(gradle#gradleHome() . '/bin/gradle')
     let g:gradle_bin = gradle#gradleHome() . '/bin/gradle'
     return g:gradle_bin
   endif
@@ -80,7 +94,7 @@ function! gradle#bin()
 endfunction
 
 function! s:getGradleVersion()
-  let l:cmd = join([gradle#bin(), ' --version'])
+  let l:cmd = join([shellescape(gradle#bin()), ' --version'])
   let l:pattern = 'Gradle\s*\(\d\+\)\.\(\d\+\)'
   let l:result = system(l:cmd)
   let l:version_list = matchlist(l:result, l:pattern)
@@ -181,7 +195,7 @@ function! gradle#listVariants() abort
   let l:gradle_variants = cache#get(l:key, 'variants', '')
 
   if empty(l:gradle_variants)
-    let l:result = system(join([gradle#bin(), ' -I ', g:gradle_init_file,' variants -q']))
+    let l:result = system(join([shellescape(gradle#bin()), ' -I ', g:gradle_init_file,' variants -q']))
 
     if empty(l:result)
       return
@@ -211,10 +225,10 @@ function! gradle#findGradleFile()
     let l:path = getcwd()
   endif
 
-  let l:file = findfile('build.gradle', l:path . ';$HOME')
+  let l:file = findfile('build.gradle', escape(l:path, ' ') . ';$HOME')
 
   if len(l:file) == 0
-    let l:file = findfile('build.gradle.kts', l:path . ';$HOME')
+    let l:file = findfile('build.gradle.kts', escape(l:path, ' ') . ';$HOME')
   endif
 
   if len(l:file) == 0
@@ -394,7 +408,7 @@ function! gradle#run(...)
     call s:vim_job(l:cmd)
   else
     let l:gradleFile = gradle#findGradleFile()
-    let l:result = split(system(join(l:cmd, ' ')), '\n')
+    let l:result = split(system(join(map(l:cmd, {k, v -> shellescape(v)})))), '\n')
     let l:id = s:BufWinId()
     call setloclist(l:id, [], ' ', s:What(l:result))
     redraw!
@@ -415,7 +429,7 @@ function! gradle#sync() abort
   else
    let l:gradleFile = gradle#findGradleFile()
     call gradle#logi('Gradle sync, please wait...')
-    let l:result = split(system(join(gradle#syncCmd(), ' ')), '\n')
+    let l:result = split(system(join(map(gradle#syncCmd(), {k, v -> shellescape(v)})))), '\n')
     call s:parseVimTaskOutput(l:gradleFile, l:result)
     let l:id = s:BufWinId()
     call setloclist(l:id, [], ' ', s:What(l:result))
@@ -705,7 +719,7 @@ function! s:nvim_job(cmd) abort
 
   call s:startBuilding()
 
-  let l:ch = jobstart(join(a:cmd), l:options)
+  let l:ch = jobstart(join(map(a:cmd, {k, v -> shellescape(v)})), l:options)
   let s:chunks[l:ch] = ['']
   let s:files[l:ch] = l:gradleFile
 endfunction
@@ -750,7 +764,7 @@ function! s:setClassPath() abort
   let l:srcs = extend(gradle#sourcePaths(), android#sourcePaths())
   let $CLASSPATH = join(gradle#uniq(sort(l:deps)), gradle#classPathSep())
   let $SRCPATH = join(gradle#uniq(sort(l:srcs)), gradle#classPathSep())
-  exec 'set path=' . join(gradle#uniq(sort(l:srcs)), gradle#classPathSep())
+  exec 'set path=' . escape(join(gradle#uniq(sort(l:srcs)), gradle#classPathSep()), ' ')
 
   " [LEGACY] Is recommended to use ALE plugin with javalsp linter instead of
   " javacomplete plugin.

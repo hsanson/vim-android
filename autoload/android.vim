@@ -35,7 +35,7 @@ endfunction
 " long time to finish and we call this method several times it caches the
 " results in a script variable.
 function! s:findManifestFile()
-  let l:file = findfile("AndroidManifest.xml", gradle#findRoot() . "/**3")
+  let l:file = findfile("AndroidManifest.xml", escape(gradle#findRoot(), ' ') . "/**3")
   return copy(fnamemodify(l:file, ":p"))
 endfunction
 
@@ -65,7 +65,7 @@ function! android#buildToolsPath()
 endfunction
 
 function! android#checkAndroidHome()
-  if finddir(android#homePath()) == ""
+  if finddir(escape(android#homePath(), ' ')) == ""
     return 0
   endif
   return 1

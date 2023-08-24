@@ -1,10 +1,10 @@
 function! efm#cmd() abort
   let l:makeprg = [
-   \  gradle#bin(),
+   \  escape(gradle#bin(), ' '),
    \  '-I',
    \  g:gradle_init_file,
    \  '-b',
-   \  gradle#findGradleFile()
+   \  escape(gradle#findGradleFile(), ' ')
    \ ]
 
   if gradle#isDaemonEnabled()
