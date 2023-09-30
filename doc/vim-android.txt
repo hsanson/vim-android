@@ -356,12 +356,7 @@ TROUBLESHOOTING                                    *vim-android-troubleshooting*
 Using neovim *health* feature you can check your environment setup running the
 CheckHealth command:
 >
-        :CheckHealth gradle
-<
-If you are not running neovim you can run the check function manually inside
-vim to verify your setup:
->
-        :call health#gradle#check()
+        :checkhealth gradle
 <
 ==============================================================================
 5. ALE Integration                                             *vim-android-ale*
