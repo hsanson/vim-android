@@ -64,6 +64,20 @@ allprojects { project ->
             }
           }
         }
+
+        if(project.android.hasProperty('unitTestVariants')) {
+          project.android.unitTestVariants.all { variant ->
+            System.err.println "vim-gradle " + project.buildDir + "/intermediates/javac/" + variant.name + "/classes"
+            variant.getCompileClasspath().each {
+               System.err.println "vim-gradle " + it
+            }
+            variant.sourceSets.each { srcSet ->
+              srcSet.javaDirectories.each { javaDir ->
+                System.err.println "vim-src " + javaDir
+              }
+            }
+          }
+        }
       } else {
         // Print build class directories. These assume the project follows a
         // standard gradle project with a main and test source sets. Custom
