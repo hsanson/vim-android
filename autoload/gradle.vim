@@ -762,7 +762,7 @@ function! s:setClassPath() abort
 
   let l:deps = gradle#classPaths()
   let l:srcs = extend(gradle#sourcePaths(), android#sourcePaths())
-  let $CLASSPATH = join(gradle#uniq(sort(l:deps)), gradle#classPathSep())
+  let $CLASSPATH = join(gradle#uniq(sort(l:deps, 's:compareJars')), gradle#classPathSep())
   let $SRCPATH = join(gradle#uniq(sort(l:srcs)), gradle#classPathSep())
   exec 'set path=' . escape(join(gradle#uniq(sort(l:srcs)), gradle#classPathSep()), ' ')
 
@@ -782,4 +782,130 @@ function! s:setClassPath() abort
   " syntastic plugin.
   let g:syntastic_java_javac_classpath = $CLASSPATH . ':' . $SRCPATH
 
+endfunction
+
+" Parses a SemVer version string.
+"
+" Returns "v:null" if the string doesn't contain a SemVer, otherwise an
+" object, like {
+"   'match': '1.0.1-rc01',
+"   'major': 1,
+"   'minor': 0,
+"   'patch': 1,
+"   'prerelease': '-rc01'
+" }
+"
+" From (adapted): https://github.com/noahfrederick/vim-composer/blob/7ad79/autoload/composer/semver.vim#L7
+function! s:parseSemVer(str)
+  let l:semver = {}
+  let l:match = matchlist(a:str, '\v(\d+)%(.(\d+)%(.(\d+))?)?(.*)')
+
+  if empty(l:match)
+    return v:null
+  endif
+
+  let l:semver.match = get(l:match, 0, '')
+  let l:semver.major = str2nr(get(l:match, 1, ''))
+  let l:semver.minor = str2nr(get(l:match, 2, ''))
+  let l:semver.patch = str2nr(get(l:match, 3, ''))
+  let l:semver.prerelease = trim(get(l:match, 4, ''))
+
+  return l:semver
+endfunction
+
+" Compares two parsed SemVer objects returned by s:parseSemVer(), and returns
+" one of "-1", "0", or "1".
+function! s:compareSemVer(v1, v2)
+  if a:v1.major == a:v2.major && a:v1.minor == a:v2.minor && a:v1.patch == a:v2.patch
+    if !empty(a:v1.prerelease) && empty(a:v2.prerelease)
+      return -1
+    elseif empty(a:v1.prerelease) && !empty(a:v2.prerelease)
+      return 1
+    elseif empty(a:v1.prerelease) && empty(a:v2.prerelease)
+      return 0
+    endif
+
+    " Compare both pre-releases using ASCII codes if labels are different, for
+    " example "-beta.1" vs. "-alpha.2"
+    if substitute(a:v1.prerelease, '\H', '', 'g') !=? substitute(a:v2.prerelease, '\H', '', 'g')
+      return a:v1.prerelease <? a:v2.prerelease ? -1 : 1
+    endif
+    " Otherwise only compare the pre-release numbers if labels are the same,
+    " for example "-beta.1" vs. "-beta.2" (1 < 2)
+    let l:prerelease1_num = str2nr(substitute(a:v1.prerelease, '\D', '', 'g'))
+    let l:prerelease2_num = str2nr(substitute(a:v2.prerelease, '\D', '', 'g'))
+    if l:prerelease1_num < l:prerelease2_num
+      return -1
+    elseif l:prerelease1_num == l:prerelease2_num
+      return 0
+    endif
+    return 1
+  endif
+
+  if a:v1.major < a:v2.major
+      \ || (a:v1.major == a:v2.major && a:v1.minor < a:v2.minor)
+      \ || (a:v1.major == a:v2.major && a:v1.minor == a:v2.minor && a:v1.patch < a:v2.patch)
+      return -1
+  endif
+  return 1
+endfunction
+
+" Custom comparison function for use in sort() to order JAR artifacts by
+" version (newest first) if specified in the file name, otherwise the
+" comparison will default to using the ASCII codes sorting.
+"
+" Returns "1" if "jar1 < jar2", "0" if "jar1 == jar2", "-1" if "jar1 > jar2".
+"
+" NOTE: This function expects the input JAR files to follow the traditional
+" naming convention of artifactId, version (SemVer), and extension (e.g,
+" "artifactId-1.0.0.jar"), otherwise the comparison will default to using
+" ASCII codes. The files can optionally include a relative/absolute paths.
+"
+" Comparison example:
+"   jar1 = 'lib-2.5.0.jar'
+"   jar2 = 'lib-1.0.0.jar'
+"   output = -1
+"
+"   jar1 = 'lib-1.0.0.jar'
+"   jar2 = 'lib-1.0.0.jar'
+"   output = 0
+"
+"   jar1 = 'lib-1.0.0-alpha.jar'
+"   jar2 = 'lib-1.0.0.jar'
+"   output = 1
+function! s:compareJars(jar1, jar2)
+  if a:jar1 ==? a:jar2
+    return 0
+  endif
+
+  " Extract only the file name (with no extension), such as 'artifactId-1.0.0'
+  let l:j1 = fnamemodify(a:jar1, ':t:r')
+  let l:j2 = fnamemodify(a:jar2, ':t:r')
+
+  let l:v1 = s:parseSemVer(l:j1)
+  let l:v2 = s:parseSemVer(l:j2)
+
+  " Non-SemVer artifacts should be compared using ASCII codes
+  if l:v1 is v:null || l:v2 is v:null
+    return l:j1 <? l:j2 ? -1 : 1
+  endif
+
+  " Extract only the artifactId (with no SemVer part)
+  let l:artifactId1 = substitute(l:j1, '\V'.l:v1.match, '', '')
+  let l:artifactId2 = substitute(l:j2, '\V'.l:v2.match, '', '')
+  " Artifacts with different artifactId should be compared using ASCII codes
+  if l:artifactId1 !=# l:artifactId2
+    return l:j1 <? l:j2 ? -1 : 1
+  endif
+
+  " NOTE: Before checking artifact versions, we need to drop the "-api"
+  " suffix (added by Gradle to all transformed jars) from the pre-release
+  " part, so that we avoid a case when a pre-release version takes over a
+  " non-pre-release one, for example "1.2.0-beta-api" vs. "1.2.0-api"
+  let l:v1.prerelease = substitute(l:v1.prerelease, '-api$', '', '')
+  let l:v2.prerelease = substitute(l:v2.prerelease, '-api$', '', '')
+
+  " Artifacts are the same, so compare the SemVer part, but always invert
+  " the sign in order to make the newer version appear higher in the list
+  return s:compareSemVer(l:v1, l:v2) * -1
 endfunction
